@@ -1,0 +1,30 @@
+<div class="d-flex align-items-end">
+  <div>
+    <button class="ally-icon" (click)="modalVisible = !modalVisible">
+      <i class="pi pi-user"></i>
+    </button>
+  </div>
+
+  <div [class]="modalVisible ? 'ally-modal active' : 'ally-modal'">
+    <div class="actions">
+      <!-- <div class="action">
+        <ally-invert></ally-invert>
+      </div> -->
+      <div class="action">
+        <ally-screen-reader></ally-screen-reader>
+      </div>
+      <div class="action">
+        <ally-contrast></ally-contrast>
+      </div>
+      <div class="action">
+        <ally-saturate></ally-saturate>
+      </div>
+      <div class="action">
+        <ally-text-size></ally-text-size>
+      </div>
+      <div class="action">
+        <ally-text-spacing></ally-text-spacing>
+      </div>
+    </div>
+  </div>
+</div>

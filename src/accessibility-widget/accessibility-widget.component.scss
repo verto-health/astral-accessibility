@@ -1,0 +1,211 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 999999;
+  bottom: 8px;
+  right: 0px;
+
+  margin-right: -8px;
+  margin-bottom: 35px;
+  transition: max-width 0.1s ease-in-out;
+
+  --iconWidth: 70px;
+  --modalWidth: 375px;
+  --modalHeight: calc(40vh - 16px);
+  --modalBackgroundColor: #232323;
+  --modalBorderColor: #e8e8e8;
+  --actionTextColor: #fff;
+  --actionActiveTextColor: #000;
+  --actionBackgroundColor: #444444;
+  --actionActiveBackgroundColor: #ffcb00;
+  --actionIconActiveBackgroundColor: #ffd73b;
+  --actionIconInactiveBackgroundColor: #6c6c6c;
+}
+
+.ally-icon {
+  background-color: var(--modalBackgroundColor);
+  padding: 8px;
+  padding-right: 16px;
+  border: 0;
+  border-radius: 20px 0 0 20px;
+  height: var(--iconWidth);
+  width: var(--iconWidth);
+
+  i {
+    background: var(--actionActiveBackgroundColor);
+    border-radius: 50%;
+    font-size: 35px;
+    padding: 8px;
+  }
+}
+
+.ally-modal {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border: 0;
+  background-color: var(--modalBackgroundColor);
+  border-radius: 20px 0px 0px 0px;
+  padding: 10px;
+  margin-right: -8px;
+  // height: var(--modalHeight);
+  min-width: fit-content;
+  width: var(--modalWidth);
+  overflow-y: scroll;
+
+  &.active {
+    display: block;
+  }
+
+  display: none;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.action {
+  ::ng-deep {
+    button {
+      padding: 10px;
+      width: 100%;
+      margin: 5px 0px;
+      color: var(--actionTextColor);
+      font-size: 20px;
+      font-weight: 600;
+      background: var(--actionBackgroundColor);
+      border: 0;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      &.in-use {
+        color: var(--actionActiveTextColor);
+        background: var(--actionActiveBackgroundColor);
+      }
+
+      .title {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+
+        .icon-state-wrap {
+          display: flex;
+          align-items: center;
+          width: 100%;
+
+          .state-dots-wrap {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 2px;
+            align-items: stretch;
+            text-align: start;
+          }
+        }
+      }
+
+      .icon {
+        border-radius: 50%;
+        font-size: 35px;
+        padding: 8px;
+
+        &.action-icon {
+          font-size: 35px;
+          padding: 8px;
+          margin-right: 20px;
+        }
+
+        &.active-check {
+          padding: 6px;
+        }
+
+        &.inactive {
+          background: var(--actionIconInactiveBackgroundColor);
+          color: #fff;
+        }
+
+        &.active {
+          background: var(--actionIconActiveBackgroundColor);
+          color: #000;
+        }
+      }
+    }
+
+    .dots {
+      display: flex;
+      height: 10px;
+      width: 100%;
+      margin-top: auto;
+      gap: 5px;
+
+      &.inactive {
+        display: none;
+      }
+
+      .dot {
+        background: #e8e8e8;
+        width: 100%;
+        height: 8px;
+        border-radius: 4px;
+
+        &.active {
+          background: #000;
+        }
+      }
+    }
+  }
+}
+
+// classes that get added onto HTML elements by accesibility controls
+::ng-deep {
+  .ally_by_verto_inverted {
+    filter: invert(1) !important;
+  }
+
+  .ally_by_verto_low_saturation {
+    filter: saturate(0.4) !important;
+  }
+
+  .ally_by_verto_high_saturation {
+    filter: saturate(2.5) !important;
+  }
+
+  .ally_by_verto_desaturated {
+    filter: saturate(0) !important;
+  }
+
+  .ally_by_verto_medium_text {
+    font-size: 1.2rem;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .ally_by_verto_large_text {
+    font-size: 1.6rem;
+  }
+
+  .ally_by_verto_extra_large_text {
+    font-size: 2.2rem;
+  }
+
+  .ally_by_verto_light_spacing {
+    word-spacing: 0.16em;
+    letter-spacing: 0.12em;
+  }
+
+  .ally_by_verto_moderate_spacing {
+    word-spacing: 0.32em;
+    letter-spacing: 0.24em;
+  }
+
+  .ally_by_verto_heavy_spacing {
+    word-spacing: 0.48em;
+    letter-spacing: 0.36em;
+  }
+}
