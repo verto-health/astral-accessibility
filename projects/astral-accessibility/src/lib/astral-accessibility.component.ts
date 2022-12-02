@@ -1,4 +1,4 @@
-import { NgIf, NgClass } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContrastComponent } from './controls/contrast.component';
 import { InvertComponent } from './controls/invert.component';
@@ -9,8 +9,8 @@ import { ScreenReaderComponent } from './controls/screen-reader.component';
 
 @Component({
   selector: 'ally-by-verto',
-  templateUrl: './accessibility-widget.component.html',
-  styleUrls: ['./accessibility-widget.component.scss'],
+  templateUrl: './astral-accessibility.component.html',
+  styleUrls: ['./astral-accessibility.component.scss'],
   standalone: true,
   imports: [
     NgIf,
@@ -22,6 +22,6 @@ import { ScreenReaderComponent } from './controls/screen-reader.component';
     ScreenReaderComponent,
   ],
 })
-export class AccessibiltyWidgetComponent {
+export class AstralAccessibilityComponent {
   modalVisible = false;
 }
