@@ -2,7 +2,7 @@ import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 
 @Component({
-  selector: 'ally-contrast',
+  selector: 'astral-contrast',
   standalone: true,
   template: `
     <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">
@@ -68,12 +68,12 @@ export class ContrastComponent {
 
     if (this.states[this.currentState] === 'High Contrast') {
       this._style.textContent = `
-            body > :not(ally-by-verto) * {
+            body > :not(astral-accessibility) * {
                 background: transparent !important;
                 color: #000 !important;
             }
 
-            html body > :not(ally-by-verto) button {
+            html body > :not(astral-accessibility) button {
               background-color: #e8e8e8 !important;
             }
         `;
@@ -81,7 +81,7 @@ export class ContrastComponent {
 
     if (this.states[this.currentState] === 'Dark High Contrast') {
       this._style.textContent = `
-            body > :not(ally-by-verto) * {
+            body > :not(astral-accessibility) * {
                 background: transparent !important;
                 color: #fff !important;
             }
@@ -90,11 +90,11 @@ export class ContrastComponent {
               background: #000;
             }
 
-            html body > :not(ally-by-verto) img {
+            html body > :not(astral-accessibility) img {
               filter: contrast(2);
             }
 
-            html body > :not(ally-by-verto) button {
+            html body > :not(astral-accessibility) button {
               background-color: #2c2c2c !important;
             }
         `;

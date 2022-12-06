@@ -8,7 +8,7 @@ import { TextSpacingComponent } from './controls/text-spacing.component';
 import { ScreenReaderComponent } from './controls/screen-reader.component';
 
 @Component({
-  selector: 'ally-by-verto',
+  selector: 'astral-accessibility',
   templateUrl: './astral-accessibility.component.html',
   styleUrls: ['./astral-accessibility.component.scss'],
   standalone: true,

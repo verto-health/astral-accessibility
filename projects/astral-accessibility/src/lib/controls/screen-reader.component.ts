@@ -2,7 +2,7 @@ import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject, Renderer2 } from '@angular/core';
 
 @Component({
-  selector: 'ally-screen-reader',
+  selector: 'astral-screen-reader',
   standalone: true,
   template: `
     <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">

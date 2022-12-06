@@ -2,7 +2,7 @@ import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 
 @Component({
-  selector: 'ally-text-size',
+  selector: 'astral-text-size',
   standalone: true,
   template: `
     <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">

@@ -2,7 +2,7 @@ import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 
 @Component({
-  selector: 'ally-invert',
+  selector: 'astral-invert',
   standalone: true,
   template: `
     <button

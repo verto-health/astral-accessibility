@@ -2,7 +2,7 @@ import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 
 @Component({
-  selector: 'ally-text-spacing',
+  selector: 'astral-text-spacing',
   standalone: true,
   template: `
     <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">
