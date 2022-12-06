@@ -28,6 +28,7 @@
               "projects/astral-accessibility-demo/src/assets"
             ],
             "styles": [
+              "./node_modules/primeicons/primeicons.css",
               "projects/astral-accessibility-demo/src/styles.scss"
             ],
             "scripts": []
