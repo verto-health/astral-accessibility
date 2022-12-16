@@ -6,8 +6,8 @@ A component for accessibility widget
 ## Installation
 Add library using `yarn add` or `npm install`
 ```
-yarn add ngx-turnstile
-npm install ngx-turnstile --save
+yarn add astral-accessibility
+npm install astral-accessibility --save
 ```
 
 ## Quickstart
@@ -32,6 +32,7 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
 
+// Astral Accessibility
 (async () => {
   const app = await createApplication({ providers: [] });
 

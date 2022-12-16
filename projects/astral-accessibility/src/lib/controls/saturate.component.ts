@@ -58,21 +58,21 @@ export class SaturateComponent {
     this._resetSaturation();
 
     if (this.states[this.currentState] === 'Low Saturation') {
-      this.document.documentElement.classList.add('ally_by_verto_low_saturation');
+      this.document.documentElement.classList.add('astral_low_saturation');
     }
 
     if (this.states[this.currentState] === 'High Saturation') {
-      this.document.documentElement.classList.add('ally_by_verto_high_saturation');
+      this.document.documentElement.classList.add('astral_high_saturation');
     }
 
     if (this.states[this.currentState] === 'Desaturated') {
-      this.document.documentElement.classList.add('ally_by_verto_desaturated');
+      this.document.documentElement.classList.add('astral_desaturated');
     }
   }
 
   private _resetSaturation() {
-    this.document.documentElement.classList.remove('ally_by_verto_low_saturation');
-    this.document.documentElement.classList.remove('ally_by_verto_high_saturation');
-    this.document.documentElement.classList.remove('ally_by_verto_desaturated');
+    this.document.documentElement.classList.remove('astral_low_saturation');
+    this.document.documentElement.classList.remove('astral_high_saturation');
+    this.document.documentElement.classList.remove('astral_desaturated');
   }
 }

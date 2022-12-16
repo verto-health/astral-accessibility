@@ -164,23 +164,23 @@
 
 // classes that get added onto HTML elements by accesibility controls
 ::ng-deep {
-  .ally_by_verto_inverted {
+  .astral_inverted {
     filter: invert(1) !important;
   }
 
-  .ally_by_verto_low_saturation {
+  .astral_low_saturation {
     filter: saturate(0.4) !important;
   }
 
-  .ally_by_verto_high_saturation {
+  .astral_high_saturation {
     filter: saturate(2.5) !important;
   }
 
-  .ally_by_verto_desaturated {
+  .astral_desaturated {
     filter: saturate(0) !important;
   }
 
-  .ally_by_verto_medium_text {
+  .astral_medium_text {
     font-size: 1.2rem;
 
     h1 {
@@ -188,25 +188,25 @@
     }
   }
 
-  .ally_by_verto_large_text {
+  .astral_large_text {
     font-size: 1.6rem;
   }
 
-  .ally_by_verto_extra_large_text {
+  .astral_extra_large_text {
     font-size: 2.2rem;
   }
 
-  .ally_by_verto_light_spacing {
+  .astral_light_spacing {
     word-spacing: 0.16em;
     letter-spacing: 0.12em;
   }
 
-  .ally_by_verto_moderate_spacing {
+  .astral_moderate_spacing {
     word-spacing: 0.32em;
     letter-spacing: 0.24em;
   }
 
-  .ally_by_verto_heavy_spacing {
+  .astral_heavy_spacing {
     word-spacing: 0.48em;
     letter-spacing: 0.36em;
   }

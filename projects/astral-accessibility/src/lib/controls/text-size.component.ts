@@ -58,21 +58,21 @@ export class TextSizeComponent {
     this._style = this.document.createElement('style');
 
     if (this.states[this.currentState] === 'Medium Text') {
-      this.document.documentElement.classList.add('ally_by_verto_medium_text');
+      this.document.documentElement.classList.add('astral_medium_text');
     } else {
-      this.document.documentElement.classList.remove('ally_by_verto_medium_text');
+      this.document.documentElement.classList.remove('astral_medium_text');
     }
 
     if (this.states[this.currentState] === 'Large Text') {
-      this.document.documentElement.classList.add('ally_by_verto_large_text');
+      this.document.documentElement.classList.add('astral_large_text');
     } else {
-      this.document.documentElement.classList.remove('ally_by_verto_large_text');
+      this.document.documentElement.classList.remove('astral_large_text');
     }
 
     if (this.states[this.currentState] === 'Extra Large Text') {
-      this.document.documentElement.classList.add('ally_by_verto_extra_large_text');
+      this.document.documentElement.classList.add('astral_extra_large_text');
     } else {
-      this.document.documentElement.classList.remove('ally_by_verto_extra_large_text');
+      this.document.documentElement.classList.remove('astral_extra_large_text');
     }
 
     this.document.body.appendChild(this._style);

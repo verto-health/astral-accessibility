@@ -26,14 +26,14 @@ export class InvertComponent {
   document = inject(DOCUMENT);
 
   get inverted() {
-    return this.document.documentElement.classList.contains('ally_by_verto_inverted');
+    return this.document.documentElement.classList.contains('astral_inverted');
   }
 
   invertPage() {
-    this.document.documentElement.classList.add('ally_by_verto_inverted');
+    this.document.documentElement.classList.add('astral_inverted');
   }
 
   removeInvertCss() {
-    this.document.documentElement.classList.remove('ally_by_verto_inverted');
+    this.document.documentElement.classList.remove('astral_inverted');
   }
 }
