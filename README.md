@@ -1,27 +1,44 @@
-# AstralAccessibility
+# Accessibility Widget for Angular Applications
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.2.
+## astral-accessibility
+A component for accessibility widget
 
-## Development server
+## Installation
+Add library using `yarn add` or `npm install`
+```
+yarn add ngx-turnstile
+npm install ngx-turnstile --save
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Quickstart
+Import `AstralAccessibilityComponent` in `main.ts` or your entry point script:
+```typescript
+// main.ts
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-## Code scaffolding
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+import { createCustomElement } from '@angular/elements';
+import { createApplication } from '@angular/platform-browser';
+import { AstralAccessibilityComponent } from 'astral-accessibility';
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+if (environment.production) {
+  enableProdMode();
+}
 
-## Running unit tests
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+(async () => {
+  const app = await createApplication({ providers: [] });
 
-## Running end-to-end tests
+  const widget = createCustomElement(AstralAccessibilityComponent, { injector: app.injector });
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+  customElements.define('astral-accessibility', widget);
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+  document.body.appendChild(document.createElement('astral-accessibility'));
+})();
+```

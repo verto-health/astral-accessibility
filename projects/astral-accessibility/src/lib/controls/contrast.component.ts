@@ -61,9 +61,9 @@ export class ContrastComponent {
     this._style = this.document.createElement('style');
 
     if (this.states[this.currentState] === 'Invert') {
-      this.document.documentElement.classList.add('ally_by_verto_inverted');
+      this.document.documentElement.classList.add('astro_inverted');
     } else {
-      this.document.documentElement.classList.remove('ally_by_verto_inverted');
+      this.document.documentElement.classList.remove('astro_inverted');
     }
 
     if (this.states[this.currentState] === 'High Contrast') {

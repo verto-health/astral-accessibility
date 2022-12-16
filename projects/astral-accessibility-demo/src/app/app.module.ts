@@ -12,8 +12,7 @@ import { AstralAccessibilityComponent } from 'dist/astral-accessibility';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    AstralAccessibilityComponent
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
