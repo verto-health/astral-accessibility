@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'astral-accessibility-demo';
+  checkbox1Value = false;
+  checkbox2Value = false;
 }
