@@ -24,4 +24,16 @@ import { ScreenReaderComponent } from './controls/screen-reader.component';
 })
 export class AstralAccessibilityComponent {
   modalVisible = false;
+  userAgent = navigator.userAgent;
+  astralAccessibilityPanel = "astral-modal";
+  isMobile = false;
+
+  ngOnInit() {
+    console.log(this.userAgent)
+    const phones = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
+    if(phones.test(this.userAgent)) {
+      this.astralAccessibilityPanel = "astral-page";
+      this.isMobile = true;
+    }
+  }
 }

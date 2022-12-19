@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <div class="d-flex align-items-end">
   <div>
     <button class="astral-icon" (click)="modalVisible = !modalVisible">
@@ -5,7 +6,13 @@
     </button>
   </div>
 
-  <div [class]="modalVisible ? 'astral-modal active' : 'astral-modal'">
+  <div [class]="modalVisible ?  astralAccessibilityPanel + ' active' : 'astral-modal'">
+    <div *ngIf="isMobile" class="header">
+      <button class="astral-back-button" (click)="modalVisible = !modalVisible">
+        <i class="pi pi-chevron-left astral-back-button"></i>
+      </button>  
+    </div>
+
     <div class="actions">
       <!-- <div class="action">
         <astral-invert></astral-invert>

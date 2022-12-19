@@ -7,13 +7,11 @@
   z-index: 999999;
   bottom: 8px;
   right: 0px;
-
-  margin-right: -8px;
-  margin-bottom: 35px;
   transition: max-width 0.1s ease-in-out;
 
   --iconWidth: 70px;
   --modalWidth: 375px;
+  --maxModalWidth: 90vw;
   --modalHeight: calc(40vh - 16px);
   --modalBackgroundColor: #232323;
   --modalBorderColor: #e8e8e8;
@@ -23,9 +21,19 @@
   --actionActiveBackgroundColor: #ffcb00;
   --actionIconActiveBackgroundColor: #ffd73b;
   --actionIconInactiveBackgroundColor: #6c6c6c;
+
+  --pageWdith: 100%;
+  --pageHeight: 100%;
+  --pageBackgroundColor: #fff;
+}
+
+.astral-position {
+  margin-right: -8px;
+  margin-bottom: 35px;
 }
 
 .astral-icon {
+  @extend .astral-position;
   background-color: var(--modalBackgroundColor);
   padding: 8px;
   padding-right: 16px;
@@ -43,14 +51,15 @@
 }
 
 .astral-modal {
+  @extend .astral-position;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border: 0;
   background-color: var(--modalBackgroundColor);
   border-radius: 20px 0px 0px 0px;
   padding: 10px;
   margin-right: -8px;
-  // height: var(--modalHeight);
   min-width: fit-content;
+  max-width: var(--maxModalWidth);
   width: var(--modalWidth);
   overflow-y: scroll;
 
@@ -59,6 +68,34 @@
   }
 
   display: none;
+}
+
+.astral-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  margin: 0;
+  // padding: 2rem;
+
+  &.active {
+    display: block;
+  }
+
+  .header {
+    background-color: var(--modalBackgroundColor);
+    padding: 1rem;
+  }
+
+  .astral-back-button {
+    border: 0px;
+    border-radius: 50%;
+    font-size: 20px;
+    padding: 8px;
+  }
+
+  .actions {
+    padding: 2rem;
+  }
 }
 
 .actions {
