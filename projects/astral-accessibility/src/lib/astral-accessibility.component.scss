@@ -1,5 +1,16 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
+// checkmark smaller on activated items
+// phone view: padding not move when text changes
+// web view: more padding on the right
+// widget icon background and panel background same color
+// update icons
+
+// safari icon turned blue
+
+// demo page: wider box (text)
+// text to describe functionality instead of dummy text
+
 :host {
   display: flex;
   flex-direction: column;
@@ -28,7 +39,7 @@
 }
 
 .astral-position {
-  margin-right: -8px;
+  margin-right: -4px;
   margin-bottom: 35px;
 }
 
@@ -52,11 +63,11 @@
 
 .astral-modal {
   @extend .astral-position;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border: 0;
   background-color: var(--modalBackgroundColor);
   border-radius: 20px 0px 0px 0px;
   padding: 10px;
+  padding-right: 18px;
   margin-right: -8px;
   min-width: fit-content;
   max-width: var(--maxModalWidth);
@@ -159,7 +170,10 @@
         }
 
         &.active-check {
-          padding: 6px;
+          padding: 13px;
+          margin-left: 20px;
+          font-size: 12px;
+          -webkit-text-stroke: 0.7px black;
         }
 
         &.inactive {
