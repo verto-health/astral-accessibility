@@ -1,9 +1,9 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
-// checkmark smaller on activated items
-// phone view: padding not move when text changes
-// web view: more padding on the right
-// widget icon background and panel background same color
+// checkmark smaller on activated items ./
+// phone view: padding not move when text changes 
+// web view: more padding on the right ./
+// widget icon background and panel background same color ./
 // update icons
 
 // safari icon turned blue
@@ -94,7 +94,7 @@
 
   .header {
     background-color: var(--modalBackgroundColor);
-    padding: 1rem;
+    padding: 3vh;
   }
 
   .astral-back-button {
@@ -102,10 +102,17 @@
     border-radius: 50%;
     font-size: 20px;
     padding: 8px;
+    background-color: var(--actionBackgroundColor);
+    color: var(--actionTextColor);
   }
 
   .actions {
-    padding: 2rem;
+    padding: 5vw;
+    padding-top: 5vh;
+
+    .action {
+      margin: 13px 0;
+    }
   }
 }
 
