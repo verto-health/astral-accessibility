@@ -91,11 +91,11 @@
 
 .astral-page {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: #fff;
   margin: 0;
-  position: relative;
-  // padding: 2rem;
+  position: fixed;
+  right: 0;
 
   &.active {
     display: block;
