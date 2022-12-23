@@ -6,13 +6,33 @@
       Astral accessibility is a widget in Angular application that provides reading accessibility functionalities like text size,
       text line height/spacing, text reader, contrast, invert, saturation. It is located at the bottom right corner of the application.
     </p>
+    <h4>Screen Reader</h4>
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-      dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      Screen reader is a tool where it would reads out texts on screen where user clicks on. For any html elements, if an aria label
+      is available, the content from aria label would be read out loud, otherwise, it reads the text content of the element. There are
+      3 different speeds, normal, fast and slow.
     </p>
-
+    <h4>Contrast</h4>
+    <p>
+      Contrast is a tool that removes background and replaces it with black of white to increase the difference in colours
+      between text and the background to increase legibility. There are 3 modes, the invert colours, high contrast, and dark
+      high contrast.
+    </p>
+    <h4>Saturation</h4>
+    <p>
+      Saturation is a tool that adjusts how colourful the colours are on screen, it has 3 different modes to lower saturation,
+      increase saturation, or remove all the colours on screen (black and white).
+    </p>
+    <h4>Bigger Text</h4>
+    <p>
+      Bigger Text is a tool that increases the size of the texts on screen.
+    </p>
+    <h4>Text Spacing</h4>
+    <p>
+      Text Spacing is a tool that increases the spacing between each character on the screen to increase legibility and readibility.
+    </p>
+    <br>
+    <h4>Check box demo</h4>
     <input type="checkbox" id="checkbox1" name="checkbox1" [(ngModel)]="checkbox1Value">
     <label for="checkbox1">This is a checkbox with no aria-label</label>
     <br>
