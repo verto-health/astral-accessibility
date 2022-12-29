@@ -25,7 +25,17 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/astral-accessibility-demo/src/favicon.ico",
-              "projects/astral-accessibility-demo/src/assets"
+              "projects/astral-accessibility-demo/src/assets",
+              {
+                "input": ".",
+                "glob": "dist/*/assets/*",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/astral-accessibility/assets",
+                "output": "/assets/"
+              }
             ],
             "styles": [
               "./node_modules/primeicons/primeicons.css",

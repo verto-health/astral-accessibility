@@ -8,13 +8,37 @@ import { Component, inject } from '@angular/core';
     <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">
       <div class="title">
         <div class="icon-state-wrap">
-          <i
+          <!-- <i
             class="pi pi-minus-circle icon action-icon "
             [ngClass]="{
               inactive: states[currentState] == base,
               active: states[currentState] != base
             }"
-          ></i>
+          ></i> -->
+          <div
+            class="icon action-icon "
+            [ngClass]="{
+              inactive: states[currentState] == base,
+              active: states[currentState] != base
+            }"
+          >
+            <svg width="41" height="41" viewBox="0 0 41 41" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <clipPath id="j7jc4ss84a">
+                  <path d="M1440 0v900H0V0h1440z"/>
+                </clipPath>
+                <clipPath id="t65z0zbfzb">
+                  <path d="M20.5 0C31.804 0 41 9.196 41 20.5S31.804 41 20.5 41 0 31.804 0 20.5 9.196 0 20.5 0zm0 2.32c-10.024 0-18.18 8.156-18.18 18.18s8.156 18.18 18.18 18.18z"/>
+                </clipPath>
+              </defs>
+              <g clip-path="url(#j7jc4ss84a)" transform="translate(-1084 -366)">
+                <g clip-path="url(#t65z0zbfzb)" transform="translate(1084 366)">
+                  <path fill="#FFF" d="M0 0h41v41H0V0z"/>
+                </g>
+              </g>
+            </svg>
+          </div>
+
           <div class="state-dots-wrap">
             <span>{{ states[currentState] }}</span>
             <div class="dots" [ngClass]="{ inactive: states[currentState] === base }">
