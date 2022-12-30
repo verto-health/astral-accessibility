@@ -8,13 +8,6 @@ import { Component, inject, Renderer2 } from '@angular/core';
     <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">
       <div class="title">
         <div class="icon-state-wrap">
-          <!-- <i
-            class="pi pi-volume-up icon action-icon "
-            [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
-            }"
-          ></i> -->
           <div
             class="icon action-icon d-flex align-items-center"
             [ngClass]="{
@@ -65,6 +58,25 @@ export class ScreenReaderComponent {
 
   constructor(private renderer: Renderer2) {}
 
+  readText(e : any) {
+    let element = document.elementFromPoint(e.x, e.y);
+
+    if(element) {
+      if (this.states[this.currentState] != this.base) {
+        if (element.ariaLabel) {
+          // it has aria-label, use aria-label
+          this.speech.text = element.ariaLabel;
+        } else {
+          // otherwise get text content
+          this.speech.text = element.textContent || "";
+        }
+        // cancel before speech, otherwise doesn't work
+        speechSynthesis.cancel();
+        speechSynthesis.speak(this.speech);
+      }
+    }
+  }
+
   ngOnInit() {
     // How to use Web Speech API
     // https://betterprogramming.pub/convert-text-to-speech-using-web-speech-api-in-javascript-c9710bbb2d41
@@ -91,22 +103,10 @@ export class ScreenReaderComponent {
 
     // find the element that the user tapped/clicked on
     this.globalListenFunction = this.renderer.listen('document', 'click', (e) => {
-      let element = document.elementFromPoint(e.x, e.y);
-
-      if(element) {
-        if (this.states[this.currentState] != this.base) {
-          if (element.ariaLabel) {
-            // it has aria-label, use aria-label
-            this.speech.text = element.ariaLabel;
-          } else {
-            // otherwise get text content
-            this.speech.text = element.textContent || "";
-          }
-          // cancel before speech, otherwise doesn't work
-          speechSynthesis.cancel();
-          speechSynthesis.speak(this.speech);
-        }
-      }
+      this.readText(e);
+    });
+    this.globalListenFunction = this.renderer.listen('document', 'touchend', (e) => {
+      this.readText(e);
     });
   }
 
