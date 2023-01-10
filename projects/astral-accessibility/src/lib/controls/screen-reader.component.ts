@@ -108,6 +108,9 @@ export class ScreenReaderComponent {
     this.globalListenFunction = this.renderer.listen('document', 'touchend', (e) => {
       this.readText(e);
     });
+    this.globalListenFunction = this.renderer.listen('document', 'touchcancel', (e) => {
+      this.readText(e);
+    });
   }
 
   ngOnDestroy() {
