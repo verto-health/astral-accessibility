@@ -58,8 +58,8 @@ export class ScreenReaderComponent {
 
   constructor(private renderer: Renderer2) {}
 
-  readText(e : any) {
-    let element = document.elementFromPoint(e.x, e.y);
+  readText(x:number, y:number) {
+    let element = document.elementFromPoint(x, y);
 
     if(element) {
       if (this.states[this.currentState] != this.base) {
@@ -77,6 +77,21 @@ export class ScreenReaderComponent {
     }
   }
 
+  getDefaultVoice(voices:Array<SpeechSynthesisVoice>) {
+    let i = 0;
+    if(voices.length === 0) {
+      return null;
+    }
+    while(!voices[i].default && i < voices.length) {
+      i++;
+    }
+    if(i < voices.length) {
+      return voices[i];
+    } else {
+      return voices[0] || null;
+    }
+   }
+
   ngOnInit() {
     // How to use Web Speech API
     // https://betterprogramming.pub/convert-text-to-speech-using-web-speech-api-in-javascript-c9710bbb2d41
@@ -85,9 +100,8 @@ export class ScreenReaderComponent {
     voices = speechSynthesis.getVoices();
 
     // default settings, currently user has no way of modifying these
-    this.speech.voice = voices[0] || null;
+    this.speech.voice = this.getDefaultVoice(voices);
     this.speech.lang = 'en';
-    this.speech.voice = voices[0];
     this.speech.rate = 1;
     this.speech.pitch = 1;
     this.speech.volume = 1;
@@ -97,19 +111,17 @@ export class ScreenReaderComponent {
     if (!voices.length) {
       speechSynthesis.addEventListener('voiceschanged', () => {
         voices = speechSynthesis.getVoices();
-        this.speech.voice = voices[0] || null;
+        this.speech.voice = this.getDefaultVoice(voices);
       });
     }
 
     // find the element that the user tapped/clicked on
     this.globalListenFunction = this.renderer.listen('document', 'click', (e) => {
-      this.readText(e);
+      this.readText(e.x, e.y);
     });
-    this.globalListenFunction = this.renderer.listen('document', 'touchend', (e) => {
-      this.readText(e);
-    });
-    this.globalListenFunction = this.renderer.listen('document', 'touchcancel', (e) => {
-      this.readText(e);
+    this.globalListenFunction = this.renderer.listen('document', 'touchstart', (e) => {
+      var touch = e.touches[0] || e.changedTouches[0];
+      this.readText(touch.pageX, touch.pageY);
     });
   }
 
