@@ -29,7 +29,6 @@ export class AstralAccessibilityComponent {
   isMobile = false;
 
   ngOnInit() {
-    console.log(this.userAgent)
     const phones = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
     if(phones.test(this.userAgent)) {
       this.astralAccessibilityPanel = "astral-page";

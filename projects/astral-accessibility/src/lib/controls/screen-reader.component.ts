@@ -150,11 +150,11 @@ export class ScreenReaderComponent {
     this._style = this.document.createElement('style');
 
     if (this.states[this.currentState] === 'Read Normal') {
-      this.speech.rate = 1;
+      this.speech.rate = 0.8;
     }
 
     if (this.states[this.currentState] === 'Read Fast') {
-      this.speech.rate = 2;
+      this.speech.rate = 1.8;
     }
 
     if (this.states[this.currentState] === 'Read Slow') {
