@@ -4,7 +4,7 @@
     <div class="astral-inverted-corner">
 
     </div>
-    <button class="astral-icon" (click)="modalVisible = !modalVisible">
+    <button [class]="astralAccessibilityIcon" (click)="modalVisible = !modalVisible">
       <!-- <i class="pi pi-user"></i> -->
       <svg viewBox="0 0 23 30" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -26,12 +26,6 @@
   </div>
 
   <div [class]="modalVisible ?  astralAccessibilityPanel + ' active' : 'astral-modal'">
-    <div *ngIf="isMobile" class="header">
-      <button class="astral-back-button" (click)="modalVisible = !modalVisible">
-        <i class="pi pi-chevron-left astral-back-button"></i>
-      </button>  
-    </div>
-
     <div class="actions">
       <!-- <div class="action">
         <astral-invert></astral-invert>

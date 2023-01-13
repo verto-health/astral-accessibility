@@ -26,13 +26,13 @@ export class AstralAccessibilityComponent {
   modalVisible = false;
   userAgent = navigator.userAgent;
   astralAccessibilityPanel = "astral-modal";
-  isMobile = false;
+  astralAccessibilityIcon = "astral-icon";
 
   ngOnInit() {
     const phones = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
     if(phones.test(this.userAgent)) {
-      this.astralAccessibilityPanel = "astral-page";
-      this.isMobile = true;
+      this.astralAccessibilityPanel = "astral-page astral-modal";
+      this.astralAccessibilityIcon = "astral-icon astral-icon-mobile";
     }
   }
 }

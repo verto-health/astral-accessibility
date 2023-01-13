@@ -68,6 +68,16 @@
   }
 }
 
+.astral-icon-mobile {
+  padding: 6px;
+  svg {
+    background: var(--actionActiveBackgroundColor);
+    border-radius: 50%;
+    width: 49px;
+    height: 49px;
+  }
+}
+
 .astral-modal {
   @extend .astral-position;
   border: 0;
@@ -88,37 +98,23 @@
 }
 
 .astral-page {
-  width: 100vw;
-  height: 100%;
-  background-color: #fff;
-  margin: 0;
-  position: fixed;
-  right: 0;
+  max-width: 80vw;
 
-  &.active {
-    display: block;
-  }
+  .action {
+    ::ng-deep {
+      button {
+        font-size: 15px;
+      }
 
-  .header {
-    background-color: var(--modalBackgroundColor);
-    padding: 3vh;
-  }
+      .icon {
+        font-size: 25px;
+        padding: 6px;
 
-  .astral-back-button {
-    border: 0px;
-    border-radius: 50%;
-    font-size: 20px;
-    padding: 8px;
-    background-color: var(--actionBackgroundColor);
-    color: var(--actionTextColor);
-  }
-
-  .actions {
-    padding: 5vw;
-    padding-top: 5vh;
-
-    .action {
-      margin: 13px 0;
+        svg {
+          width: 25px;
+          height: 25px;
+        }
+      }
     }
   }
 }
