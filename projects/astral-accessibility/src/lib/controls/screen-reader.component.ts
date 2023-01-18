@@ -5,14 +5,15 @@ import { Component, inject, Renderer2 } from '@angular/core';
   selector: 'astral-screen-reader',
   standalone: true,
   template: `
-    <button (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base }">
+    <button [disabled]="!synthesisAvailable" (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base, 'disabled-button': !synthesisAvailable }">
       <div class="title">
         <div class="icon-state-wrap">
           <div
             class="icon action-icon d-flex align-items-center"
             [ngClass]="{
               inactive: states[currentState] == base,
-              active: states[currentState] != base
+              active: states[currentState] != base,
+              disabled: !synthesisAvailable
             }"
           >
             <svg width="25" height="25" viewBox="0 0 40 27" xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +35,7 @@ import { Component, inject, Renderer2 } from '@angular/core';
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ synthesisAvailable ? states[currentState] : unavailableMessage }}</span>
             <div class="dots" [ngClass]="{ inactive: states[currentState] === base }">
               <div class="dot" [ngClass]="{ active: states[currentState] === 'Read Normal' }"></div>
               <div class="dot" [ngClass]="{ active: states[currentState] === 'Read Fast' }"></div>
@@ -57,6 +58,7 @@ export class ScreenReaderComponent {
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
   isApple = false;
+  synthesisAvailable = true;
 
   constructor(private renderer: Renderer2) {}
 
@@ -82,8 +84,12 @@ export class ScreenReaderComponent {
   getDefaultVoice(voices:Array<SpeechSynthesisVoice>) {
     let i = 0;
     if(voices.length === 0) {
+      this.synthesisAvailable = false;
       return null;
+    } else {
+      this.synthesisAvailable = true;
     }
+    voices = voices.filter(voice => /en-US/i.test(voice.lang));
     while(!voices[i].default && i < voices.length) {
       i++;
     }
@@ -141,6 +147,7 @@ export class ScreenReaderComponent {
 
   currentState = 0;
   base = 'Screen Reader';
+  unavailableMessage = 'Screen Reader unavailable on device';
   states = [this.base, 'Read Normal', 'Read Fast', 'Read Slow'];
 
   _style: HTMLStyleElement;

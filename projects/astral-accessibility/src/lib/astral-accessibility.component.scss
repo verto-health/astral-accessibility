@@ -17,10 +17,13 @@
   --modalBorderColor: #e8e8e8;
   --actionTextColor: #fff;
   --actionActiveTextColor: #000;
+  --actionDisabledTextColor: rgb(164, 164, 164);
   --actionBackgroundColor: #444444;
   --actionActiveBackgroundColor: #ffcb00;
+  --actionDisabledBackgroundColor: #373737;
   --actionIconActiveBackgroundColor: #ffd73b;
   --actionIconInactiveBackgroundColor: #6c6c6c;
+  --actionIconDisabledBackgroundColor: #595959;
 
   --pageWdith: 100%;
   --pageHeight: 100%;
@@ -88,7 +91,6 @@
   margin-right: -8px;
   max-width: var(--maxModalWidth);
   width: var(--modalWidth);
-  overflow-y: scroll;
 
   &.active {
     display: block;
@@ -146,6 +148,11 @@
         background: var(--actionActiveBackgroundColor);
       }
 
+      &.disabled-button {
+        color: var(--actionDisabledTextColor);
+        background: var(--actionDisabledBackgroundColor);
+      }
+
       .title {
         display: flex;
         flex-direction: column;
@@ -193,6 +200,13 @@
         &.inactive {
           background: var(--actionIconInactiveBackgroundColor);
           color: #fff;
+        }
+
+        &.disabled {
+          background: var(--actionIconDisabledBackgroundColor);
+          svg {
+            filter: brightness(0.5);
+          }
         }
 
         &.active {
