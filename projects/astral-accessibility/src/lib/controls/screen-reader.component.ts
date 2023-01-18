@@ -55,6 +55,8 @@ import { Component, inject, Renderer2 } from '@angular/core';
 export class ScreenReaderComponent {
   globalListenFunction: Function;
   speech = new SpeechSynthesisUtterance();
+  userAgent = navigator.userAgent;
+  isApple = false;
 
   constructor(private renderer: Renderer2) {}
 
@@ -93,6 +95,11 @@ export class ScreenReaderComponent {
    }
 
   ngOnInit() {
+    const apple = /iPhone|iPad|iPod|Safari/i;
+    if(apple.test(this.userAgent) && !(/Chrome/.test(this.userAgent))) {
+      this.isApple = true;
+    }
+
     // How to use Web Speech API
     // https://betterprogramming.pub/convert-text-to-speech-using-web-speech-api-in-javascript-c9710bbb2d41
 
@@ -154,7 +161,7 @@ export class ScreenReaderComponent {
     }
 
     if (this.states[this.currentState] === 'Read Fast') {
-      this.speech.rate = 1.8;
+      this.speech.rate = this.isApple ? 1.3 : 1.8;
     }
 
     if (this.states[this.currentState] === 'Read Slow') {
