@@ -102,6 +102,7 @@ export class ScreenReaderComponent {
 
   ngOnInit() {
     const apple = /iPhone|iPad|iPod|Safari/i;
+    console.log(this.userAgent);
     if(apple.test(this.userAgent) && !(/Chrome/.test(this.userAgent))) {
       this.isApple = true;
     }
@@ -180,6 +181,8 @@ export class ScreenReaderComponent {
         speechSynthesis.cancel();
       }
     }
+
+    console.log(`Current speech rate = ${this.speech.rate}`);
 
     this.document.body.appendChild(this._style);
   }
