@@ -5,7 +5,14 @@ import { Component, inject, Renderer2 } from '@angular/core';
   selector: 'astral-screen-reader',
   standalone: true,
   template: `
-    <button [disabled]="!synthesisAvailable" (click)="nextState()" [ngClass]="{ 'in-use': states[currentState] != base, 'disabled-button': !synthesisAvailable }">
+    <button
+      [disabled]="!synthesisAvailable"
+      (click)="nextState()"
+      [ngClass]="{
+        'in-use': states[currentState] != base,
+        'disabled-button': !synthesisAvailable
+      }"
+    >
       <div class="title">
         <div class="icon-state-wrap">
           <div
@@ -16,30 +23,56 @@ import { Component, inject, Renderer2 } from '@angular/core';
               disabled: !synthesisAvailable
             }"
           >
-            <svg width="25" height="25" viewBox="0 0 40 27" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="25"
+              height="25"
+              viewBox="0 0 40 27"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <defs>
                 <clipPath id="vlgiro5t1a">
-                  <path d="M1440 0v900H0V0h1440z"/>
+                  <path d="M1440 0v900H0V0h1440z" />
                 </clipPath>
                 <clipPath id="avls4jsytb">
-                  <path d="M13.956 0a1.266 1.266 0 0 1 1.26 1.058L19 23.735l3.277-19.642a1.266 1.266 0 0 1 2.486-.07l3.184 14.086 1.909-6.482a1.266 1.266 0 0 1 2.417-.043l1.294 3.877.52-1.563a1.267 1.267 0 0 1 1.203-.864h2.077a.633.633 0 1 1 0 1.265H35.29l-.52 1.562a1.267 1.267 0 0 1-2.403 0l-1.296-3.877-1.909 6.482c-.162.553-.679.926-1.255.907a1.25 1.25 0 0 1-1.196-.985L23.527 4.304 20.25 23.943A1.247 1.247 0 0 1 19 25a1.247 1.247 0 0 1-1.25-1.057L13.966 1.268l-2.748 18.294a1.266 1.266 0 0 1-2.478.131L6.177 9.882l-1.63 3.668a1.267 1.267 0 0 1-1.159.749H.633a.633.633 0 1 1 0-1.265h2.755l1.632-3.67a1.267 1.267 0 0 1 2.383.195l2.563 9.812 2.748-18.293A1.266 1.266 0 0 1 13.956 0z"/>
+                  <path
+                    d="M13.956 0a1.266 1.266 0 0 1 1.26 1.058L19 23.735l3.277-19.642a1.266 1.266 0 0 1 2.486-.07l3.184 14.086 1.909-6.482a1.266 1.266 0 0 1 2.417-.043l1.294 3.877.52-1.563a1.267 1.267 0 0 1 1.203-.864h2.077a.633.633 0 1 1 0 1.265H35.29l-.52 1.562a1.267 1.267 0 0 1-2.403 0l-1.296-3.877-1.909 6.482c-.162.553-.679.926-1.255.907a1.25 1.25 0 0 1-1.196-.985L23.527 4.304 20.25 23.943A1.247 1.247 0 0 1 19 25a1.247 1.247 0 0 1-1.25-1.057L13.966 1.268l-2.748 18.294a1.266 1.266 0 0 1-2.478.131L6.177 9.882l-1.63 3.668a1.267 1.267 0 0 1-1.159.749H.633a.633.633 0 1 1 0-1.265h2.755l1.632-3.67a1.267 1.267 0 0 1 2.383.195l2.563 9.812 2.748-18.293A1.266 1.266 0 0 1 13.956 0z"
+                  />
                 </clipPath>
               </defs>
               <g clip-path="url(#vlgiro5t1a)" transform="translate(-1084 -271)">
                 <g clip-path="url(#avls4jsytb)" transform="translate(1085 272)">
-                  <path fill="#FFF" d="M0 0h38v25H0V0z"/>
+                  <path fill="#FFF" d="M0 0h38v25H0V0z" />
                 </g>
-                <path d="M1104 297a1.247 1.247 0 0 1-1.25-1.057l-3.784-22.675-2.748 18.294a1.266 1.266 0 0 1-2.478.131l-2.563-9.811-1.63 3.668a1.267 1.267 0 0 1-1.159.749h-2.755a.633.633 0 1 1 0-1.265h2.755l1.632-3.67a1.267 1.267 0 0 1 2.383.195l2.563 9.812 2.748-18.293a1.266 1.266 0 0 1 2.502-.02l3.784 22.677 3.277-19.642a1.266 1.266 0 0 1 2.486-.07l3.184 14.086 1.909-6.482a1.266 1.266 0 0 1 2.417-.043l1.294 3.877.52-1.563a1.267 1.267 0 0 1 1.203-.864h2.077a.633.633 0 1 1 0 1.265h-2.077l-.52 1.562a1.267 1.267 0 0 1-2.403 0l-1.296-3.877-1.909 6.482c-.162.553-.679.926-1.255.907a1.25 1.25 0 0 1-1.196-.985l-3.184-14.084-3.277 19.639A1.247 1.247 0 0 1 1104 297z" stroke="#FFF" fill="none" stroke-linejoin="round"/>
+                <path
+                  d="M1104 297a1.247 1.247 0 0 1-1.25-1.057l-3.784-22.675-2.748 18.294a1.266 1.266 0 0 1-2.478.131l-2.563-9.811-1.63 3.668a1.267 1.267 0 0 1-1.159.749h-2.755a.633.633 0 1 1 0-1.265h2.755l1.632-3.67a1.267 1.267 0 0 1 2.383.195l2.563 9.812 2.748-18.293a1.266 1.266 0 0 1 2.502-.02l3.784 22.677 3.277-19.642a1.266 1.266 0 0 1 2.486-.07l3.184 14.086 1.909-6.482a1.266 1.266 0 0 1 2.417-.043l1.294 3.877.52-1.563a1.267 1.267 0 0 1 1.203-.864h2.077a.633.633 0 1 1 0 1.265h-2.077l-.52 1.562a1.267 1.267 0 0 1-2.403 0l-1.296-3.877-1.909 6.482c-.162.553-.679.926-1.255.907a1.25 1.25 0 0 1-1.196-.985l-3.184-14.084-3.277 19.639A1.247 1.247 0 0 1 1104 297z"
+                  stroke="#FFF"
+                  fill="none"
+                  stroke-linejoin="round"
+                />
               </g>
-            </svg> 
+            </svg>
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ synthesisAvailable ? states[currentState] : unavailableMessage }}</span>
-            <div class="dots" [ngClass]="{ inactive: states[currentState] === base }">
-              <div class="dot" [ngClass]="{ active: states[currentState] === 'Read Normal' }"></div>
-              <div class="dot" [ngClass]="{ active: states[currentState] === 'Read Fast' }"></div>
-              <div class="dot" [ngClass]="{ active: states[currentState] === 'Read Slow' }"></div>
+            <span>{{
+              synthesisAvailable ? states[currentState] : unavailableMessage
+            }}</span>
+            <div
+              class="dots"
+              [ngClass]="{ inactive: states[currentState] === base }"
+            >
+              <div
+                class="dot"
+                [ngClass]="{ active: states[currentState] === 'Read Normal' }"
+              ></div>
+              <div
+                class="dot"
+                [ngClass]="{ active: states[currentState] === 'Read Fast' }"
+              ></div>
+              <div
+                class="dot"
+                [ngClass]="{ active: states[currentState] === 'Read Slow' }"
+              ></div>
             </div>
           </div>
         </div>
@@ -62,17 +95,17 @@ export class ScreenReaderComponent {
 
   constructor(private renderer: Renderer2) {}
 
-  readText(x:number, y:number) {
+  readText(x: number, y: number) {
     let element = document.elementFromPoint(x, y);
 
-    if(element) {
+    if (element) {
       if (this.states[this.currentState] != this.base) {
         if (element.ariaLabel) {
           // it has aria-label, use aria-label
           this.speech.text = element.ariaLabel;
         } else {
           // otherwise get text content
-          this.speech.text = element.textContent || "";
+          this.speech.text = element.textContent || '';
         }
         // cancel before speech, otherwise doesn't work
         speechSynthesis.cancel();
@@ -81,41 +114,41 @@ export class ScreenReaderComponent {
     }
   }
 
-  getDefaultVoice(voices:Array<SpeechSynthesisVoice>, isApple=false) {
-    console.log(isApple)
-    if(isApple && voices.length > 0) {
+  getDefaultVoice(voices: Array<SpeechSynthesisVoice>, isApple = false) {
+    if (isApple && voices.length > 0) {
       const appleVoice = voices.findIndex((v) => {
-        return v.voiceURI.toUpperCase().includes("DANIEL");
-      })
-      console.log(`apple voice = ${appleVoice}`)
-      if(appleVoice) {
+        return v.voiceURI.toUpperCase().includes('DANIEL');
+      });
+      if (appleVoice) {
         this.synthesisAvailable = true;
         return voices[appleVoice];
       }
     }
     let i = 0;
-    if(voices.length === 0) {
+    if (voices.length === 0) {
       this.synthesisAvailable = false;
       return null;
     } else {
       this.synthesisAvailable = true;
     }
-    voices = voices.filter(voice => /en-US/i.test(voice.lang));
-    while(!voices[i].default && i < voices.length) {
+    voices = voices.filter((voice) => /en-US/i.test(voice.lang));
+    while (
+      !voices[i].default &&
+      i < voices.length &&
+      !voices[i].voiceURI.toUpperCase().includes('FLO')
+    ) {
       i++;
     }
-    if(i < voices.length) {
-      console.log(voices[i].voiceURI)
+    if (i < voices.length) {
       return voices[i];
     } else {
       return voices[0] || null;
     }
-   }
+  }
 
   ngOnInit() {
     const apple = /iPhone|iPad|iPod|Safari/i;
-    console.log(this.userAgent);
-    if(apple.test(this.userAgent) && !(/Chrome/.test(this.userAgent))) {
+    if (apple.test(this.userAgent) && !/Chrome/.test(this.userAgent)) {
       this.isApple = true;
     }
 
@@ -142,13 +175,21 @@ export class ScreenReaderComponent {
     }
 
     // find the element that the user tapped/clicked on
-    this.globalListenFunction = this.renderer.listen('document', 'click', (e) => {
-      this.readText(e.x, e.y);
-    });
-    this.globalListenFunction = this.renderer.listen('document', 'touchstart', (e) => {
-      var touch = e.touches[0] || e.changedTouches[0];
-      this.readText(touch.pageX, touch.pageY);
-    });
+    this.globalListenFunction = this.renderer.listen(
+      'document',
+      'click',
+      (e) => {
+        this.readText(e.x, e.y);
+      }
+    );
+    this.globalListenFunction = this.renderer.listen(
+      'document',
+      'touchstart',
+      (e) => {
+        var touch = e.touches[0] || e.changedTouches[0];
+        this.readText(touch.pageX, touch.pageY);
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -193,9 +234,6 @@ export class ScreenReaderComponent {
         speechSynthesis.cancel();
       }
     }
-
-    console.log(`Current speech rate = ${this.speech.rate}`);
-
     this.document.body.appendChild(this._style);
   }
 }
