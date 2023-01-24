@@ -94,7 +94,7 @@ export class ScreenReaderComponent {
       i++;
     }
     if(i < voices.length) {
-      console.log(voices[i])
+      console.log(voices[i].voiceURI)
       return voices[i];
     } else {
       return voices[0] || null;
