@@ -81,7 +81,18 @@ export class ScreenReaderComponent {
     }
   }
 
-  getDefaultVoice(voices:Array<SpeechSynthesisVoice>) {
+  getDefaultVoice(voices:Array<SpeechSynthesisVoice>, isApple=false) {
+    console.log(isApple)
+    if(isApple && voices.length > 0) {
+      const appleVoice = voices.findIndex((v) => {
+        return v.voiceURI.toUpperCase().includes("DANIEL");
+      })
+      console.log(`apple voice = ${appleVoice}`)
+      if(appleVoice) {
+        this.synthesisAvailable = true;
+        return voices[appleVoice];
+      }
+    }
     let i = 0;
     if(voices.length === 0) {
       this.synthesisAvailable = false;
@@ -115,7 +126,7 @@ export class ScreenReaderComponent {
     voices = speechSynthesis.getVoices();
 
     // default settings, currently user has no way of modifying these
-    this.speech.voice = this.getDefaultVoice(voices);
+    this.speech.voice = this.getDefaultVoice(voices, this.isApple);
     this.speech.lang = 'en';
     this.speech.rate = 1;
     this.speech.pitch = 1;
@@ -126,7 +137,7 @@ export class ScreenReaderComponent {
     if (!voices.length) {
       speechSynthesis.addEventListener('voiceschanged', () => {
         voices = speechSynthesis.getVoices();
-        this.speech.voice = this.getDefaultVoice(voices);
+        this.speech.voice = this.getDefaultVoice(voices, this.isApple);
       });
     }
 
@@ -170,7 +181,7 @@ export class ScreenReaderComponent {
     }
 
     if (this.states[this.currentState] === 'Read Fast') {
-      this.speech.rate = this.isApple ? 1 : 1.8;
+      this.speech.rate = this.isApple ? 1.3 : 1.8;
     }
 
     if (this.states[this.currentState] === 'Read Slow') {
