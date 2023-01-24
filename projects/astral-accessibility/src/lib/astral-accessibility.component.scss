@@ -151,6 +151,8 @@
       &.disabled-button {
         color: var(--actionDisabledTextColor);
         background: var(--actionDisabledBackgroundColor);
+        // hide button when disabled
+        display: none;
       }
 
       .title {
