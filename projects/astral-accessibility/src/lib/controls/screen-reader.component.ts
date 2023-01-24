@@ -94,6 +94,7 @@ export class ScreenReaderComponent {
       i++;
     }
     if(i < voices.length) {
+      console.log(voices[i])
       return voices[i];
     } else {
       return voices[0] || null;
@@ -169,7 +170,7 @@ export class ScreenReaderComponent {
     }
 
     if (this.states[this.currentState] === 'Read Fast') {
-      this.speech.rate = this.isApple ? 1.3 : 1.8;
+      this.speech.rate = this.isApple ? 1 : 1.8;
     }
 
     if (this.states[this.currentState] === 'Read Slow') {
