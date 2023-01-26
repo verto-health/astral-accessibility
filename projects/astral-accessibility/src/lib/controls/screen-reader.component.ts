@@ -115,22 +115,25 @@ export class ScreenReaderComponent {
   }
 
   getDefaultVoice(voices: Array<SpeechSynthesisVoice>, isApple = false) {
-    if (isApple && voices.length > 0) {
-      const appleVoice = voices.findIndex((v) => {
-        return v.voiceURI.toUpperCase().includes('DANIEL');
-      });
-      if (appleVoice) {
-        this.synthesisAvailable = true;
-        return voices[appleVoice];
-      }
-    }
-    let i = 0;
+    const defaultVoice = 'Daniel';
     if (voices.length === 0) {
       this.synthesisAvailable = false;
       return null;
     } else {
       this.synthesisAvailable = true;
     }
+
+    // use voice Daniel whenever available
+    const voice = voices.findIndex((v) => {
+      return v.name.toUpperCase().includes(defaultVoice.toUpperCase());
+    });
+    if (voice) {
+      this.synthesisAvailable = true;
+      return voices[voice];
+    }
+
+    // if voice Daniel not found, then pick another default voice that is not Flo
+    let i = 0;
     voices = voices.filter((voice) => /en-US/i.test(voice.lang));
     while (
       !voices[i].default &&
@@ -222,7 +225,8 @@ export class ScreenReaderComponent {
     }
 
     if (this.states[this.currentState] === 'Read Fast') {
-      this.speech.rate = this.isApple ? 1.3 : 1.8;
+      this.speech.rate = this.isApple ? 1.3 : 1.7;
+      console.log(this.speech.rate);
     }
 
     if (this.states[this.currentState] === 'Read Slow') {
