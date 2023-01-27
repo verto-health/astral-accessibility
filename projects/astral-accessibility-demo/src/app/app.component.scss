@@ -54,9 +54,13 @@
     .header {
       position: relative;
       width: 100%;
+      background-image: url("../assets/banner.png");
+      display: flex;
+      align-items: center;
+      min-height: max-content;
 
       .header-text {
-        position: absolute;
+        // position: absolute;
         margin: 5vh auto;
         color: white;
         text-align: center;
@@ -84,27 +88,32 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .home-page .card {
     width: 90vw;
     max-height: 90vh;
-    // hr {
-    //   display: block;
-    //   margin: 5% 0px;
-    // }
+
     .header {
-      // position: relative;
+      height: 10vh;
+
       .header-text {
-        // position: relative;
         max-width: 90vw;
         margin: 5vw 0;
         font-size: 0.8rem;
-        // margin: 5%;
       }
     }
     .introduction {
       padding: 10%;
-      padding-top: 0px;
+      padding-top: 5%;
+
+      h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0px;
+      }
+
+      p {
+        margin-top: 0px;
+      }
     }
   }
 
