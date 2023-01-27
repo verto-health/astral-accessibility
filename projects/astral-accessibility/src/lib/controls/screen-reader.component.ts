@@ -226,7 +226,6 @@ export class ScreenReaderComponent {
 
     if (this.states[this.currentState] === 'Read Fast') {
       this.speech.rate = this.isApple ? 1.3 : 1.7;
-      console.log(this.speech.rate);
     }
 
     if (this.states[this.currentState] === 'Read Slow') {
