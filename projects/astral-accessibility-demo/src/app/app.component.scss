@@ -2,6 +2,7 @@
 * {
   font-family: "Poppins", sans-serif;
 }
+
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -30,21 +31,48 @@
   margin: auto;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 2em;
-  background-image: url("/../assets/space.jpg");
+  background-image: url("/../assets/bg.png");
   background-size: cover;
   background-attachment: fixed;
+
+  hr {
+    display: none;
+  }
 
   .card {
     width: 70vw;
     max-height: 75vh;
     border: 2px solid #e8e8e8;
-    padding: 2rem;
+    // padding: 2rem;
     border-radius: 20px;
     margin: auto;
     margin-top: 5vh;
     background-color: rgba(255, 255, 255);
     background-color: rgba(255, 255, 255, 0.7);
     overflow-y: scroll;
+
+    .header {
+      position: relative;
+      width: 100%;
+
+      .header-text {
+        position: absolute;
+        margin: 5vh auto;
+        color: white;
+        text-align: center;
+        width: 100%;
+      }
+    }
+
+    .banner {
+      width: 100%;
+      max-height: 20vh;
+      object-fit: cover;
+    }
+
+    .introduction {
+      padding: 2rem;
+    }
 
     h1 {
       margin: 0;
@@ -53,5 +81,35 @@
     p {
       width: 100%;
     }
+  }
+}
+
+@media (max-width: 500px) {
+  .home-page .card {
+    width: 90vw;
+    max-height: 90vh;
+    // hr {
+    //   display: block;
+    //   margin: 5% 0px;
+    // }
+    .header {
+      // position: relative;
+      .header-text {
+        // position: relative;
+        max-width: 90vw;
+        margin: 5vw 0;
+        font-size: 0.8rem;
+        // margin: 5%;
+      }
+    }
+    .introduction {
+      padding: 10%;
+      padding-top: 0px;
+    }
+  }
+
+  .banner {
+    height: 12vh;
+    // display: none;
   }
 }
