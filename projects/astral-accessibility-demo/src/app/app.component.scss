@@ -55,6 +55,8 @@
       position: relative;
       width: 100%;
       background-image: url("../assets/banner.png");
+      background-position: center;
+      background-size: cover;
       display: flex;
       align-items: center;
       min-height: max-content;
