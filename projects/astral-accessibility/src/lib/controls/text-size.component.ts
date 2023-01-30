@@ -86,14 +86,17 @@ export class TextSizeComponent {
   document = inject(DOCUMENT);
 
   currentState = 0;
+  currentScale = 1;
   base = 'Bigger Text';
   states = [this.base, 'Medium Text', 'Large Text', 'Extra Large Text'];
 
   _style: HTMLStyleElement;
 
   updateTextSize(node: HTMLElement, scale: number) {
+    NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+    HTMLCollection.prototype[Symbol.iterator] =
+      Array.prototype[Symbol.iterator];
     const children = node.children;
-    console.log(children);
     if (children.length === 0) {
       // change font size
       const currentFontSize = window.getComputedStyle(node).fontSize;
@@ -101,9 +104,9 @@ export class TextSizeComponent {
       node.style.fontSize = `${currentFontSizeNum * scale}px`;
     } else {
       // has children, don't change font size and move on
-      // for (const child of children) {
-      //   console.log(child);
-      // }
+      for (const child of children) {
+        this.updateTextSize(child as HTMLElement, scale);
+      }
     }
   }
 
@@ -115,27 +118,25 @@ export class TextSizeComponent {
   }
 
   private _runStateLogic() {
-    this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    // reset fontsize first
+    this.updateTextSize(document.body, 1 / this.currentScale);
 
     if (this.states[this.currentState] === 'Medium Text') {
-      this.updateTextSize(document.body, 1.1);
-    } else {
-      this.document.documentElement.classList.remove('astral_medium_text');
+      this.currentScale = 1.1;
     }
 
     if (this.states[this.currentState] === 'Large Text') {
-      this.document.documentElement.classList.add('astral_large_text');
-    } else {
-      this.document.documentElement.classList.remove('astral_large_text');
+      this.currentScale = 1.3;
     }
 
     if (this.states[this.currentState] === 'Extra Large Text') {
-      this.document.documentElement.classList.add('astral_extra_large_text');
-    } else {
-      this.document.documentElement.classList.remove('astral_extra_large_text');
+      this.currentScale = 1.5;
     }
 
-    this.document.body.appendChild(this._style);
+    if (!(this.states[this.currentState] === this.base)) {
+      this.updateTextSize(document.body, this.currentScale);
+    } else {
+      this.currentScale = 1;
+    }
   }
 }
