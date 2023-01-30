@@ -265,15 +265,19 @@
   }
 
   .astral_medium_text {
-    zoom: 1.2;
+    font-size: 1.2rem;
+
+    h1 {
+      font-size: 1.8rem;
+    }
   }
 
   .astral_large_text {
-    zoom: 1.6;
+    font-size: 1.6rem;
   }
 
   .astral_extra_large_text {
-    zoom: 1.8;
+    font-size: 2.2rem;
   }
 
   .astral_light_spacing {
