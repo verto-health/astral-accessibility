@@ -5,8 +5,7 @@
   ],
   "server": {
     "baseDir": [
-      "projects/demo",
-      "dist"
+      "projects/demo"
     ]
   }
 }
