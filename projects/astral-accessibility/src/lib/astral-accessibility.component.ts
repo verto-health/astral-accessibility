@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ContrastComponent } from './controls/contrast.component';
 import { InvertComponent } from './controls/invert.component';
 import { SaturateComponent } from './controls/saturate.component';
@@ -21,6 +21,7 @@ import { ScreenReaderComponent } from './controls/screen-reader.component';
     TextSpacingComponent,
     ScreenReaderComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AstralAccessibilityComponent {
   modalVisible = false;

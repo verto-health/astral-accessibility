@@ -4,9 +4,6 @@ import { AstralAccessibilityComponent } from './astral-accessibility.component';
 
 
 @NgModule({
-  declarations: [
-    // AstralAccessibilityComponent
-  ],
   imports: [
     AstralAccessibilityComponent
   ],

@@ -3,45 +3,23 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "astral-accessibility-demo": {
+    "astral-accessibility": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "projects/astral-accessibility-demo",
-      "sourceRoot": "projects/astral-accessibility-demo/src",
-      "prefix": "app",
+      "root": "projects/astral-accessibility",
+      "sourceRoot": "projects/astral-accessibility/src",
+      "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
-            "outputPath": "dist/astral-accessibility-demo",
-            "index": "projects/astral-accessibility-demo/src/index.html",
-            "main": "projects/astral-accessibility-demo/src/main.ts",
-            "polyfills": "projects/astral-accessibility-demo/src/polyfills.ts",
-            "tsConfig": "projects/astral-accessibility-demo/tsconfig.app.json",
+            "outputPath": "dist/astral-accessibility-angular-output",
+            "index": "projects/astral-accessibility/src/index.html",
+            "main": "projects/astral-accessibility/src/main.ts",
+            "tsConfig": "projects/astral-accessibility/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/astral-accessibility-demo/src/favicon.ico",
-              "projects/astral-accessibility-demo/src/assets",
-              {
-                "input": ".",
-                "glob": "dist/*/assets/*",
-                "output": "/assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/astral-accessibility/assets",
-                "output": "/assets/"
-              }
-            ],
-            "styles": [
-              "./node_modules/primeicons/primeicons.css",
-              "projects/astral-accessibility-demo/src/styles.scss"
-            ],
-            "scripts": []
+            "assets": [],
+            "scripts": [],
+            "singleBundle": true
           },
           "configurations": {
             "production": {
@@ -54,13 +32,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "projects/astral-accessibility-demo/src/environments/environment.ts",
-                  "with": "projects/astral-accessibility-demo/src/environments/environment.prod.ts"
+                  "maximumError": "500kb"
                 }
               ],
               "outputHashing": "all"
@@ -78,62 +50,14 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "browserTarget": "astral-accessibility-demo:build:production"
-            },
-            "development": {
-              "browserTarget": "astral-accessibility-demo:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "astral-accessibility-demo:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/astral-accessibility-demo/src/test.ts",
-            "polyfills": "projects/astral-accessibility-demo/src/polyfills.ts",
-            "tsConfig": "projects/astral-accessibility-demo/tsconfig.spec.json",
-            "karmaConfig": "projects/astral-accessibility-demo/karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/astral-accessibility-demo/src/favicon.ico",
-              "projects/astral-accessibility-demo/src/assets"
-            ],
-            "styles": [
-              "projects/astral-accessibility-demo/src/styles.scss"
-            ],
-            "scripts": []
-          }
-        }
-      }
-    },
-    "astral-accessibility": {
-      "projectType": "library",
-      "root": "projects/astral-accessibility",
-      "sourceRoot": "projects/astral-accessibility/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "projects/astral-accessibility/ng-package.json"
+            "browserTarget": "astral-accessibility:build"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/astral-accessibility/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/astral-accessibility/tsconfig.lib.json"
+              "browserTarget": "astral-accessibility:build:production"
             }
-          },
-          "defaultConfiguration": "production"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
