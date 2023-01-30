@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve astral-accessibility",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:lib": "ng build --single-bundle",
+    "build:lib:dev": "ng build --configuration=development --single-bundle",
+    "start:demo": "yarn build:lib:dev && lite-server -c projects/demo/lite-server-config.json"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +22,8 @@
     "@angular/platform-browser": "^14.1.0",
     "@angular/platform-browser-dynamic": "^14.1.0",
     "@angular/router": "^14.1.0",
+    "lite-server": "^2.6.1",
+    "ngx-build-plus": "14",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
