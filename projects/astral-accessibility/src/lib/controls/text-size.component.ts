@@ -92,16 +92,13 @@ export class TextSizeComponent {
 
   _style: HTMLStyleElement;
 
-  updateTextSize(node: HTMLElement, scale: number) {
-    NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
-    HTMLCollection.prototype[Symbol.iterator] =
-      Array.prototype[Symbol.iterator];
+  updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
     const children = node.children;
     if (children.length === 0) {
       // change font size
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
-      node.style.fontSize = `${currentFontSizeNum * scale}px`;
+      node.style.fontSize = `${(currentFontSizeNum / previousScale) * scale}px`;
     } else {
       // has children, don't change font size and move on
       for (const child of children) {
@@ -118,8 +115,7 @@ export class TextSizeComponent {
   }
 
   private _runStateLogic() {
-    // reset fontsize first
-    this.updateTextSize(document.body, 1 / this.currentScale);
+    let previousScale = this.currentScale;
 
     if (this.states[this.currentState] === 'Medium Text') {
       this.currentScale = 1.1;
@@ -134,7 +130,7 @@ export class TextSizeComponent {
     }
 
     if (!(this.states[this.currentState] === this.base)) {
-      this.updateTextSize(document.body, this.currentScale);
+      this.updateTextSize(document.body, this.currentScale, previousScale);
     } else {
       this.currentScale = 1;
     }
