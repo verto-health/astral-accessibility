@@ -92,6 +92,20 @@ export class TextSizeComponent {
 
   _style: HTMLStyleElement;
 
+  private observer: MutationObserver;
+
+  // Select the node that will be observed for mutations
+  targetNode = document.body;
+
+  // Options for the observer (which mutations to observe)
+  config = { attributes: true, childList: true, subtree: true };
+
+  // constructor() {
+  //   this.observer = new MutationObserver((mutations: MutationRecord[]) => {
+  //     this.updateTextSize(this.targetNode, this.currentScale, 1);
+  //   });
+  // }
+
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
     const children = node.children;
     if (children.length === 0) {
@@ -102,7 +116,7 @@ export class TextSizeComponent {
     } else {
       // has children, don't change font size and move on
       for (const child of children) {
-        this.updateTextSize(child as HTMLElement, scale);
+        this.updateTextSize(child as HTMLElement, scale, previousScale);
       }
     }
   }
@@ -132,6 +146,7 @@ export class TextSizeComponent {
     if (!(this.states[this.currentState] === this.base)) {
       this.updateTextSize(document.body, this.currentScale, previousScale);
     } else {
+      this.updateTextSize(document.body, 1, this.currentScale);
       this.currentScale = 1;
     }
   }
