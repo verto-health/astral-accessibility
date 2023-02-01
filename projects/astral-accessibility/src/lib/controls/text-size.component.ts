@@ -112,7 +112,7 @@ export class TextSizeComponent {
       });
       this.observer.observe(this.targetNode, this.config);
     });
-    this.observer.observe(this.targetNode, this.config);
+    /* No observer here, we don't want it to be on by default */
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
@@ -136,7 +136,10 @@ export class TextSizeComponent {
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
-    this.observer.observe(this.targetNode, this.config);
+    if (this.currentState !== 0) {
+      // is not base state, don't need observer for base state
+      this.observer.observe(this.targetNode, this.config);
+    }
   }
 
   private _runStateLogic() {
@@ -157,6 +160,8 @@ export class TextSizeComponent {
     if (!(this.states[this.currentState] === this.base)) {
       this.updateTextSize(document.body, this.currentScale, previousScale);
     } else {
+      // is base state
+      // revert to original size
       this.updateTextSize(document.body, 1, this.currentScale);
       this.currentScale = 1;
     }
