@@ -1,5 +1,6 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
 
 @Component({
   selector: 'astral-text-size',
@@ -11,13 +12,6 @@ import { Component, inject } from '@angular/core';
     >
       <div class="title">
         <div class="icon-state-wrap">
-          <!-- <i
-            class="pi pi-sort-alpha-up icon action-icon "
-            [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
-            }"
-          ></i> -->
           <div
             class="icon action-icon "
             [ngClass]="{
@@ -73,14 +67,13 @@ import { Component, inject } from '@angular/core';
           </div>
         </div>
       </div>
-      <i
-        *ngIf="states[currentState] !== base"
-        class="pi pi-check icon active active-check"
-        style="font-weight: 900"
-      ></i>
+
+      <astral-widget-checkmark
+        [isActive]="states[currentState] !== base"
+      ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass],
+  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSizeComponent {
   document = inject(DOCUMENT);

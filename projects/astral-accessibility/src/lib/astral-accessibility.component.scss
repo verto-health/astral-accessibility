@@ -198,11 +198,15 @@
           margin-left: 20px;
           font-size: 12px;
           -webkit-text-stroke: 0.7px black;
+
+          svg {
+            width: 15px;
+            height: 15px;
+          }
         }
 
         &.inactive {
           background: var(--actionIconInactiveBackgroundColor);
-          color: #fff;
         }
 
         &.disabled {

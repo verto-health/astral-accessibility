@@ -1,5 +1,6 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject, Renderer2 } from '@angular/core';
+import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
 
 @Component({
   selector: 'astral-screen-reader',
@@ -77,14 +78,13 @@ import { Component, inject, Renderer2 } from '@angular/core';
           </div>
         </div>
       </div>
-      <i
-        *ngIf="states[currentState] !== base"
-        class="pi pi-check icon active active-check"
-        style="font-weight: 900"
-      ></i>
+
+      <astral-widget-checkmark
+        [isActive]="states[currentState] !== base"
+      ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass],
+  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {
   globalListenFunction: Function;

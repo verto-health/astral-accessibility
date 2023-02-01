@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { AstralAccessibilityComponent } from './astral-accessibility.component';
-
-
+import { AstralCheckmarkSvgComponent } from './util/astral-checksvg.component';
 
 @NgModule({
-  imports: [
-    AstralAccessibilityComponent
-  ],
-  exports: [
-    AstralAccessibilityComponent
-  ]
+  declarations: [AstralCheckmarkSvgComponent],
+  imports: [AstralAccessibilityComponent],
+  exports: [AstralAccessibilityComponent],
 })
-export class AstralAccessibilityModule { }
+export class AstralAccessibilityModule {}

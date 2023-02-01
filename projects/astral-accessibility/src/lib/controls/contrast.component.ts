@@ -1,5 +1,6 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
 
 @Component({
   selector: 'astral-contrast',
@@ -26,8 +27,8 @@ import { Component, inject } from '@angular/core';
             }"
           >
             <svg
-              width="41"
-              height="41"
+              width="25"
+              height="25"
               viewBox="0 0 41 41"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -73,14 +74,13 @@ import { Component, inject } from '@angular/core';
           </div>
         </div>
       </div>
-      <i
-        *ngIf="states[currentState] !== base"
-        class="pi pi-check icon active active-check"
-        style="font-weight: 900"
-      ></i>
+
+      <astral-widget-checkmark
+        [isActive]="states[currentState] !== base"
+      ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass],
+  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ContrastComponent {
   document = inject(DOCUMENT);
