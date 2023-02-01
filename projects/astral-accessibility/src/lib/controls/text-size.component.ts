@@ -89,6 +89,7 @@ export class TextSizeComponent {
   currentScale = 1;
   base = 'Bigger Text';
   states = [this.base, 'Medium Text', 'Large Text', 'Extra Large Text'];
+  private initialStyles = new WeakMap();
 
   _style: HTMLStyleElement;
 
@@ -116,16 +117,42 @@ export class TextSizeComponent {
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
+    // keep initial styling
+    if (!this.initialStyles.has(node)) {
+      // store initial styling of fontSize, lineHeight, and wordSpacing
+      this.initialStyles.set(node, {
+        'font-size': node.style.fontSize,
+        'line-height': node.style.lineHeight,
+        'word-spacing': node.style.wordSpacing,
+      });
+    }
+
     const children = node.children;
     if (children.length === 0) {
       // change font size
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
       node.style.fontSize = `${(currentFontSizeNum / previousScale) * scale}px`;
+      node.style.lineHeight = `initial`;
+      node.style.wordSpacing = `initial`;
     } else {
       // has children, don't change font size and move on
       for (const child of children) {
         this.updateTextSize(child as HTMLElement, scale, previousScale);
+      }
+    }
+  }
+
+  restoreTextSize(node: HTMLElement) {
+    const children = node.children;
+    if (children.length === 0 && this.initialStyles.has(node)) {
+      for (const [key, value] of Object.entries(this.initialStyles.get(node))) {
+        node.style[key] = value;
+      }
+    } else {
+      // has children, move on
+      for (const child of children) {
+        this.restoreTextSize(child as HTMLElement);
       }
     }
   }
@@ -146,23 +173,22 @@ export class TextSizeComponent {
     let previousScale = this.currentScale;
 
     if (this.states[this.currentState] === 'Medium Text') {
-      this.currentScale = 1.1;
+      this.currentScale = 1.2;
     }
 
     if (this.states[this.currentState] === 'Large Text') {
-      this.currentScale = 1.3;
+      this.currentScale = 1.5;
     }
 
     if (this.states[this.currentState] === 'Extra Large Text') {
-      this.currentScale = 1.5;
+      this.currentScale = 1.8;
     }
 
     if (!(this.states[this.currentState] === this.base)) {
       this.updateTextSize(document.body, this.currentScale, previousScale);
     } else {
       // is base state
-      // revert to original size
-      this.updateTextSize(document.body, 1, this.currentScale);
+      this.restoreTextSize(document.body);
       this.currentScale = 1;
     }
   }
