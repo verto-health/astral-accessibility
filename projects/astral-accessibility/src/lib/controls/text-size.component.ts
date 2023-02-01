@@ -100,11 +100,20 @@ export class TextSizeComponent {
   // Options for the observer (which mutations to observe)
   config = { attributes: true, childList: true, subtree: true };
 
-  // constructor() {
-  //   this.observer = new MutationObserver((mutations: MutationRecord[]) => {
-  //     this.updateTextSize(this.targetNode, this.currentScale, 1);
-  //   });
-  // }
+  constructor() {
+    this.observer = new MutationObserver((mutations: MutationRecord[]) => {
+      this.observer.disconnect();
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            this.updateTextSize(node as HTMLElement, this.currentScale);
+          }
+        });
+      });
+      this.observer.observe(this.targetNode, this.config);
+    });
+    this.observer.observe(this.targetNode, this.config);
+  }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
     const children = node.children;
@@ -122,10 +131,12 @@ export class TextSizeComponent {
   }
 
   nextState() {
+    this.observer.disconnect();
     this.currentState += 1;
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
+    this.observer.observe(this.targetNode, this.config);
   }
 
   private _runStateLogic() {
