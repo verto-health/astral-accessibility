@@ -8,7 +8,7 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   template: `
     <button
       (click)="nextState()"
-      [ngClass]="{ 'in-use': states[currentState] != base }"
+      [ngClass]="{ 'in-use': states[currentState] !== base }"
     >
       <div class="title">
         <div class="icon-state-wrap">
