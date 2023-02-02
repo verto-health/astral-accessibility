@@ -198,11 +198,15 @@
           margin-left: 20px;
           font-size: 12px;
           -webkit-text-stroke: 0.7px black;
+
+          svg {
+            width: 15px;
+            height: 15px;
+          }
         }
 
         &.inactive {
           background: var(--actionIconInactiveBackgroundColor);
-          color: #fff;
         }
 
         &.disabled {
@@ -262,22 +266,6 @@
 
   .astral_desaturated {
     filter: saturate(0) !important;
-  }
-
-  .astral_medium_text {
-    font-size: 1.2rem;
-
-    h1 {
-      font-size: 1.8rem;
-    }
-  }
-
-  .astral_large_text {
-    font-size: 1.6rem;
-  }
-
-  .astral_extra_large_text {
-    font-size: 2.2rem;
   }
 
   .astral_light_spacing {
