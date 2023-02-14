@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:lib": "ng build --single-bundle --output-hashing=none",
-    "build:lib:dev": "ng build --configuration=development --single-bundle",
+    "build:lib:dev": "ng build --watch --configuration=development --single-bundle",
     "start:demo-server": "lite-server -c projects/demo/lite-server-config.json",
     "start:demo": "npm-run-all -p build:lib:dev start:demo-server"
   },
