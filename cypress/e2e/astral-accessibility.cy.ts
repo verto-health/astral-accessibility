@@ -98,41 +98,5 @@ describe('template spec', () => {
       .get(textElements)
       .should('have.css', 'word-spacing', `0px`)
       .and('have.css', 'letter-spacing', `0`);
-
-    // const textSizeComopnent = cy.document().find('astral-text-size');
-    // // get original styling
-    // const initialStyling = new WeakMap();
-    // cy.document()
-    //   .get(textElements)
-    //   .each((elmt) => {
-    //     initialStyling.set(
-    //       elmt.get(0),
-    //       elmt.css(['font-size', 'line-height', 'word-spacing'])
-    //     );
-    //   })
-    //   .then(() => cy.log(initialStyling));
-
-    // // medium text
-    // textSizeComopnent.click();
-
-    // cy.document()
-    //   .get('.card')
-    //   // .filter((i, el) => {
-    //   //   return el.innerText.match(/^S/g);
-    //   // })
-    //   .filter(':contains("a")')
-    //   .each((elmt) => {
-    //     if (initialStyling.has(elmt.get(0))) {
-    //       const initialSize = initialStyling
-    //         .get(elmt.get(0))
-    //         ['font-size'].replaceAll(/\D/g, '');
-    //       cy.log(`initial size = ${initialSize}`);
-    //       cy.wrap(elmt).should(
-    //         'have.css',
-    //         'font-size',
-    //         `${initialSize * 1.2}px`
-    //       );
-    //     }
-    //   });
   });
 });
