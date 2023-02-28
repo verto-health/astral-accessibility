@@ -122,11 +122,19 @@ export class TextSizeComponent {
 
     const children = node.children;
     const excludeNodes = ['SCRIPT'];
+    // traverse and update children first
+    if (children.length > 0) {
+      for (const child of children) {
+        if (!excludeNodes.includes(child.nodeName))
+          this.updateTextSize(child as HTMLElement, scale, previousScale);
+      }
+    }
+
     if (
       Array.from(node.childNodes).some(
-        (node) =>
-          node.nodeType === node.TEXT_NODE &&
-          node.nodeValue?.replace(/\s*/i, '')?.length
+        (child) =>
+          child.nodeType === child.TEXT_NODE &&
+          child.nodeValue?.replace(/\s*/i, '')?.length
       ) ||
       children.length === 0
     ) {
@@ -136,12 +144,6 @@ export class TextSizeComponent {
       node.style.fontSize = `${(currentFontSizeNum / previousScale) * scale}px`;
       node.style.lineHeight = `initial`;
       node.style.wordSpacing = `initial`;
-    }
-    if (children.length > 0) {
-      for (const child of children) {
-        if (!excludeNodes.includes(child.nodeName))
-          this.updateTextSize(child as HTMLElement, scale, previousScale);
-      }
     }
   }
 
