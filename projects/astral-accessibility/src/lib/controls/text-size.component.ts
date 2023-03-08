@@ -121,32 +121,42 @@ export class TextSizeComponent {
     }
 
     const children = node.children;
-    if (children.length === 0) {
-      // change font size
+    const excludeNodes = ['SCRIPT'];
+    // traverse and update children first
+    if (children.length > 0) {
+      for (const child of children) {
+        if (!excludeNodes.includes(child.nodeName))
+          this.updateTextSize(child as HTMLElement, scale, previousScale);
+      }
+    }
+
+    if (
+      Array.from(node.childNodes).some(
+        (child) =>
+          child.nodeType === child.TEXT_NODE &&
+          child.nodeValue?.replace(/\s*/i, '')?.length
+      ) ||
+      children.length === 0
+    ) {
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
+
       node.style.fontSize = `${(currentFontSizeNum / previousScale) * scale}px`;
       node.style.lineHeight = `initial`;
       node.style.wordSpacing = `initial`;
-    } else {
-      // has children, don't change font size and move on
-      for (const child of children) {
-        this.updateTextSize(child as HTMLElement, scale, previousScale);
-      }
     }
   }
 
   restoreTextSize(node: HTMLElement) {
     const children = node.children;
-    if (children.length === 0 && this.initialStyles.has(node)) {
+    if (this.initialStyles.has(node)) {
       for (const [key, value] of Object.entries(this.initialStyles.get(node))) {
         node.style[key] = value;
       }
-    } else {
-      // has children, move on
-      for (const child of children) {
-        this.restoreTextSize(child as HTMLElement);
-      }
+    }
+
+    for (const child of children) {
+      this.restoreTextSize(child as HTMLElement);
     }
   }
 
