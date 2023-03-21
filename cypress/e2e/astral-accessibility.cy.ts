@@ -1,6 +1,7 @@
 describe('template spec', () => {
   it('passes', () => {
     cy.visit(Cypress.env('baseUrl'));
+    cy.waitForResource('main.js')
 
     const textElements = 'p,h1,h2,h3,h4,h5,h6,div,a,button,label';
 
