@@ -1,0 +1,27 @@
+name: e2e Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - .github/workflows/cypress.yml
+      - projects/**/*
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install yarn packages
+        run: |
+          yarn install
+      - name: Run Cypress for environment
+        uses: cypress-io/github-action@v2
+        with:
+          start: |
+            yarn start:demo
+          wait-on: "http://localhost:8000"
+          wait-on-timeout: 300
+          browser: chrome
+          config-file: cypress.config.ts
