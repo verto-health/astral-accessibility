@@ -1,7 +1,7 @@
 describe('template spec', () => {
   it('passes', () => {
     cy.visit(Cypress.env('baseUrl'));
-    cy.waitForResource('main.js')
+    cy.waitForResource('main.js');
 
     const textElements = 'p,h1,h2,h3,h4,h5,h6,div,a,button,label';
 
@@ -99,5 +99,96 @@ describe('template spec', () => {
       .get(textElements)
       .should('have.css', 'word-spacing', `0px`)
       .and('have.css', 'letter-spacing', `0`);
+
+    /*********************
+        text-size test 
+    **********************/
+    const textSizeComopnent = cy.document().find('astral-text-size');
+    const mediumTextScale = 1.2;
+    const largeTextScale = 1.5;
+    const extraLargeTextScale = 1.8;
+
+    // get original styling
+    const initialStyling = new WeakMap();
+    cy.document()
+      .get(textElements)
+      .each((elmt) => {
+        initialStyling.set(
+          elmt.get(0),
+          elmt.css(['font-size', 'line-height', 'word-spacing'])
+        );
+      });
+
+    // medium text
+    textSizeComopnent.click();
+
+    cy.document()
+      .get('.card')
+      .contains(/^S/g)
+      .each((elmt) => {
+        if (initialStyling.has(elmt.get(0))) {
+          const initialSize = initialStyling
+            .get(elmt.get(0))
+            ['font-size'].replaceAll(/\D/g, '');
+          cy.wrap(elmt).should(
+            'have.css',
+            'font-size',
+            `${initialSize * mediumTextScale}px`
+          );
+        }
+      });
+
+    // large text
+    textSizeComopnent.click();
+
+    cy.document()
+      .get('.card')
+      .contains(/^S/g)
+      .each((elmt) => {
+        if (initialStyling.has(elmt.get(0))) {
+          const initialSize = initialStyling
+            .get(elmt.get(0))
+            ['font-size'].replaceAll(/\D/g, '');
+          cy.wrap(elmt).should(
+            'have.css',
+            'font-size',
+            `${initialSize * largeTextScale}px`
+          );
+        }
+      });
+
+    // extra text
+    textSizeComopnent.click();
+
+    cy.document()
+      .get('.card')
+      .contains(/^S/g)
+      .each((elmt) => {
+        if (initialStyling.has(elmt.get(0))) {
+          const initialSize = initialStyling
+            .get(elmt.get(0))
+            ['font-size'].replaceAll(/\D/g, '');
+          cy.wrap(elmt).should(
+            'have.css',
+            'font-size',
+            `${initialSize * extraLargeTextScale}px`
+          );
+        }
+      });
+
+    // revert text scale change
+    textSizeComopnent.click();
+
+    cy.document()
+      .get('.card')
+      .contains(/^S/g)
+      .each((elmt) => {
+        if (initialStyling.has(elmt.get(0))) {
+          const initialSize = initialStyling
+            .get(elmt.get(0))
+            ['font-size'].replaceAll(/\D/g, '');
+          cy.wrap(elmt).should('have.css', 'font-size', `${initialSize}px`);
+        }
+      });
   });
 });

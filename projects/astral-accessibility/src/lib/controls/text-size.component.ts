@@ -133,8 +133,8 @@ export class TextSizeComponent {
     if (
       Array.from(node.childNodes).some(
         (child) =>
-          child.nodeType === child.TEXT_NODE &&
-          child.nodeValue?.replace(/\s*/i, '')?.length
+        child.nodeType === child.TEXT_NODE &&
+        child.nodeValue?.replace(/\s*/i, '')?.length
       ) ||
       children.length === 0
     ) {
