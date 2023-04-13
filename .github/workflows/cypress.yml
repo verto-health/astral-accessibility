@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - name: Install yarn packages
@@ -20,6 +20,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: |
+            yarn build
             yarn start:demo
           wait-on: "http://localhost:8000"
           wait-on-timeout: 300
