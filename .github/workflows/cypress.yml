@@ -7,6 +7,8 @@ on:
     paths:
       - .github/workflows/cypress.yml
       - projects/**/*
+      - package.json
+      - yarn.lock
 
 jobs:
   test:
@@ -20,8 +22,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: |
-            yarn build
-            yarn start:demo
+            yarn start:test-server
           wait-on: "http://localhost:8000"
           wait-on-timeout: 300
           browser: chrome
