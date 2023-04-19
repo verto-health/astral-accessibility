@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Get dependabot's PRs
         run: |
-          echo "::set-output name=basePrs::$(gh pr list --json baseRefName,headRefName,number --label 'dependencies' --author 'dependabot' --repo 'verto-health/astral-accessibility')"
+          echo "::set-output name=basePrs::$(gh pr list --json baseRefName,headRefName,number --label 'dependencies' --author 'app/dependabot' --repo 'verto-health/astral-accessibility')"
         id: list
 
     outputs:
@@ -26,6 +26,7 @@ jobs:
       matrix:
         pr: ${{ fromJson(needs.get-dependabot-prs) }}
     steps:
+      # checks out base branch
       - uses: actions/checkout@v2
         with:
           ref: ${{ matrix.pr.baseRefName }}
@@ -37,7 +38,7 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           pull-request-number: ${{ matrix.pr.number }}
 
-      - name: Automerge Pull Request ${{ matrix.pr.baseRefName }} -> ${{ matrix.pr.headRefName }}
+      - name: Automerge Pull Request ${{ matrix.pr.number }}
         id: automerge
         uses: "pascalgn/automerge-action@v0.15.0"
         env:
