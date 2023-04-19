@@ -38,6 +38,10 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           pull-request-number: ${{ matrix.pr.number }}
 
+      - name: Dependabot rebase
+        run: |
+          gh pr comment ${{ matrix.pr.number }} -b "@dependabot rebase"
+
       - name: Automerge Pull Request ${{ matrix.pr.number }}
         id: automerge
         uses: "pascalgn/automerge-action@v0.15.0"
