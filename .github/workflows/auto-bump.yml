@@ -1,0 +1,58 @@
+name: Merge Dependabot version bumps
+on:
+  schedule:
+    # Run this task everyday at 08:00am, Monday to Friday
+    - cron: "0 10 * * 0"
+
+jobs:
+  get-dependabot-prs:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Get dependabot's PRs
+        run: |
+          echo "::set-output name=basePrs::$(gh pr list --json baseRefName,headRefName,number --label 'dependencies' --author 'dependabot' --repo 'verto-health/astral-accessibility')"
+        id: list
+
+    outputs:
+      basePrs: ${{ steps.list.outputs.basePrs }}
+
+  auto-pr-merge:
+    # check list not empty
+    if: fromJson(needs.get-dependabot-prs)[0] != null
+    needs: get-dependabot-prs
+
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        pr: ${{ fromJson(needs.get-dependabot-prs) }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.pr.baseRefName }}
+          fetch-depth: 0
+
+      - name: Auto approve the Pull Request
+        uses: hmarr/auto-approve-action@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          pull-request-number: ${{ matrix.pr.number }}
+
+      - name: Automerge Pull Request ${{ matrix.pr.baseRefName }} -> ${{ matrix.pr.headRefName }}
+        id: automerge
+        uses: "pascalgn/automerge-action@v0.15.0"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST: ${{ matrix.pr.number }}
+          MERGE_RETRY_SLEEP: 10000
+          MERGE_DELETE_BRANCH: true
+
+      - name: Comment error if merge failed
+        if: (steps.automerge.outputs.mergeResult != 'merged')
+        run: |
+          gh pr comment ${{ matrix.pr.headRefName }} -b "Merge failed, merge result was ${{ steps.automerge.outputs.mergeResult }}. PR-${{ steps.automerge.outputs.pullRequestNumber }} updated"
+          gh pr edit ${{ matrix.pr.headRefName }} --add-label 'Cannot update'
+          gh pr close ${{ steps.cpr.outputs.pull-request-number }} -c 'Failed to merge because it was ${{ steps.automerge.outputs.mergeResult }}' -d
+      - name: Remove 'Cannot update' tag if present
+        if: ${{ (steps.pr-created.outputs.is-created == 'true') && (steps.automerge.outputs.mergeResult == 'merged') }}
+        run: |
+          gh pr edit ${{ matrix.pr.headRefName }} --remove-label 'Cannot update'
