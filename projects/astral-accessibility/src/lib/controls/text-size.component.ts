@@ -106,12 +106,15 @@ export class TextSizeComponent {
       });
       this.observer.observe(this.targetNode, this.config);
     });
+    console.log('created observer');
     /* No observer here, we don't want it to be on by default */
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
+    console.log('update text size');
     // keep initial styling
     if (!this.initialStyles.has(node)) {
+      console.log('  new node: adding to initial styles');
       // store initial styling of fontSize, lineHeight, and wordSpacing
       this.initialStyles.set(node, {
         'font-size': node.style.fontSize,
@@ -124,6 +127,7 @@ export class TextSizeComponent {
     const excludeNodes = ['SCRIPT'];
     // traverse and update children first
     if (children.length > 0) {
+      console.log('  traverse children to recursively update size');
       for (const child of children) {
         if (!excludeNodes.includes(child.nodeName))
           this.updateTextSize(child as HTMLElement, scale, previousScale);
@@ -138,6 +142,7 @@ export class TextSizeComponent {
       ) ||
       children.length === 0
     ) {
+      console.log('  update current node styling');
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
 
@@ -167,6 +172,9 @@ export class TextSizeComponent {
 
     this._runStateLogic();
     if (this.currentState !== 0) {
+      console.log(
+        `current state = ${this.states[this.currentState]}, attaching observer`
+      );
       // is not base state, don't need observer for base state
       this.observer.observe(this.targetNode, this.config);
     }
