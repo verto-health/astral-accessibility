@@ -87,6 +87,8 @@ export class TextSizeComponent {
   _style: HTMLStyleElement;
 
   private observer: MutationObserver;
+  private debugCount = 0;
+  private updating = false;
 
   // Select the node that will be observed for mutations
   targetNode = document.body;
@@ -94,27 +96,53 @@ export class TextSizeComponent {
   // Options for the observer (which mutations to observe)
   config = { attributes: true, childList: true, subtree: true };
 
-  constructor() {
-    this.observer = new MutationObserver((mutations: MutationRecord[]) => {
-      this.observer.disconnect();
-      mutations.forEach((mutation) => {
+  private _updateDom = (mutations: MutationRecord[]) => {
+    mutations.forEach((mutation) => {
+      if (!this.updating) {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof HTMLElement) {
-            this.updateTextSize(node as HTMLElement, this.currentScale);
+            this.updateTextSizeWrapper(node as HTMLElement, this.currentScale);
           }
         });
-      });
-      this.observer.observe(this.targetNode, this.config);
+      }
     });
-    console.log('created observer');
+  };
+
+  constructor() {
+    this.observer = new MutationObserver(this._updateDom);
     /* No observer here, we don't want it to be on by default */
   }
 
-  updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
-    console.log('update text size');
+  updateTextSizeWrapper(
+    node: HTMLElement,
+    scale: number,
+    previousScale: number = 1
+  ) {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer.takeRecords();
+    }
+
+    const updated = this.updateTextSize(node, scale, previousScale);
+    if (updated) {
+      setTimeout(() => {
+        this.observer.observe(this.targetNode, this.config);
+        this.updating = false;
+      }, 0);
+    }
+  }
+
+  updateTextSize(
+    node: HTMLElement,
+    scale: number,
+    previousScale: number = 1,
+    count: number = 0
+  ) {
     // keep initial styling
+    this.updating = true;
+    this.debugCount++;
+
     if (!this.initialStyles.has(node)) {
-      console.log('  new node: adding to initial styles');
       // store initial styling of fontSize, lineHeight, and wordSpacing
       this.initialStyles.set(node, {
         'font-size': node.style.fontSize,
@@ -127,10 +155,15 @@ export class TextSizeComponent {
     const excludeNodes = ['SCRIPT'];
     // traverse and update children first
     if (children.length > 0) {
-      console.log('  traverse children to recursively update size');
+      // @ts-ignore
       for (const child of children) {
         if (!excludeNodes.includes(child.nodeName))
-          this.updateTextSize(child as HTMLElement, scale, previousScale);
+          this.updateTextSize(
+            child as HTMLElement,
+            scale,
+            previousScale,
+            count++
+          );
       }
     }
 
@@ -142,7 +175,6 @@ export class TextSizeComponent {
       ) ||
       children.length === 0
     ) {
-      console.log('  update current node styling');
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
 
@@ -150,6 +182,8 @@ export class TextSizeComponent {
       node.style.lineHeight = `initial`;
       node.style.wordSpacing = `initial`;
     }
+
+    return true;
   }
 
   restoreTextSize(node: HTMLElement) {
@@ -160,24 +194,22 @@ export class TextSizeComponent {
       }
     }
 
+    // @ts-ignore
     for (const child of children) {
       this.restoreTextSize(child as HTMLElement);
     }
   }
 
   nextState() {
-    this.observer.disconnect();
+    if (this.observer) {
+      this.observer.disconnect();
+      let s = this.observer.takeRecords();
+    }
+
     this.currentState += 1;
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
-    if (this.currentState !== 0) {
-      console.log(
-        `current state = ${this.states[this.currentState]}, attaching observer`
-      );
-      // is not base state, don't need observer for base state
-      this.observer.observe(this.targetNode, this.config);
-    }
   }
 
   private _runStateLogic() {
@@ -196,7 +228,11 @@ export class TextSizeComponent {
     }
 
     if (!(this.states[this.currentState] === this.base)) {
-      this.updateTextSize(document.body, this.currentScale, previousScale);
+      this.updateTextSizeWrapper(
+        document.body,
+        this.currentScale,
+        previousScale
+      );
     } else {
       // is base state
       this.restoreTextSize(document.body);
