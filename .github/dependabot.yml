@@ -8,8 +8,7 @@ updates:
       time: "09:00"
       ignore:
         - dependency-name: "*"
-          update-types:
-            [version-update:semver-patch, "version-update:semver-major"]
+          update-types: ["version-update:semver-major"]
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -18,5 +17,4 @@ updates:
       time: "09:00"
     ignore:
       - dependency-name: "*"
-        update-types:
-          [version-update:semver-patch, "version-update:semver-major"]
+        update-types: ["version-update:semver-major"]
