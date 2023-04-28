@@ -87,7 +87,6 @@ export class TextSizeComponent {
   _style: HTMLStyleElement;
 
   private observer: MutationObserver;
-  private debugCount = 0;
   private updating = false;
 
   // Select the node that will be observed for mutations
@@ -138,10 +137,10 @@ export class TextSizeComponent {
     previousScale: number = 1,
     count: number = 0
   ) {
-    // keep initial styling
+    // safety check for mutation observer don't fire while update text runs
     this.updating = true;
-    this.debugCount++;
 
+    // keep initial styling
     if (!this.initialStyles.has(node)) {
       // store initial styling of fontSize, lineHeight, and wordSpacing
       this.initialStyles.set(node, {
@@ -203,7 +202,7 @@ export class TextSizeComponent {
   nextState() {
     if (this.observer) {
       this.observer.disconnect();
-      let s = this.observer.takeRecords();
+      this.observer.takeRecords();
     }
 
     this.currentState += 1;
