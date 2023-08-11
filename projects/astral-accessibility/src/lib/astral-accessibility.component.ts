@@ -6,6 +6,7 @@ import { SaturateComponent } from './controls/saturate.component';
 import { TextSizeComponent } from './controls/text-size.component';
 import { TextSpacingComponent } from './controls/text-spacing.component';
 import { ScreenReaderComponent } from './controls/screen-reader.component';
+import { ScreenMaskComponent } from './controls/screen-mask.component';
 
 @Component({
   selector: 'astral-accessibility',
@@ -20,6 +21,7 @@ import { ScreenReaderComponent } from './controls/screen-reader.component';
     TextSizeComponent,
     TextSpacingComponent,
     ScreenReaderComponent,
+    ScreenMaskComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
