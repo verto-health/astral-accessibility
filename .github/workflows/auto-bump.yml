@@ -44,7 +44,7 @@ jobs:
 
       - name: Automerge Pull Request ${{ matrix.pr.number }}
         id: automerge
-        uses: "pascalgn/automerge-action@v0.15.0"
+        uses: "pascalgn/automerge-action@v0.15.6"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST: ${{ matrix.pr.number }}
