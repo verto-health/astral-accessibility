@@ -32,8 +32,18 @@ export class AstralAccessibilityComponent {
   userAgent = navigator.userAgent;
   astralAccessibilityPanel = "astral-modal";
   astralAccessibilityIcon = "astral-icon";
+  options: Record<string, any> = {};
+  filterWidget: String[] = [];
 
   ngOnInit() {
+    const astralElement = document.querySelector("astral-accessibility");
+    const astralOptions = astralElement?.getAttribute("astral-options");
+
+    if (astralOptions) {
+      this.options = JSON.parse(astralOptions);
+      this.filterWidget = this.options["filterWidget"];
+    }
+
     const phones =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
     if (phones.test(this.userAgent)) {
