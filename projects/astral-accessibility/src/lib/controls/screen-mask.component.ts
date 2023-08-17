@@ -92,8 +92,8 @@ export class ScreenMaskComponent {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.55);
     pointer-events: none;
-    border-bottom: 8px solid #0F2BA9;
-    height: ${this.height - 114}px;
+    border-bottom: 8px solid #654AFF;
+    height: ${this.height - 115}px;
   }
   `;
 
@@ -104,7 +104,7 @@ export class ScreenMaskComponent {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.55);
     pointer-events: none;
-    border-top: 7px solid #5DCA8E;
+    border-top: 8px solid #FFCB00;
     height: ${this.cursorY}px;
   }
   `;
