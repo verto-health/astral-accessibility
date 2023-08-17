@@ -51,11 +51,21 @@ Optionally we can choose which widgets should appear by passing an object inside
 ```html
 <script>
   initializeAstral({
+    filterWidget: ["Contrast", "Bigger Text", "Screen Mask"],
+  });
+</script>
+```
+
+Optionally we can choose which widgets should appear by passing an object inside of function call:
+
+```html
+<script>
+  initializeAstral({
     enabledFeatures: [
       "Screen Reader",
       "Contrast",
       "Saturation",
-      "Text Size",
+      "Bigger Text",
       "Text Spacing",
       "Screen Mask",
       "Line Height",
