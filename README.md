@@ -21,6 +21,7 @@ started this project [here](blue.verto.health/advancing-accessibility-with-astra
 - Saturation
 - Text Size
 - Text Spacing
+- Screen Mask
 - More to come!
 
 ## Usage
@@ -31,6 +32,16 @@ Astral is built with Angular Elements. You can use it in your website in under 3
 <script src="https://astral-accessibility.pages.dev/main.js"></script>
 <script>
   initializeAstral();
+</script>
+```
+
+Optionally we can choose which widgets should appear by passing an object inside of function call:
+
+```html
+<script>
+  initializeAstral({
+    filterWidget: ["Contrast", "Bigger Text", "Screen Mask"],
+  });
 </script>
 ```
 
