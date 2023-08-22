@@ -11,6 +11,7 @@ export default defineConfig({
 
   env: {
     baseUrl: "http://localhost:8000",
+    blankUrl: "http://localhost:8000/blank-page.html",
   },
 
   e2e: {
