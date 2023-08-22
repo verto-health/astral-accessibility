@@ -154,10 +154,10 @@ export class ScreenMaskComponent {
     const maskBottom = document.querySelector('.mask-bottom');
   
     if (maskTop) {
-      this.renderer.setStyle(maskTop, 'height', `${this.cursorY}px`);
+      this.renderer.setStyle(maskTop, 'height', `${this.cursorY - 57}px`);
     }
     if (maskBottom) {
-      this.renderer.setStyle(maskBottom, 'height', `${this.height - 114}px`);
+      this.renderer.setStyle(maskBottom, 'height', `${this.height - 57}px`);
     }
   }
 
