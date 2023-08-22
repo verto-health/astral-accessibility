@@ -43,3 +43,10 @@ $ yarn install
 $ yarn run start:demo
 ```
 This will watch for changes and automatically reload when you make changes in both Angular and the demo app under `projects/demo`.
+
+### Running E2E Tests With Cypress
+After running the steps above, you will have access to the Cypress test suite. To run Cypress locally, run the following command in your terminal
+```
+$ yarn cypress open
+```
+Choose E2E Testing, and select a browser to start running the Specs
