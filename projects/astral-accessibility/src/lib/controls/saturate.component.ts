@@ -87,6 +87,14 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class SaturateComponent {
+  constructor(){
+    if(this.getSaturateState() == null){
+      return;
+    }else{
+      this.currentState = this.getSaturateState();
+      this._runStateLogic();
+    }
+  }
   document = inject(DOCUMENT);
 
   currentState = 0;
@@ -96,6 +104,7 @@ export class SaturateComponent {
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
+    this.saveSaturateState();
 
     this._runStateLogic();
   }
@@ -116,6 +125,14 @@ export class SaturateComponent {
     }
   }
 
+  private saveSaturateState(){
+    localStorage.setItem('saturateState', JSON.stringify(this.currentState));
+  }
+
+  private getSaturateState(){
+    const saturateState = localStorage.getItem('saturateState');
+    return Number(saturateState);
+  }
   private _resetSaturation() {
     this.document.documentElement.classList.remove('astral_low_saturation');
     this.document.documentElement.classList.remove('astral_high_saturation');

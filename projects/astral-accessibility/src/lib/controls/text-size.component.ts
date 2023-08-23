@@ -107,6 +107,14 @@ export class TextSizeComponent {
       this.observer.observe(this.targetNode, this.config);
     });
     /* No observer here, we don't want it to be on by default */
+
+
+    if(this.getTextSizeState() == null){
+      return;
+    }else{
+      this.currentState = this.getTextSizeState();
+      this._runStateLogic();
+    }
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
@@ -164,6 +172,7 @@ export class TextSizeComponent {
     this.observer.disconnect();
     this.currentState += 1;
     this.currentState = this.currentState % 4;
+    this.saveTextSizeState();
 
     this._runStateLogic();
     if (this.currentState !== 0) {
@@ -194,5 +203,14 @@ export class TextSizeComponent {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
     }
+  }
+
+  private saveTextSizeState(){
+    localStorage.setItem('textSizeState', JSON.stringify(this.currentState));
+  }
+
+  private getTextSizeState(){
+    const textSizeState = localStorage.getItem('textSizeState');
+    return Number(textSizeState);
   }
 }

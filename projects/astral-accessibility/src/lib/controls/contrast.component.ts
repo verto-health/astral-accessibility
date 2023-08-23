@@ -83,6 +83,14 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ContrastComponent {
+  constructor(){
+    if(this.getContrastState() == null){
+      return;
+    }else{
+      this.currentState = this.getContrastState();
+      this._runStateLogic();
+    }
+  }
   document = inject(DOCUMENT);
 
   currentState = 0;
@@ -94,6 +102,7 @@ export class ContrastComponent {
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
+    this.saveContrastState();
 
     this._runStateLogic();
   }
@@ -136,5 +145,14 @@ export class ContrastComponent {
     }
 
     this.document.body.appendChild(this._style);
+  }
+  
+  private saveContrastState(){
+    localStorage.setItem('contrastState', JSON.stringify(this.currentState));
+  }
+
+  private getContrastState(){
+    const contrastState = localStorage.getItem('contrastState');
+    return Number(contrastState);
   }
 }

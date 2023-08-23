@@ -93,7 +93,14 @@ export class ScreenReaderComponent {
   isApple = false;
   synthesisAvailable = true;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2) {
+    if(this.getScreenReaderState() == null){
+      return;
+    }else{
+      this.currentState = this.getScreenReaderState();
+      this._runStateLogic();
+    }
+  }
 
   readText(x: number, y: number) {
     let element = document.elementFromPoint(x, y);
@@ -212,6 +219,7 @@ export class ScreenReaderComponent {
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
+    this.saveScreenReaderState();
 
     this._runStateLogic();
   }
@@ -238,5 +246,14 @@ export class ScreenReaderComponent {
       }
     }
     this.document.body.appendChild(this._style);
+  }
+
+  private saveScreenReaderState(){
+    localStorage.setItem('screenReaderState', JSON.stringify(this.currentState));
+  }
+
+  private getScreenReaderState(){
+    const screenReaderState = localStorage.getItem('screenReaderState');
+    return Number(screenReaderState);
   }
 }

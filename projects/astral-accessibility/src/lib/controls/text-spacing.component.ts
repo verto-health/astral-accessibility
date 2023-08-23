@@ -76,6 +76,14 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent {
+  constructor(){
+    if(this.getTextSpacingState() == null){
+      return;
+    }else{
+      this.currentState = this.getTextSpacingState();
+      this._runStateLogic();
+    }
+  }
   document = inject(DOCUMENT);
 
   currentState = 0;
@@ -87,6 +95,7 @@ export class TextSpacingComponent {
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
+    this.saveTextSpacingState();
 
     this._runStateLogic();
   }
@@ -114,5 +123,14 @@ export class TextSpacingComponent {
     }
 
     this.document.body.appendChild(this._style);
+  }
+
+  private saveTextSpacingState(){
+    localStorage.setItem('textSpacingState', JSON.stringify(this.currentState));
+  }
+
+  private getTextSpacingState(){
+    const textSpacingState = localStorage.getItem('textSpacingState');
+    return Number(textSpacingState);
   }
 }
