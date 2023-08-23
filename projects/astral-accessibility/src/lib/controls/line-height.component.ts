@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, Renderer2, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { AccessabilityComponent } from './accessability.component';
 
 @Component({
   selector: 'astral-line-height',
@@ -56,8 +57,16 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class LineHeightComponent {
-  constructor(private renderer: Renderer2) {}
+export class LineHeightComponent extends AccessabilityComponent{
+  constructor(private renderer: Renderer2) {
+    super()
+    if(super.getState('lineHeightState') == null){
+      return;
+    }else{
+      this.currentState = super.getState('lineHeightState');
+      this._runStateLogic();
+    }
+  }
   document = inject(DOCUMENT);
 
   currentState = 0;
@@ -86,8 +95,7 @@ export class LineHeightComponent {
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState = super.changeState(this.currentState, 'lineHeightState')
 
     this._runStateLogic();
   }

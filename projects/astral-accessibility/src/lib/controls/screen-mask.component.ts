@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, Renderer2, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { AccessabilityComponent } from './accessability.component';
 
 @Component({
   selector: 'astral-screen-mask',
@@ -65,8 +66,16 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
     `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ScreenMaskComponent {
-  constructor(private renderer: Renderer2) {}
+export class ScreenMaskComponent extends AccessabilityComponent{
+  constructor(private renderer: Renderer2) {
+    super()
+    if(super.getState('screenMaskState') == null){
+      return;
+    }else{
+      this.currentState = super.getState('screenMaskState');
+      this._runStateLogic();
+    }
+  }
 
   cursorY = 0;
   screenHeight: number = window.innerHeight;
@@ -172,6 +181,7 @@ export class ScreenMaskComponent {
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 3;
+    super.saveState('screenMaskState', JSON.stringify(this.currentState))
 
     this._runStateLogic();
   }
