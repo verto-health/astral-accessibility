@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject, Renderer2 } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { AccessabilityComponent } from './accessability.component';
 
 @Component({
   selector: 'astral-screen-reader',
@@ -86,7 +87,7 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ScreenReaderComponent {
+export class ScreenReaderComponent extends AccessabilityComponent{
   globalListenFunction: Function;
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
@@ -94,10 +95,11 @@ export class ScreenReaderComponent {
   synthesisAvailable = true;
 
   constructor(private renderer: Renderer2) {
-    if(this.getScreenReaderState() == null){
+    super()
+    if(super.getState('screenReaderState') == null){
       return;
     }else{
-      this.currentState = this.getScreenReaderState();
+      this.currentState = super.getState('screenReaderState');
       this._runStateLogic();
     }
   }
@@ -217,9 +219,7 @@ export class ScreenReaderComponent {
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
-    this.saveScreenReaderState();
+    this.currentState = super.changeState(this.currentState, 'screenReaderState')
 
     this._runStateLogic();
   }
@@ -246,14 +246,5 @@ export class ScreenReaderComponent {
       }
     }
     this.document.body.appendChild(this._style);
-  }
-
-  private saveScreenReaderState(){
-    localStorage.setItem('screenReaderState', JSON.stringify(this.currentState));
-  }
-
-  private getScreenReaderState(){
-    const screenReaderState = localStorage.getItem('screenReaderState');
-    return Number(screenReaderState);
   }
 }

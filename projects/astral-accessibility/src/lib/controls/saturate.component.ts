@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { AccessabilityComponent } from './accessability.component';
 
 @Component({
   selector: 'astral-saturate',
@@ -86,12 +87,13 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class SaturateComponent {
+export class SaturateComponent extends AccessabilityComponent{
   constructor(){
-    if(this.getSaturateState() == null){
+    super()
+    if(super.getState('saturateState') == null){
       return;
     }else{
-      this.currentState = this.getSaturateState();
+      this.currentState = super.getState('saturateState');
       this._runStateLogic();
     }
   }
@@ -102,9 +104,7 @@ export class SaturateComponent {
   states = [this.base, 'Low Saturation', 'High Saturation', 'Desaturated'];
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
-    this.saveSaturateState();
+    this.currentState = super.changeState(this.currentState, 'saturateState')
 
     this._runStateLogic();
   }
@@ -125,14 +125,6 @@ export class SaturateComponent {
     }
   }
 
-  private saveSaturateState(){
-    localStorage.setItem('saturateState', JSON.stringify(this.currentState));
-  }
-
-  private getSaturateState(){
-    const saturateState = localStorage.getItem('saturateState');
-    return Number(saturateState);
-  }
   private _resetSaturation() {
     this.document.documentElement.classList.remove('astral_low_saturation');
     this.document.documentElement.classList.remove('astral_high_saturation');

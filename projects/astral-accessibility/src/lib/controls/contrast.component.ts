@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { AccessabilityComponent } from './accessability.component';
 
 @Component({
   selector: 'astral-contrast',
@@ -82,12 +83,13 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ContrastComponent {
+export class ContrastComponent extends AccessabilityComponent{
   constructor(){
-    if(this.getContrastState() == null){
+    super()
+    if(super.getState('contrastState') == null){
       return;
     }else{
-      this.currentState = this.getContrastState();
+      this.currentState = super.getState('contrastState');
       this._runStateLogic();
     }
   }
@@ -100,9 +102,7 @@ export class ContrastComponent {
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
-    this.saveContrastState();
+    this.currentState = super.changeState(this.currentState, 'contrastState')
 
     this._runStateLogic();
   }
@@ -147,12 +147,4 @@ export class ContrastComponent {
     this.document.body.appendChild(this._style);
   }
   
-  private saveContrastState(){
-    localStorage.setItem('contrastState', JSON.stringify(this.currentState));
-  }
-
-  private getContrastState(){
-    const contrastState = localStorage.getItem('contrastState');
-    return Number(contrastState);
-  }
 }

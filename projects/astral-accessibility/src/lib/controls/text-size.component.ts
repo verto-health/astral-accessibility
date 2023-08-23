@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { AccessabilityComponent } from './accessability.component';
 
 @Component({
   selector: 'astral-text-size',
@@ -75,7 +76,7 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class TextSizeComponent {
+export class TextSizeComponent extends AccessabilityComponent {
   document = inject(DOCUMENT);
 
   currentState = 0;
@@ -95,6 +96,7 @@ export class TextSizeComponent {
   config = { attributes: true, childList: true, subtree: true };
 
   constructor() {
+    super()
     this.observer = new MutationObserver((mutations: MutationRecord[]) => {
       this.observer.disconnect();
       mutations.forEach((mutation) => {
@@ -109,10 +111,10 @@ export class TextSizeComponent {
     /* No observer here, we don't want it to be on by default */
 
 
-    if(this.getTextSizeState() == null){
+    if(super.getState('textSizeState') == null){
       return;
     }else{
-      this.currentState = this.getTextSizeState();
+      this.currentState = super.getState('textSizeState');
       this._runStateLogic();
     }
   }
@@ -170,9 +172,7 @@ export class TextSizeComponent {
 
   nextState() {
     this.observer.disconnect();
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
-    this.saveTextSizeState();
+    this.currentState = super.changeState(this.currentState, 'textSizeState')
 
     this._runStateLogic();
     if (this.currentState !== 0) {
@@ -203,14 +203,5 @@ export class TextSizeComponent {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
     }
-  }
-
-  private saveTextSizeState(){
-    localStorage.setItem('textSizeState', JSON.stringify(this.currentState));
-  }
-
-  private getTextSizeState(){
-    const textSizeState = localStorage.getItem('textSizeState');
-    return Number(textSizeState);
   }
 }
