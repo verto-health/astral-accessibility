@@ -7,6 +7,8 @@ import { TextSizeComponent } from './controls/text-size.component';
 import { TextSpacingComponent } from './controls/text-spacing.component';
 import { ScreenReaderComponent } from './controls/screen-reader.component';
 import { AccessabilityComponent } from './controls/accessability.component'
+import { ScreenMaskComponent } from './controls/screen-mask.component';
+import { LineHeightComponent } from './controls/line-height.component';
 
 @Component({
   selector: 'astral-accessibility',
@@ -22,6 +24,8 @@ import { AccessabilityComponent } from './controls/accessability.component'
     TextSpacingComponent,
     ScreenReaderComponent,
     AccessabilityComponent,
+    ScreenMaskComponent,
+    LineHeightComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

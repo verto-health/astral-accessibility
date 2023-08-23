@@ -1,3 +1,5 @@
+/* @import url(./cursor.png); */
+
 /* width */
 * {
   font-family: "Poppins", sans-serif;
@@ -83,6 +85,7 @@ body {
   padding: 2rem;
 }
 
+
 .home-page .card h1 {
   margin: 0;
 }
@@ -90,6 +93,7 @@ body {
 .home-page .cardp {
   width: 100%;
 }
+
 
 @media (max-width: 550px) {
   .home-page .card {
@@ -119,5 +123,84 @@ body {
 
   .banner {
     height: 12vh;
+  }
+}
+
+/* astral styling repeat */
+
+.widget-title {
+  padding: 10px;
+  width: fit-content;
+  margin: 25px 0px 0px 0px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  background: #444444;
+  border: 0;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &.in-use {
+    color: #000;
+    background: #ffcb00;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: "Poppins", sans-serif;
+
+    .icon-state-wrap {
+      display: flex;
+      align-items: center;
+
+      .state-dots-wrap {
+        display: flex;
+        flex-direction: column;
+        padding: 2px;
+        align-items: stretch;
+        text-align: start;
+      }
+    }
+  }
+
+  .icon {
+    background-color: #6c6c6c;
+    border-radius: 50%;
+    margin-right: 20px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    font-size: 35px;
+
+    svg {
+      width: 35px;
+      height: 35px;
+    }
+
+    &.active-check {
+      padding: 13px;
+      margin-left: 20px;
+      font-size: 12px;
+      -webkit-text-stroke: 0.7px black;
+
+      svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    &.active {
+      background: #ffd73b;
+      svg {
+        filter: brightness(0);
+      }
+    }
   }
 }
