@@ -1,9 +1,9 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
-  selector: 'astral-text-spacing',
+  selector: "astral-text-spacing",
   standalone: true,
   template: `
     <button
@@ -79,8 +79,8 @@ export class TextSpacingComponent {
   document = inject(DOCUMENT);
 
   currentState = 0;
-  base = 'Text Spacing';
-  states = [this.base, 'Light Spacing', 'Moderate Spacing', 'Heavy Spacing'];
+  base = "Text Spacing";
+  states = [this.base, "Light Spacing", "Moderate Spacing", "Heavy Spacing"];
 
   _style: HTMLStyleElement;
 
@@ -93,24 +93,24 @@ export class TextSpacingComponent {
 
   private _runStateLogic() {
     this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === 'Light Spacing') {
-      this.document.documentElement.classList.add('astral_light_spacing');
+    if (this.states[this.currentState] === "Light Spacing") {
+      this.document.documentElement.classList.add("astral_light_spacing");
     } else {
-      this.document.documentElement.classList.remove('astral_light_spacing');
+      this.document.documentElement.classList.remove("astral_light_spacing");
     }
 
-    if (this.states[this.currentState] === 'Moderate Spacing') {
-      this.document.documentElement.classList.add('astral_moderate_spacing');
+    if (this.states[this.currentState] === "Moderate Spacing") {
+      this.document.documentElement.classList.add("astral_moderate_spacing");
     } else {
-      this.document.documentElement.classList.remove('astral_moderate_spacing');
+      this.document.documentElement.classList.remove("astral_moderate_spacing");
     }
 
-    if (this.states[this.currentState] === 'Heavy Spacing') {
-      this.document.documentElement.classList.add('astral_heavy_spacing');
+    if (this.states[this.currentState] === "Heavy Spacing") {
+      this.document.documentElement.classList.add("astral_heavy_spacing");
     } else {
-      this.document.documentElement.classList.remove('astral_heavy_spacing');
+      this.document.documentElement.classList.remove("astral_heavy_spacing");
     }
 
     this.document.body.appendChild(this._style);

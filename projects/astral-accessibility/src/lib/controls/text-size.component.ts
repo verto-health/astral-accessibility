@@ -1,9 +1,9 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
-  selector: 'astral-text-size',
+  selector: "astral-text-size",
   standalone: true,
   template: `
     <button
@@ -80,8 +80,8 @@ export class TextSizeComponent {
 
   currentState = 0;
   currentScale = 1;
-  base = 'Bigger Text';
-  states = [this.base, 'Medium Text', 'Large Text', 'Extra Large Text'];
+  base = "Bigger Text";
+  states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
   private initialStyles = new WeakMap();
 
   _style: HTMLStyleElement;
@@ -114,14 +114,14 @@ export class TextSizeComponent {
     if (!this.initialStyles.has(node)) {
       // store initial styling of fontSize, lineHeight, and wordSpacing
       this.initialStyles.set(node, {
-        'font-size': node.style.fontSize,
-        'line-height': node.style.lineHeight,
-        'word-spacing': node.style.wordSpacing,
+        "font-size": node.style.fontSize,
+        "line-height": node.style.lineHeight,
+        "word-spacing": node.style.wordSpacing,
       });
     }
 
     const children = node.children;
-    const excludeNodes = ['SCRIPT'];
+    const excludeNodes = ["SCRIPT"];
     // traverse and update children first
     if (children.length > 0) {
       for (const child of children) {
@@ -134,7 +134,7 @@ export class TextSizeComponent {
       Array.from(node.childNodes).some(
         (child) =>
           child.nodeType === child.TEXT_NODE &&
-          child.nodeValue?.replace(/\s*/i, '')?.length
+          child.nodeValue?.replace(/\s*/i, "")?.length,
       ) ||
       children.length === 0
     ) {
@@ -175,15 +175,15 @@ export class TextSizeComponent {
   private _runStateLogic() {
     let previousScale = this.currentScale;
 
-    if (this.states[this.currentState] === 'Medium Text') {
+    if (this.states[this.currentState] === "Medium Text") {
       this.currentScale = 1.2;
     }
 
-    if (this.states[this.currentState] === 'Large Text') {
+    if (this.states[this.currentState] === "Large Text") {
       this.currentScale = 1.5;
     }
 
-    if (this.states[this.currentState] === 'Extra Large Text') {
+    if (this.states[this.currentState] === "Extra Large Text") {
       this.currentScale = 1.8;
     }
 

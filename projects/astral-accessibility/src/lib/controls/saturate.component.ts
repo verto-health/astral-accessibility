@@ -1,9 +1,9 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
-  selector: 'astral-saturate',
+  selector: "astral-saturate",
   standalone: true,
   template: `
     <button
@@ -90,8 +90,8 @@ export class SaturateComponent {
   document = inject(DOCUMENT);
 
   currentState = 0;
-  base = 'Saturation';
-  states = [this.base, 'Low Saturation', 'High Saturation', 'Desaturated'];
+  base = "Saturation";
+  states = [this.base, "Low Saturation", "High Saturation", "Desaturated"];
 
   nextState() {
     this.currentState += 1;
@@ -103,22 +103,22 @@ export class SaturateComponent {
   private _runStateLogic() {
     this._resetSaturation();
 
-    if (this.states[this.currentState] === 'Low Saturation') {
-      this.document.documentElement.classList.add('astral_low_saturation');
+    if (this.states[this.currentState] === "Low Saturation") {
+      this.document.documentElement.classList.add("astral_low_saturation");
     }
 
-    if (this.states[this.currentState] === 'High Saturation') {
-      this.document.documentElement.classList.add('astral_high_saturation');
+    if (this.states[this.currentState] === "High Saturation") {
+      this.document.documentElement.classList.add("astral_high_saturation");
     }
 
-    if (this.states[this.currentState] === 'Desaturated') {
-      this.document.documentElement.classList.add('astral_desaturated');
+    if (this.states[this.currentState] === "Desaturated") {
+      this.document.documentElement.classList.add("astral_desaturated");
     }
   }
 
   private _resetSaturation() {
-    this.document.documentElement.classList.remove('astral_low_saturation');
-    this.document.documentElement.classList.remove('astral_high_saturation');
-    this.document.documentElement.classList.remove('astral_desaturated');
+    this.document.documentElement.classList.remove("astral_low_saturation");
+    this.document.documentElement.classList.remove("astral_high_saturation");
+    this.document.documentElement.classList.remove("astral_desaturated");
   }
 }
