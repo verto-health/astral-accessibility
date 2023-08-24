@@ -1,7 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject, Renderer2 } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessabilityComponent } from './accessability.component';
+import { AccessibilityComponent } from './accessibility.component';
 
 @Component({
   selector: 'astral-screen-reader',
@@ -87,7 +87,7 @@ import { AccessabilityComponent } from './accessability.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ScreenReaderComponent extends AccessabilityComponent{
+export class ScreenReaderComponent extends AccessibilityComponent {
   globalListenFunction: Function;
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
@@ -96,10 +96,10 @@ export class ScreenReaderComponent extends AccessabilityComponent{
 
   constructor(private renderer: Renderer2) {
     super()
-    if(super.getState('screenReaderState') == null){
+    if(super.getState('astralAccessibility_screenReaderState') == null){
       return;
     }else{
-      this.currentState = super.getState('screenReaderState');
+      this.currentState = super.getState('astralAccessibility_screenReaderState');
       this._runStateLogic();
     }
   }
@@ -219,7 +219,7 @@ export class ScreenReaderComponent extends AccessabilityComponent{
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'screenReaderState')
+    this.currentState = super.changeState(this.currentState, 'astralAccessibility_screenReaderState', this.states.length)
 
     this._runStateLogic();
   }

@@ -6,7 +6,7 @@ import { SaturateComponent } from './controls/saturate.component';
 import { TextSizeComponent } from './controls/text-size.component';
 import { TextSpacingComponent } from './controls/text-spacing.component';
 import { ScreenReaderComponent } from './controls/screen-reader.component';
-import { AccessabilityComponent } from './controls/accessability.component'
+import { AccessibilityComponent } from './controls/accessibility.component'
 import { ScreenMaskComponent } from './controls/screen-mask.component';
 import { LineHeightComponent } from './controls/line-height.component';
 
@@ -23,7 +23,7 @@ import { LineHeightComponent } from './controls/line-height.component';
     TextSizeComponent,
     TextSpacingComponent,
     ScreenReaderComponent,
-    AccessabilityComponent,
+    AccessibilityComponent,
     ScreenMaskComponent,
     LineHeightComponent
   ],

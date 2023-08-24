@@ -1,7 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, Renderer2, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessabilityComponent } from './accessability.component';
+import { AccessibilityComponent } from './accessibility.component';
 
 @Component({
   selector: 'astral-screen-mask',
@@ -66,13 +66,13 @@ import { AccessabilityComponent } from './accessability.component';
     `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ScreenMaskComponent extends AccessabilityComponent{
+export class ScreenMaskComponent extends AccessibilityComponent {
   constructor(private renderer: Renderer2) {
     super()
-    if(super.getState('screenMaskState') == null){
+    if(super.getState('astralAccessibility_screenMaskState') == null){
       return;
     }else{
-      this.currentState = super.getState('screenMaskState');
+      this.currentState = super.getState('astralAccessibility_screenMaskState');
       this._runStateLogic();
     }
   }
@@ -179,9 +179,7 @@ export class ScreenMaskComponent extends AccessabilityComponent{
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 3;
-    super.saveState('screenMaskState', JSON.stringify(this.currentState))
+    this.currentState = super.changeState(this.currentState, 'astralAccessibility_screenMaskState', this.states.length)
 
     this._runStateLogic();
   }

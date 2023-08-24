@@ -1,7 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessabilityComponent } from './accessability.component';
+import { AccessibilityComponent } from './accessibility.component';
 
 @Component({
   selector: 'astral-contrast',
@@ -83,13 +83,13 @@ import { AccessabilityComponent } from './accessability.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ContrastComponent extends AccessabilityComponent{
+export class ContrastComponent extends AccessibilityComponent {
   constructor(){
     super()
-    if(super.getState('contrastState') == null){
+    if(super.getState('astralAccessibility_contrastState') == null){
       return;
     }else{
-      this.currentState = super.getState('contrastState');
+      this.currentState = super.getState('astralAccessibility_contrastState');
       this._runStateLogic();
     }
   }
@@ -102,7 +102,7 @@ export class ContrastComponent extends AccessabilityComponent{
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'contrastState')
+    this.currentState = super.changeState(this.currentState, 'astralAccessibility_contrastState', this.states.length)
 
     this._runStateLogic();
   }

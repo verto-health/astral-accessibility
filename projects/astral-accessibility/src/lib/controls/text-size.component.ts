@@ -1,7 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessabilityComponent } from './accessability.component';
+import { AccessibilityComponent } from './accessibility.component';
 
 @Component({
   selector: 'astral-text-size',
@@ -76,7 +76,7 @@ import { AccessabilityComponent } from './accessability.component';
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class TextSizeComponent extends AccessabilityComponent {
+export class TextSizeComponent extends AccessibilityComponent {
   document = inject(DOCUMENT);
 
   currentState = 0;
@@ -111,10 +111,10 @@ export class TextSizeComponent extends AccessabilityComponent {
     /* No observer here, we don't want it to be on by default */
 
 
-    if(super.getState('textSizeState') == null){
+    if(super.getState('astralAccessibility_textSizeState') == null){
       return;
     }else{
-      this.currentState = super.getState('textSizeState');
+      this.currentState = super.getState('astralAccessibility_textSizeState');
       this._runStateLogic();
     }
   }
@@ -172,7 +172,7 @@ export class TextSizeComponent extends AccessabilityComponent {
 
   nextState() {
     this.observer.disconnect();
-    this.currentState = super.changeState(this.currentState, 'textSizeState')
+    this.currentState = super.changeState(this.currentState, 'astralAccessibility_textSizeState', this.states.length)
 
     this._runStateLogic();
     if (this.currentState !== 0) {

@@ -7,20 +7,22 @@ import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
   template: ``,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class AccessabilityComponent {
+export class AccessibilityComponent {
   constructor(){
   }
 
-  changeState(currentState: number, state: string){
+  changeState(currentState: number, state: string, numOfStates: number){
     currentState += 1;
-    currentState = currentState % 4;
+    currentState = currentState % numOfStates;
     this.saveState(state, JSON.stringify(currentState));
     return currentState
   }
 
+
   saveState(key: string, value: string){
     localStorage.setItem(key, value);
   }
+
   getState(key: string){
     const textSizeState = localStorage.getItem(key);
     return Number(textSizeState);
