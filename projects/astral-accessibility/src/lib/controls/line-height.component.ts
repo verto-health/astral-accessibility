@@ -77,17 +77,17 @@ export class LineHeightComponent {
   states = [this.base, "Light Height", "Moderate Height", "Heavy Height"];
 
   lowHeight = `
-  *{
-    line-height: 1.5 !important;
-  }`;
+  *:not(.astral-accessibility *) {
+      line-height: 1.5 !important;
+    }`;
 
   moderateHeight = `
-  *{
+  *:not(.astral-accessibility *) {
     line-height: 3 !important;
   }`;
 
   heavyHeight = `
-  *{
+  *:not(.astral-accessibility *) {
     line-height: 4 !important;
   }`;
 
