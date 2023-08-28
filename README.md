@@ -1,4 +1,7 @@
 # Astral Accessibility: Open Source Accessibility Widget
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![Astral Accessibility](docs/astral.png)
 
@@ -50,3 +53,25 @@ After running the steps above, you will have access to the Cypress test suite. T
 $ yarn cypress open
 ```
 Choose E2E Testing, and select a browser to start running the Specs
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/shameerrehman"><img src="https://avatars.githubusercontent.com/u/94149351?v=4?s=100" width="100px;" alt="shameerrehman"/><br /><sub><b>shameerrehman</b></sub></a><br /><a href="https://github.com/verto-health/astral-accessibility/commits?author=shameerrehman" title="Tests">⚠️</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
