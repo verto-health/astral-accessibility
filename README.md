@@ -50,3 +50,14 @@ After running the steps above, you will have access to the Cypress test suite. T
 $ yarn cypress open
 ```
 Choose E2E Testing, and select a browser to start running the Specs
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+[![All Contributors](https://img.shields.io/github/all-contributors/verto-health/astral-accessibility?color=ee8449&style=flat-square)](#contributors)
+<!-- ALL-CONTRIBUTORS-LIST:END -->
