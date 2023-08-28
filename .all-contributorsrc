@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "shameerrehman",
+      "name": "shameerrehman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/94149351?v=4",
+      "profile": "https://github.com/shameerrehman",
+      "contributions": [
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "astral-accessibility",
+  "projectOwner": "verto-health"
+}
