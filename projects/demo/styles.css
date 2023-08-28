@@ -85,7 +85,6 @@ body {
   padding: 2rem;
 }
 
-
 .home-page .card h1 {
   margin: 0;
 }
@@ -93,7 +92,6 @@ body {
 .home-page .cardp {
   width: 100%;
 }
-
 
 @media (max-width: 550px) {
   .home-page .card {

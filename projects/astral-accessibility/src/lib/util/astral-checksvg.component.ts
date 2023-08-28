@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { Component, Input } from "@angular/core";
+import { NgIf } from "@angular/common";
 
 @Component({
-  selector: 'astral-widget-checkmark',
+  selector: "astral-widget-checkmark",
   standalone: true,
   template: `
     <div *ngIf="isActive" class="icon active active-check">

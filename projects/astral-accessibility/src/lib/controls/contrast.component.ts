@@ -1,9 +1,9 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
-  selector: 'astral-contrast',
+  selector: "astral-contrast",
   standalone: true,
   template: `
     <button
@@ -86,8 +86,8 @@ export class ContrastComponent {
   document = inject(DOCUMENT);
 
   currentState = 0;
-  base = 'Contrast';
-  states = [this.base, 'Invert', 'High Contrast', 'Dark High Contrast'];
+  base = "Contrast";
+  states = [this.base, "Invert", "High Contrast", "Dark High Contrast"];
 
   _style: HTMLStyleElement;
 
@@ -100,15 +100,15 @@ export class ContrastComponent {
 
   private _runStateLogic() {
     this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === 'Invert') {
-      this.document.documentElement.classList.add('astral_inverted');
+    if (this.states[this.currentState] === "Invert") {
+      this.document.documentElement.classList.add("astral_inverted");
     } else {
-      this.document.documentElement.classList.remove('astral_inverted');
+      this.document.documentElement.classList.remove("astral_inverted");
     }
 
-    if (this.states[this.currentState] === 'High Contrast') {
+    if (this.states[this.currentState] === "High Contrast") {
       this._style.textContent = `
             body > :not(astral-accessibility) * {
                 background: transparent !important;
@@ -121,7 +121,7 @@ export class ContrastComponent {
         `;
     }
 
-    if (this.states[this.currentState] === 'Dark High Contrast') {
+    if (this.states[this.currentState] === "Dark High Contrast") {
       this._style.textContent = `
             body > :not(astral-accessibility), body > :not(astral-accessibility) * {
               background: black !important;
