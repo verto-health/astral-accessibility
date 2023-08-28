@@ -69,12 +69,7 @@ import { AccessibilityComponent } from './accessibility.component';
 export class ScreenMaskComponent extends AccessibilityComponent {
   constructor(private renderer: Renderer2) {
     super()
-    if(super.getState('astralAccessibility_screenMaskState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_screenMaskState');
-      this._runStateLogic();
-    }
+    this.currentState = super.setLogic('astralAccessibility_screenMaskState')
   }
 
   cursorY = 0;
@@ -172,7 +167,7 @@ export class ScreenMaskComponent extends AccessibilityComponent {
 
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_screenMaskState');
   base = 'Screen Mask';
   states = [this.base, 'Large Cursor', 'Reading Mask'];
 
@@ -184,7 +179,7 @@ export class ScreenMaskComponent extends AccessibilityComponent {
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement('style');
 

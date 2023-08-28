@@ -1,13 +1,11 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
+import { Component } from '@angular/core';
 
 @Component({
   standalone: true,
   template: ``,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [],
 })
-export class AccessibilityComponent {
+export abstract class AccessibilityComponent {
   constructor(){
   }
 
@@ -18,7 +16,6 @@ export class AccessibilityComponent {
     return currentState
   }
 
-
   saveState(key: string, value: string){
     localStorage.setItem(key, value);
   }
@@ -27,4 +24,20 @@ export class AccessibilityComponent {
     const textSizeState = localStorage.getItem(key);
     return Number(textSizeState);
   }
+
+  setLogic(state: string){
+    const currentState = this.getState(state);
+    if (currentState == null){
+      return 0
+    }
+    else{
+      this._runStateLogic()
+      return currentState
+    }
+  }
+
+  protected _runStateLogic(){
+    //to be overridden
+  }
+
 }

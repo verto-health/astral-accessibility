@@ -79,7 +79,7 @@ import { AccessibilityComponent } from './accessibility.component';
 export class TextSizeComponent extends AccessibilityComponent {
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_textSizeState');
   currentScale = 1;
   base = 'Bigger Text';
   states = [this.base, 'Medium Text', 'Large Text', 'Extra Large Text'];
@@ -110,13 +110,7 @@ export class TextSizeComponent extends AccessibilityComponent {
     });
     /* No observer here, we don't want it to be on by default */
 
-
-    if(super.getState('astralAccessibility_textSizeState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_textSizeState');
-      this._runStateLogic();
-    }
+    this.currentState = super.setLogic('astralAccessibility_textSizeState')
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
@@ -181,7 +175,7 @@ export class TextSizeComponent extends AccessibilityComponent {
     }
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     let previousScale = this.currentScale;
 
     if (this.states[this.currentState] === 'Medium Text') {

@@ -79,16 +79,11 @@ import { AccessibilityComponent } from './accessibility.component';
 export class TextSpacingComponent extends AccessibilityComponent {
   constructor(){
     super()
-    if(super.getState('astralAccessibility_textSpacingState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_textSpacingState');
-      this._runStateLogic();
-    }
+    this.currentState = super.setLogic('astralAccessibility_textSpacingState')
   }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_textSpacingState');
   base = 'Text Spacing';
   states = [this.base, 'Light Spacing', 'Moderate Spacing', 'Heavy Spacing'];
 
@@ -100,7 +95,7 @@ export class TextSpacingComponent extends AccessibilityComponent {
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement('style');
 

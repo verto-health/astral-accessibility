@@ -90,16 +90,11 @@ import { AccessibilityComponent } from './accessibility.component';
 export class SaturateComponent extends AccessibilityComponent {
   constructor(){
     super()
-    if(super.getState('astralAccessibility_saturateState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_saturateState');
-      this._runStateLogic();
-    }
+    this.currentState = super.setLogic('astralAccessibility_saturateState')
   }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_saturateState');
   base = 'Saturation';
   states = [this.base, 'Low Saturation', 'High Saturation', 'Desaturated'];
 
@@ -109,7 +104,7 @@ export class SaturateComponent extends AccessibilityComponent {
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._resetSaturation();
 
     if (this.states[this.currentState] === 'Low Saturation') {

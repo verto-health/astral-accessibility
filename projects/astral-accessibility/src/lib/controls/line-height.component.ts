@@ -60,16 +60,11 @@ import { AccessibilityComponent } from './accessibility.component';
 export class LineHeightComponent extends AccessibilityComponent {
   constructor(private renderer: Renderer2) {
     super()
-    if(super.getState('astralAccessibility_lineHeightState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_lineHeightState');
-      this._runStateLogic();
-    }
+    this.currentState = super.setLogic('astralAccessibility_lineHeightState')
   }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_lineHeightState');
   base = 'Line Height';
   states = [this.base, 'Light Height', 'Moderate Height', 'Heavy Height'];
 
@@ -100,7 +95,7 @@ export class LineHeightComponent extends AccessibilityComponent {
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement('style');
 

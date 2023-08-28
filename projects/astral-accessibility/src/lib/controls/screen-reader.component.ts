@@ -96,12 +96,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
 
   constructor(private renderer: Renderer2) {
     super()
-    if(super.getState('astralAccessibility_screenReaderState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_screenReaderState');
-      this._runStateLogic();
-    }
+    this.currentState = super.setLogic('astralAccessibility_screenReaderState')
   }
 
   readText(x: number, y: number) {
@@ -211,7 +206,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
 
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_screenReaderState');
   base = 'Screen Reader';
   unavailableMessage = 'Screen Reader unavailable on device';
   states = [this.base, 'Read Normal', 'Read Fast', 'Read Slow'];
@@ -224,7 +219,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement('style');
 

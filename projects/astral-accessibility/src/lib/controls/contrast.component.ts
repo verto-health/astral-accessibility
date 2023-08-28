@@ -85,17 +85,12 @@ import { AccessibilityComponent } from './accessibility.component';
 })
 export class ContrastComponent extends AccessibilityComponent {
   constructor(){
-    super()
-    if(super.getState('astralAccessibility_contrastState') == null){
-      return;
-    }else{
-      this.currentState = super.getState('astralAccessibility_contrastState');
-      this._runStateLogic();
-    }
+    super()    
+    this.currentState = super.setLogic('astralAccessibility_contrastState')
   }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState('astralAccessibility_contrastState');
   base = 'Contrast';
   states = [this.base, 'Invert', 'High Contrast', 'Dark High Contrast'];
 
@@ -107,7 +102,7 @@ export class ContrastComponent extends AccessibilityComponent {
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement('style');
 
