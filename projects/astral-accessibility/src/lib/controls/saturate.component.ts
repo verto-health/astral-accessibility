@@ -102,7 +102,7 @@ export class SaturateComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_saturateState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();

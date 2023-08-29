@@ -181,7 +181,7 @@ export class ScreenMaskComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_screenMaskState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();

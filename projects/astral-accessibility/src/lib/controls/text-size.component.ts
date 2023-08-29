@@ -169,7 +169,7 @@ export class TextSizeComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_textSizeState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();

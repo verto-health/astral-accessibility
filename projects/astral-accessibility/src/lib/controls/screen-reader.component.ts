@@ -217,7 +217,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_screenReaderState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();

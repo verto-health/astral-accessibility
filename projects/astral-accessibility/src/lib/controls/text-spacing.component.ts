@@ -93,7 +93,7 @@ export class TextSpacingComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_textSpacingState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();

@@ -100,7 +100,7 @@ export class ContrastComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_contrastState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();

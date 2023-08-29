@@ -105,7 +105,7 @@ export class LineHeightComponent extends AccessibilityComponent {
     this.currentState = super.changeState(
       this.currentState,
       "astralAccessibility_lineHeightState",
-      this.states.length
+      this.states.length,
     );
 
     this._runStateLogic();
