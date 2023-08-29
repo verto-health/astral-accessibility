@@ -187,7 +187,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
       "click",
       (e) => {
         this.readText(e.x, e.y);
-      }
+      },
     );
     this.globalListenFunction = this.renderer.listen(
       "document",
@@ -195,7 +195,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
       (e) => {
         var touch = e.touches[0] || e.changedTouches[0];
         this.readText(touch.pageX, touch.pageY);
-      }
+      },
     );
   }
 

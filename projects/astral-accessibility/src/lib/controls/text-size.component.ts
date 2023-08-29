@@ -138,7 +138,7 @@ export class TextSizeComponent extends AccessibilityComponent {
       Array.from(node.childNodes).some(
         (child) =>
           child.nodeType === child.TEXT_NODE &&
-          child.nodeValue?.replace(/\s*/i, "")?.length
+          child.nodeValue?.replace(/\s*/i, "")?.length,
       ) ||
       children.length === 0
     ) {

@@ -120,7 +120,7 @@ export class LineHeightComponent extends AccessibilityComponent {
         this.lowHeightStyleTag = this.renderer.createElement("style");
         this.renderer.appendChild(
           this.lowHeightStyleTag,
-          this.renderer.createText(this.lowHeight)
+          this.renderer.createText(this.lowHeight),
         );
         this.renderer.appendChild(this.document.head, this.lowHeightStyleTag);
       }
@@ -136,18 +136,18 @@ export class LineHeightComponent extends AccessibilityComponent {
         this.moderateHeightStyleTag = this.renderer.createElement("style");
         this.renderer.appendChild(
           this.moderateHeightStyleTag,
-          this.renderer.createText(this.moderateHeight)
+          this.renderer.createText(this.moderateHeight),
         );
         this.renderer.appendChild(
           this.document.head,
-          this.moderateHeightStyleTag
+          this.moderateHeightStyleTag,
         );
       }
     } else {
       if (this.moderateHeightStyleTag) {
         this.renderer.removeChild(
           this.document.head,
-          this.moderateHeightStyleTag
+          this.moderateHeightStyleTag,
         );
         this.moderateHeightStyleTag = null;
       }
@@ -158,7 +158,7 @@ export class LineHeightComponent extends AccessibilityComponent {
         this.heavyHeightStyleTag = this.renderer.createElement("style");
         this.renderer.appendChild(
           this.heavyHeightStyleTag,
-          this.renderer.createText(this.heavyHeight)
+          this.renderer.createText(this.heavyHeight),
         );
         this.renderer.appendChild(this.document.head, this.heavyHeightStyleTag);
       }

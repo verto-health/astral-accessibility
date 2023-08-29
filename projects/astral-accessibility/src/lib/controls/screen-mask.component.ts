@@ -211,21 +211,21 @@ export class ScreenMaskComponent extends AccessibilityComponent {
       const maskBottomCss = this.renderer.createElement("style");
       this.renderer.appendChild(
         maskBottomCss,
-        this.renderer.createText(this.maskBottomStyle)
+        this.renderer.createText(this.maskBottomStyle),
       );
       this.renderer.appendChild(this.document.head, maskBottomCss);
 
       const maskTopCss = this.renderer.createElement("style");
       this.renderer.appendChild(
         maskTopCss,
-        this.renderer.createText(this.maskTopStyle)
+        this.renderer.createText(this.maskTopStyle),
       );
       this.renderer.appendChild(this.document.head, maskTopCss);
 
       const screenMaskContainerCss = this.renderer.createElement("style");
       this.renderer.appendChild(
         screenMaskContainerCss,
-        this.renderer.createText(this.screenMaskContainerStyle)
+        this.renderer.createText(this.screenMaskContainerStyle),
       );
       this.renderer.appendChild(this.document.head, screenMaskContainerCss);
 
@@ -236,7 +236,7 @@ export class ScreenMaskComponent extends AccessibilityComponent {
       this.toggleListeners(true);
     } else {
       const removeMaskContainer = document.querySelector(
-        ".screen-mask-container"
+        ".screen-mask-container",
       );
       if (removeMaskContainer) {
         this.renderer.removeChild(document.body, removeMaskContainer);

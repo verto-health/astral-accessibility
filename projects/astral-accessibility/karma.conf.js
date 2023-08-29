@@ -27,7 +27,7 @@ module.exports = function (config) {
     coverageReporter: {
       dir: require("path").join(
         __dirname,
-        "../../coverage/astral-accessibility"
+        "../../coverage/astral-accessibility",
       ),
       subdir: ".",
       reporters: [{ type: "html" }, { type: "text-summary" }],

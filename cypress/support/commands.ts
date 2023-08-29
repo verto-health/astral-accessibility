@@ -61,10 +61,10 @@ Cypress.Commands.add("waitForResource", (name, options = {}) => {
               // let's resolve with the found performance object
               // to allow tests to inspect it
               return foundResource;
-            })
+            }),
           );
         }, 100);
       });
-    }
+    },
   );
 });
