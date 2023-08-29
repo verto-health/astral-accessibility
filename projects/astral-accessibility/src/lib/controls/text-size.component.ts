@@ -1,10 +1,10 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessibilityComponent } from './accessibility.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
-  selector: 'astral-text-size',
+  selector: "astral-text-size",
   standalone: true,
   template: `
     <button
@@ -79,10 +79,10 @@ import { AccessibilityComponent } from './accessibility.component';
 export class TextSizeComponent extends AccessibilityComponent {
   document = inject(DOCUMENT);
 
-  currentState = super.getState('astralAccessibility_textSizeState');
+  currentState = super.getState("astralAccessibility_textSizeState");
   currentScale = 1;
-  base = 'Bigger Text';
-  states = [this.base, 'Medium Text', 'Large Text', 'Extra Large Text'];
+  base = "Bigger Text";
+  states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
   private initialStyles = new WeakMap();
 
   _style: HTMLStyleElement;
@@ -96,7 +96,7 @@ export class TextSizeComponent extends AccessibilityComponent {
   config = { attributes: true, childList: true, subtree: true };
 
   constructor() {
-    super()
+    super();
     this.observer = new MutationObserver((mutations: MutationRecord[]) => {
       this.observer.disconnect();
       mutations.forEach((mutation) => {
@@ -110,7 +110,7 @@ export class TextSizeComponent extends AccessibilityComponent {
     });
     /* No observer here, we don't want it to be on by default */
 
-    this.currentState = super.setLogic('astralAccessibility_textSizeState')
+    this.currentState = super.setLogic("astralAccessibility_textSizeState");
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
@@ -118,14 +118,14 @@ export class TextSizeComponent extends AccessibilityComponent {
     if (!this.initialStyles.has(node)) {
       // store initial styling of fontSize, lineHeight, and wordSpacing
       this.initialStyles.set(node, {
-        'font-size': node.style.fontSize,
-        'line-height': node.style.lineHeight,
-        'word-spacing': node.style.wordSpacing,
+        "font-size": node.style.fontSize,
+        "line-height": node.style.lineHeight,
+        "word-spacing": node.style.wordSpacing,
       });
     }
 
     const children = node.children;
-    const excludeNodes = ['SCRIPT'];
+    const excludeNodes = ["SCRIPT"];
     // traverse and update children first
     if (children.length > 0) {
       for (const child of children) {
@@ -138,7 +138,7 @@ export class TextSizeComponent extends AccessibilityComponent {
       Array.from(node.childNodes).some(
         (child) =>
           child.nodeType === child.TEXT_NODE &&
-          child.nodeValue?.replace(/\s*/i, '')?.length
+          child.nodeValue?.replace(/\s*/i, "")?.length
       ) ||
       children.length === 0
     ) {
@@ -166,7 +166,11 @@ export class TextSizeComponent extends AccessibilityComponent {
 
   nextState() {
     this.observer.disconnect();
-    this.currentState = super.changeState(this.currentState, 'astralAccessibility_textSizeState', this.states.length)
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_textSizeState",
+      this.states.length
+    );
 
     this._runStateLogic();
     if (this.currentState !== 0) {
@@ -178,15 +182,15 @@ export class TextSizeComponent extends AccessibilityComponent {
   protected override _runStateLogic() {
     let previousScale = this.currentScale;
 
-    if (this.states[this.currentState] === 'Medium Text') {
+    if (this.states[this.currentState] === "Medium Text") {
       this.currentScale = 1.2;
     }
 
-    if (this.states[this.currentState] === 'Large Text') {
+    if (this.states[this.currentState] === "Large Text") {
       this.currentScale = 1.5;
     }
 
-    if (this.states[this.currentState] === 'Extra Large Text') {
+    if (this.states[this.currentState] === "Extra Large Text") {
       this.currentScale = 1.8;
     }
 

@@ -1,10 +1,10 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessibilityComponent } from './accessibility.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
-  selector: 'astral-text-spacing',
+  selector: "astral-text-spacing",
   standalone: true,
   template: `
     <button
@@ -77,44 +77,48 @@ import { AccessibilityComponent } from './accessibility.component';
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent extends AccessibilityComponent {
-  constructor(){
-    super()
-    this.currentState = super.setLogic('astralAccessibility_textSpacingState')
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_textSpacingState");
   }
   document = inject(DOCUMENT);
 
-  currentState = super.getState('astralAccessibility_textSpacingState');
-  base = 'Text Spacing';
-  states = [this.base, 'Light Spacing', 'Moderate Spacing', 'Heavy Spacing'];
+  currentState = super.getState("astralAccessibility_textSpacingState");
+  base = "Text Spacing";
+  states = [this.base, "Light Spacing", "Moderate Spacing", "Heavy Spacing"];
 
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'astralAccessibility_textSpacingState', this.states.length)
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_textSpacingState",
+      this.states.length
+    );
 
     this._runStateLogic();
   }
 
   protected override _runStateLogic() {
     this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === 'Light Spacing') {
-      this.document.documentElement.classList.add('astral_light_spacing');
+    if (this.states[this.currentState] === "Light Spacing") {
+      this.document.documentElement.classList.add("astral_light_spacing");
     } else {
-      this.document.documentElement.classList.remove('astral_light_spacing');
+      this.document.documentElement.classList.remove("astral_light_spacing");
     }
 
-    if (this.states[this.currentState] === 'Moderate Spacing') {
-      this.document.documentElement.classList.add('astral_moderate_spacing');
+    if (this.states[this.currentState] === "Moderate Spacing") {
+      this.document.documentElement.classList.add("astral_moderate_spacing");
     } else {
-      this.document.documentElement.classList.remove('astral_moderate_spacing');
+      this.document.documentElement.classList.remove("astral_moderate_spacing");
     }
 
-    if (this.states[this.currentState] === 'Heavy Spacing') {
-      this.document.documentElement.classList.add('astral_heavy_spacing');
+    if (this.states[this.currentState] === "Heavy Spacing") {
+      this.document.documentElement.classList.add("astral_heavy_spacing");
     } else {
-      this.document.documentElement.classList.remove('astral_heavy_spacing');
+      this.document.documentElement.classList.remove("astral_heavy_spacing");
     }
 
     this.document.body.appendChild(this._style);

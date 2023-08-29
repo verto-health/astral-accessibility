@@ -1,10 +1,10 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, Renderer2, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessibilityComponent } from './accessibility.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, Renderer2, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
-  selector: 'astral-line-height',
+  selector: "astral-line-height",
   standalone: true,
   template: `
     <button
@@ -20,8 +20,20 @@ import { AccessibilityComponent } from './accessibility.component';
               active: states[currentState] != base
             }"
           >
-            <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13 6L21 6.00048M13 12L21 12.0005M13 18L21 18.0005M6 4V20M6 4L3 7M6 4L9 7M6 20L3 17M6 20L9 17" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="25px"
+              height="25px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13 6L21 6.00048M13 12L21 12.0005M13 18L21 18.0005M6 4V20M6 4L3 7M6 4L9 7M6 20L3 17M6 20L9 17"
+                stroke="#ffffff"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
 
@@ -59,14 +71,14 @@ import { AccessibilityComponent } from './accessibility.component';
 })
 export class LineHeightComponent extends AccessibilityComponent {
   constructor(private renderer: Renderer2) {
-    super()
-    this.currentState = super.setLogic('astralAccessibility_lineHeightState')
+    super();
+    this.currentState = super.setLogic("astralAccessibility_lineHeightState");
   }
   document = inject(DOCUMENT);
 
-  currentState = super.getState('astralAccessibility_lineHeightState');
-  base = 'Line Height';
-  states = [this.base, 'Light Height', 'Moderate Height', 'Heavy Height'];
+  currentState = super.getState("astralAccessibility_lineHeightState");
+  base = "Line Height";
+  states = [this.base, "Light Height", "Moderate Height", "Heavy Height"];
 
   lowHeight = `
   *{
@@ -90,19 +102,26 @@ export class LineHeightComponent extends AccessibilityComponent {
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'astralAccessibility_lineHeightState', this.states.length)
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_lineHeightState",
+      this.states.length
+    );
 
     this._runStateLogic();
   }
 
   protected override _runStateLogic() {
     this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === 'Light Height') {
+    if (this.states[this.currentState] === "Light Height") {
       if (!this.lowHeightStyleTag) {
-        this.lowHeightStyleTag = this.renderer.createElement('style');
-        this.renderer.appendChild(this.lowHeightStyleTag, this.renderer.createText(this.lowHeight));
+        this.lowHeightStyleTag = this.renderer.createElement("style");
+        this.renderer.appendChild(
+          this.lowHeightStyleTag,
+          this.renderer.createText(this.lowHeight)
+        );
         this.renderer.appendChild(this.document.head, this.lowHeightStyleTag);
       }
     } else {
@@ -112,23 +131,35 @@ export class LineHeightComponent extends AccessibilityComponent {
       }
     }
 
-    if (this.states[this.currentState] === 'Moderate Height') {
+    if (this.states[this.currentState] === "Moderate Height") {
       if (!this.moderateHeightStyleTag) {
-        this.moderateHeightStyleTag = this.renderer.createElement('style');
-        this.renderer.appendChild(this.moderateHeightStyleTag, this.renderer.createText(this.moderateHeight));
-        this.renderer.appendChild(this.document.head, this.moderateHeightStyleTag);
+        this.moderateHeightStyleTag = this.renderer.createElement("style");
+        this.renderer.appendChild(
+          this.moderateHeightStyleTag,
+          this.renderer.createText(this.moderateHeight)
+        );
+        this.renderer.appendChild(
+          this.document.head,
+          this.moderateHeightStyleTag
+        );
       }
     } else {
       if (this.moderateHeightStyleTag) {
-        this.renderer.removeChild(this.document.head, this.moderateHeightStyleTag);
+        this.renderer.removeChild(
+          this.document.head,
+          this.moderateHeightStyleTag
+        );
         this.moderateHeightStyleTag = null;
       }
     }
 
-    if (this.states[this.currentState] === 'Heavy Height') {
+    if (this.states[this.currentState] === "Heavy Height") {
       if (!this.heavyHeightStyleTag) {
-        this.heavyHeightStyleTag = this.renderer.createElement('style');
-        this.renderer.appendChild(this.heavyHeightStyleTag, this.renderer.createText(this.heavyHeight));
+        this.heavyHeightStyleTag = this.renderer.createElement("style");
+        this.renderer.appendChild(
+          this.heavyHeightStyleTag,
+          this.renderer.createText(this.heavyHeight)
+        );
         this.renderer.appendChild(this.document.head, this.heavyHeightStyleTag);
       }
     } else {

@@ -1,10 +1,10 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessibilityComponent } from './accessibility.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
-  selector: 'astral-contrast',
+  selector: "astral-contrast",
   standalone: true,
   template: `
     <button
@@ -84,35 +84,39 @@ import { AccessibilityComponent } from './accessibility.component';
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ContrastComponent extends AccessibilityComponent {
-  constructor(){
-    super()    
-    this.currentState = super.setLogic('astralAccessibility_contrastState')
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_contrastState");
   }
   document = inject(DOCUMENT);
 
-  currentState = super.getState('astralAccessibility_contrastState');
-  base = 'Contrast';
-  states = [this.base, 'Invert', 'High Contrast', 'Dark High Contrast'];
+  currentState = super.getState("astralAccessibility_contrastState");
+  base = "Contrast";
+  states = [this.base, "Invert", "High Contrast", "Dark High Contrast"];
 
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'astralAccessibility_contrastState', this.states.length)
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_contrastState",
+      this.states.length
+    );
 
     this._runStateLogic();
   }
 
   protected override _runStateLogic() {
     this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === 'Invert') {
-      this.document.documentElement.classList.add('astral_inverted');
+    if (this.states[this.currentState] === "Invert") {
+      this.document.documentElement.classList.add("astral_inverted");
     } else {
-      this.document.documentElement.classList.remove('astral_inverted');
+      this.document.documentElement.classList.remove("astral_inverted");
     }
 
-    if (this.states[this.currentState] === 'High Contrast') {
+    if (this.states[this.currentState] === "High Contrast") {
       this._style.textContent = `
             body > :not(astral-accessibility) * {
                 background: transparent !important;
@@ -125,7 +129,7 @@ export class ContrastComponent extends AccessibilityComponent {
         `;
     }
 
-    if (this.states[this.currentState] === 'Dark High Contrast') {
+    if (this.states[this.currentState] === "Dark High Contrast") {
       this._style.textContent = `
             body > :not(astral-accessibility), body > :not(astral-accessibility) * {
               background: black !important;
@@ -141,5 +145,4 @@ export class ContrastComponent extends AccessibilityComponent {
 
     this.document.body.appendChild(this._style);
   }
-  
 }

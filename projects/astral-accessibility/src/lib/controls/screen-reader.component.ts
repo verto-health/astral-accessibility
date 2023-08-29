@@ -1,10 +1,10 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject, Renderer2 } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessibilityComponent } from './accessibility.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject, Renderer2 } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
-  selector: 'astral-screen-reader',
+  selector: "astral-screen-reader",
   standalone: true,
   template: `
     <button
@@ -95,8 +95,8 @@ export class ScreenReaderComponent extends AccessibilityComponent {
   synthesisAvailable = true;
 
   constructor(private renderer: Renderer2) {
-    super()
-    this.currentState = super.setLogic('astralAccessibility_screenReaderState')
+    super();
+    this.currentState = super.setLogic("astralAccessibility_screenReaderState");
   }
 
   readText(x: number, y: number) {
@@ -109,7 +109,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
           this.speech.text = element.ariaLabel;
         } else {
           // otherwise get text content
-          this.speech.text = element.textContent || '';
+          this.speech.text = element.textContent || "";
         }
         // cancel before speech, otherwise doesn't work
         speechSynthesis.cancel();
@@ -119,7 +119,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
   }
 
   getDefaultVoice(voices: Array<SpeechSynthesisVoice>, isApple = false) {
-    const defaultVoice = 'Daniel';
+    const defaultVoice = "Daniel";
     if (voices.length === 0) {
       this.synthesisAvailable = false;
       return null;
@@ -142,7 +142,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
     while (
       !voices[i].default &&
       i < voices.length &&
-      !voices[i].voiceURI.toUpperCase().includes('FLO')
+      !voices[i].voiceURI.toUpperCase().includes("FLO")
     ) {
       i++;
     }
@@ -167,7 +167,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
 
     // default settings, currently user has no way of modifying these
     this.speech.voice = this.getDefaultVoice(voices, this.isApple);
-    this.speech.lang = 'en';
+    this.speech.lang = "en";
     this.speech.rate = 1;
     this.speech.pitch = 1;
     this.speech.volume = 1;
@@ -175,7 +175,7 @@ export class ScreenReaderComponent extends AccessibilityComponent {
     // Voices doesn't get immediately returned sometimes
     // https://www.bennadel.com/blog/3955-having-fun-with-the-speechsynthesis-api-in-angular-11-0-5.htm
     if (!voices.length) {
-      speechSynthesis.addEventListener('voiceschanged', () => {
+      speechSynthesis.addEventListener("voiceschanged", () => {
         voices = speechSynthesis.getVoices();
         this.speech.voice = this.getDefaultVoice(voices, this.isApple);
       });
@@ -183,15 +183,15 @@ export class ScreenReaderComponent extends AccessibilityComponent {
 
     // find the element that the user tapped/clicked on
     this.globalListenFunction = this.renderer.listen(
-      'document',
-      'click',
+      "document",
+      "click",
       (e) => {
         this.readText(e.x, e.y);
       }
     );
     this.globalListenFunction = this.renderer.listen(
-      'document',
-      'touchstart',
+      "document",
+      "touchstart",
       (e) => {
         var touch = e.touches[0] || e.changedTouches[0];
         this.readText(touch.pageX, touch.pageY);
@@ -206,32 +206,36 @@ export class ScreenReaderComponent extends AccessibilityComponent {
 
   document = inject(DOCUMENT);
 
-  currentState = super.getState('astralAccessibility_screenReaderState');
-  base = 'Screen Reader';
-  unavailableMessage = 'Screen Reader unavailable on device';
-  states = [this.base, 'Read Normal', 'Read Fast', 'Read Slow'];
+  currentState = super.getState("astralAccessibility_screenReaderState");
+  base = "Screen Reader";
+  unavailableMessage = "Screen Reader unavailable on device";
+  states = [this.base, "Read Normal", "Read Fast", "Read Slow"];
 
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'astralAccessibility_screenReaderState', this.states.length)
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_screenReaderState",
+      this.states.length
+    );
 
     this._runStateLogic();
   }
 
   protected override _runStateLogic() {
     this._style?.remove?.();
-    this._style = this.document.createElement('style');
+    this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === 'Read Normal') {
+    if (this.states[this.currentState] === "Read Normal") {
       this.speech.rate = 0.8;
     }
 
-    if (this.states[this.currentState] === 'Read Fast') {
+    if (this.states[this.currentState] === "Read Fast") {
       this.speech.rate = this.isApple ? 1.3 : 1.7;
     }
 
-    if (this.states[this.currentState] === 'Read Slow') {
+    if (this.states[this.currentState] === "Read Slow") {
       this.speech.rate = 0.4;
     }
 

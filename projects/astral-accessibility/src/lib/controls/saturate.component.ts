@@ -1,10 +1,10 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AstralCheckmarkSvgComponent } from '../util/astral-checksvg.component';
-import { AccessibilityComponent } from './accessibility.component';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
-  selector: 'astral-saturate',
+  selector: "astral-saturate",
   standalone: true,
   template: `
     <button
@@ -88,18 +88,22 @@ import { AccessibilityComponent } from './accessibility.component';
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class SaturateComponent extends AccessibilityComponent {
-  constructor(){
-    super()
-    this.currentState = super.setLogic('astralAccessibility_saturateState')
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_saturateState");
   }
   document = inject(DOCUMENT);
 
-  currentState = super.getState('astralAccessibility_saturateState');
-  base = 'Saturation';
-  states = [this.base, 'Low Saturation', 'High Saturation', 'Desaturated'];
+  currentState = super.getState("astralAccessibility_saturateState");
+  base = "Saturation";
+  states = [this.base, "Low Saturation", "High Saturation", "Desaturated"];
 
   nextState() {
-    this.currentState = super.changeState(this.currentState, 'astralAccessibility_saturateState', this.states.length)
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_saturateState",
+      this.states.length
+    );
 
     this._runStateLogic();
   }
@@ -107,22 +111,22 @@ export class SaturateComponent extends AccessibilityComponent {
   protected override _runStateLogic() {
     this._resetSaturation();
 
-    if (this.states[this.currentState] === 'Low Saturation') {
-      this.document.documentElement.classList.add('astral_low_saturation');
+    if (this.states[this.currentState] === "Low Saturation") {
+      this.document.documentElement.classList.add("astral_low_saturation");
     }
 
-    if (this.states[this.currentState] === 'High Saturation') {
-      this.document.documentElement.classList.add('astral_high_saturation');
+    if (this.states[this.currentState] === "High Saturation") {
+      this.document.documentElement.classList.add("astral_high_saturation");
     }
 
-    if (this.states[this.currentState] === 'Desaturated') {
-      this.document.documentElement.classList.add('astral_desaturated');
+    if (this.states[this.currentState] === "Desaturated") {
+      this.document.documentElement.classList.add("astral_desaturated");
     }
   }
 
   private _resetSaturation() {
-    this.document.documentElement.classList.remove('astral_low_saturation');
-    this.document.documentElement.classList.remove('astral_high_saturation');
-    this.document.documentElement.classList.remove('astral_desaturated');
+    this.document.documentElement.classList.remove("astral_low_saturation");
+    this.document.documentElement.classList.remove("astral_high_saturation");
+    this.document.documentElement.classList.remove("astral_desaturated");
   }
 }

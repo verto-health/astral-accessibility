@@ -1,8 +1,8 @@
-import { DOCUMENT, NgIf, NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject } from "@angular/core";
 
 @Component({
-  selector: 'astral-invert',
+  selector: "astral-invert",
   standalone: true,
   template: `
     <button
@@ -17,7 +17,11 @@ import { Component, inject } from '@angular/core';
         ></i>
         <span>Invert Colours</span>
       </div>
-      <i *ngIf="inverted" class="pi pi-check icon active active-check" style="font-weight: 900"></i>
+      <i
+        *ngIf="inverted"
+        class="pi pi-check icon active active-check"
+        style="font-weight: 900"
+      ></i>
     </button>
   `,
   imports: [NgIf, NgClass],
@@ -26,14 +30,14 @@ export class InvertComponent {
   document = inject(DOCUMENT);
 
   get inverted() {
-    return this.document.documentElement.classList.contains('astral_inverted');
+    return this.document.documentElement.classList.contains("astral_inverted");
   }
 
   invertPage() {
-    this.document.documentElement.classList.add('astral_inverted');
+    this.document.documentElement.classList.add("astral_inverted");
   }
 
   removeInvertCss() {
-    this.document.documentElement.classList.remove('astral_inverted');
+    this.document.documentElement.classList.remove("astral_inverted");
   }
 }
