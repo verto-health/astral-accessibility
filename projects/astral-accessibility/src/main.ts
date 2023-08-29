@@ -4,12 +4,22 @@ import { createApplication } from "@angular/platform-browser";
 import { AstralAccessibilityComponent } from "./lib/astral-accessibility.component";
 import "zone.js";
 
-(window as any).initializeAstral = async function initializeAstral(features?: Record<string, any>) {
+(window as any).initializeAstral = async function initializeAstral(
+  features?: Record<string, any>,
+) {
   try {
     //When no options are given by default all widgets are allowed
     if (!features) {
       features = {
-        enabledFeatures: ["Screen Reader", "Contrast", "Saturation", "Text Size", "Text Spacing", "Screen Mask", "Line Height"]
+        enabledFeatures: [
+          "Screen Reader",
+          "Contrast",
+          "Saturation",
+          "Text Size",
+          "Text Spacing",
+          "Screen Mask",
+          "Line Height",
+        ],
       };
     }
 
@@ -20,8 +30,13 @@ import "zone.js";
     customElements.define("astral-accessibility", widget);
 
     const doc = app.injector.get(DOCUMENT);
-    const astralAccessibilityElement = doc.createElement('astral-accessibility');
-    astralAccessibilityElement.setAttribute('astral-features', JSON.stringify(features));
+    const astralAccessibilityElement = doc.createElement(
+      "astral-accessibility",
+    );
+    astralAccessibilityElement.setAttribute(
+      "astral-features",
+      JSON.stringify(features),
+    );
     doc.body.appendChild(astralAccessibilityElement);
   } catch (err) {
     console.error(err);

@@ -36,12 +36,12 @@ export class AstralAccessibilityComponent {
   enabledFeatures: String[] = [];
 
   ngOnInit() {
-    const astralElement = document.querySelector('astral-accessibility');
-    const astralOptions = astralElement?.getAttribute('astral-features');
+    const astralElement = document.querySelector("astral-accessibility");
+    const astralOptions = astralElement?.getAttribute("astral-features");
 
     if (astralOptions) {
       this.options = JSON.parse(astralOptions);
-      this.enabledFeatures = this.options['enabledFeatures'];
+      this.enabledFeatures = this.options["enabledFeatures"];
     }
 
     const phones =
