@@ -15,7 +15,7 @@ import "zone.js";
           "Screen Reader",
           "Contrast",
           "Saturation",
-          "Text Size",
+          "Bigger Text",
           "Text Spacing",
           "Screen Mask",
           "Line Height",
