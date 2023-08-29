@@ -26,7 +26,7 @@ started this project [here](blue.verto.health/advancing-accessibility-with-astra
 - More to come!
 
 | Key           | Capability                                                                                                                                                                                                                                                                                                 |
-|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Screen Reader | Screen reader is a tool where it would reads out texts on screen where user clicks on. For any html elements, if an aria label is available, the content from aria label would be read out loud, otherwise, it reads the text content of the element. There are 3 different speeds, normal, fast and slow. |
 | Contrast      | Contrast is a tool that removes background and replaces it with black or white to increase the difference in colours between text and the background to increase legibility. There are 3 modes, the invert colours, high contrast, and dark high contrast.                                                 |
 | Saturation    | Saturation is a tool that adjusts how colourful the colours are on screen, it has 3 different modes to lower saturation, increase saturation, or remove all the colours on screen (black and white).                                                                                                       |
@@ -34,9 +34,6 @@ started this project [here](blue.verto.health/advancing-accessibility-with-astra
 | Text Spacing  | Text Spacing is a tool that increases the spacing between each character on the screen to increase legibility and readibility.                                                                                                                                                                             |
 | Screen Mask   | Screen Mask is a tool which dims the background and has a smaller focused area which follows the cursor sliding up and down the page.                                                                                                                                                                      |
 | Line Spacing  | Line Spacing is a tool which increases the space between lines for greater readability.                                                                                                                                                                                                                    |
-
-
-
 
 ## Usage
 
@@ -54,7 +51,15 @@ Optionally we can choose which widgets should appear by passing an object inside
 ```html
 <script>
   initializeAstral({
-    enabledFeatures: ["Screen Reader", "Contrast", "Saturation", "Text Size", "Text Spacing", "Screen Mask", "Line Height"]
+    enabledFeatures: [
+      "Screen Reader",
+      "Contrast",
+      "Saturation",
+      "Text Size",
+      "Text Spacing",
+      "Screen Mask",
+      "Line Height",
+    ],
   });
 </script>
 ```
