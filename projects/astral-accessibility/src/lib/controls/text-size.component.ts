@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
   selector: "astral-text-size",
@@ -75,10 +76,10 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class TextSizeComponent {
+export class TextSizeComponent extends AccessibilityComponent {
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState("astralAccessibility_textSizeState");
   currentScale = 1;
   base = "Bigger Text";
   states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
@@ -95,6 +96,7 @@ export class TextSizeComponent {
   config = { attributes: true, childList: true, subtree: true };
 
   constructor() {
+    super();
     this.observer = new MutationObserver((mutations: MutationRecord[]) => {
       this.observer.disconnect();
       mutations.forEach((mutation) => {
@@ -107,6 +109,8 @@ export class TextSizeComponent {
       this.observer.observe(this.targetNode, this.config);
     });
     /* No observer here, we don't want it to be on by default */
+
+    this.currentState = super.setLogic("astralAccessibility_textSizeState");
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
@@ -162,8 +166,11 @@ export class TextSizeComponent {
 
   nextState() {
     this.observer.disconnect();
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_textSizeState",
+      this.states.length,
+    );
 
     this._runStateLogic();
     if (this.currentState !== 0) {
@@ -172,7 +179,7 @@ export class TextSizeComponent {
     }
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     let previousScale = this.currentScale;
 
     if (this.states[this.currentState] === "Medium Text") {

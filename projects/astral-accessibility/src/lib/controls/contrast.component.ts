@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
   selector: "astral-contrast",
@@ -82,23 +83,30 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ContrastComponent {
+export class ContrastComponent extends AccessibilityComponent {
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_contrastState");
+  }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState("astralAccessibility_contrastState");
   base = "Contrast";
   states = [this.base, "Invert", "High Contrast", "Dark High Contrast"];
 
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_contrastState",
+      this.states.length,
+    );
 
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 

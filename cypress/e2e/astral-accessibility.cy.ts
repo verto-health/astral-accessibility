@@ -212,6 +212,7 @@ describe("template spec", () => {
     cy.document().find(".mask-top").should("not.exist");
     screenMaskComponent.click();
     cy.document().find(".mask-top").should("exist");
+    cy.clearAllLocalStorage();
     cy.reload();
     cy.document().find(".mask-top").should("not.exist");
   });

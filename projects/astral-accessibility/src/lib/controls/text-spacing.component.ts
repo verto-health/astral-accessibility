@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
   selector: "astral-text-spacing",
@@ -75,23 +76,30 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class TextSpacingComponent {
+export class TextSpacingComponent extends AccessibilityComponent {
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_textSpacingState");
+  }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState("astralAccessibility_textSpacingState");
   base = "Text Spacing";
   states = [this.base, "Light Spacing", "Moderate Spacing", "Heavy Spacing"];
 
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_textSpacingState",
+      this.states.length,
+    );
 
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 

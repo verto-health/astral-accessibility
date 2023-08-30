@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject, Renderer2 } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
   selector: "astral-screen-reader",
@@ -86,14 +87,17 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ScreenReaderComponent {
+export class ScreenReaderComponent extends AccessibilityComponent {
   globalListenFunction: Function;
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
   isApple = false;
   synthesisAvailable = true;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2) {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_screenReaderState");
+  }
 
   readText(x: number, y: number) {
     let element = document.elementFromPoint(x, y);
@@ -202,7 +206,7 @@ export class ScreenReaderComponent {
 
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState("astralAccessibility_screenReaderState");
   base = "Screen Reader";
   unavailableMessage = "Screen Reader unavailable on device";
   states = [this.base, "Read Normal", "Read Fast", "Read Slow"];
@@ -210,13 +214,16 @@ export class ScreenReaderComponent {
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_screenReaderState",
+      this.states.length,
+    );
 
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 

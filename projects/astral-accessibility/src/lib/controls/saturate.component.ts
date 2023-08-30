@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AccessibilityComponent } from "./accessibility.component";
 
 @Component({
   selector: "astral-saturate",
@@ -86,21 +87,28 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class SaturateComponent {
+export class SaturateComponent extends AccessibilityComponent {
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_saturateState");
+  }
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = super.getState("astralAccessibility_saturateState");
   base = "Saturation";
   states = [this.base, "Low Saturation", "High Saturation", "Desaturated"];
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState = super.changeState(
+      this.currentState,
+      "astralAccessibility_saturateState",
+      this.states.length,
+    );
 
     this._runStateLogic();
   }
 
-  private _runStateLogic() {
+  protected override _runStateLogic() {
     this._resetSaturation();
 
     if (this.states[this.currentState] === "Low Saturation") {

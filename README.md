@@ -65,3 +65,52 @@ $ yarn cypress open
 ```
 
 Choose E2E Testing, and select a browser to start running the Specs
+
+## Feature Development
+
+### State Saving
+
+Astral supports state saving, meaning keys are saved to localStorage to save the user's configuration of the tool. When developing new features to add in state saving you can follow a similar setup to existing widgets.
+
+1. Import the Parent class for all features:
+
+```js
+import { AccessibilityComponent } from "./accessibility.component";
+```
+
+2. Inhert Parent class properties, call `super()` in new constructor, and set the current state:
+   Note: We prefix the key to be set with `astralAccessibility_` to not clash with user's localStorage
+
+```js
+export class <newComponent> extends AccessibilityComponent {
+  constructor() {
+    super();
+    this.currentState = super.setLogic("astralAccessibility_<newFeatureState>");
+  ...
+  }
+}
+```
+
+3. Initialize current state to get from the localStorage:
+
+```js
+currentState = super.getState("astralAccessibility_<newFeatureState>");
+```
+
+4. In the `nextState()` function use the Parent `changeState(currentState, localStorageKey, numOfStates)` function:
+
+```js
+this.currentState = super.changeState(
+  this.currentState,
+  "astralAccessibility_<newFeatureState>",
+  this.states.length,
+);
+```
+
+5. The Child class function `_runStateLogic()` function should override the Parent class
+
+```js
+protected override _runStateLogic(){
+    ...
+}
+```
