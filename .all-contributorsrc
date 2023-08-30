@@ -1,13 +1,10 @@
 {
-  "files": [
-    "README.md"
-  ],
+  "files": ["README.md"],
   "imageSize": 100,
   "commit": false,
   "commitType": "docs",
   "commitConvention": "angular",
-  "contributors": [
-  ],
+  "contributors": [],
   "contributorsPerLine": 7,
   "skipCi": true,
   "repoType": "github",
