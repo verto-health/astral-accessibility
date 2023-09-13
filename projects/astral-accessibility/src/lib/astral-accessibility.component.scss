@@ -54,6 +54,7 @@
 
 .astral-icon {
   @extend .astral-position;
+  line-height: normal;
   background-color: var(--modalBackgroundColor);
   padding: 8px;
   padding-right: 16px;
