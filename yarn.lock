@@ -298,10 +298,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/elements@14.1.0":
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/elements/-/elements-14.1.0.tgz#46ec2b9389caf1c356a76bc300a052d68dd21887"
-  integrity sha512-PRZi5sO6DJz33e0ofITU04Dhv7ErBCnuDBVcvrglttWcAEk+p0ZA9jrBLQET8VU82fIF6ArWIEyM+LL0oeBKGw==
+"@angular/elements@14.3.0":
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/@angular/elements/-/elements-14.3.0.tgz#f4ce07241d5b05c8c843465cf564f3519ed8d5d5"
+  integrity sha512-fIg8IOD2R36v3SZ8yQEwTC8T71Hk0lbJFJXaOUZDZ6MfwdT8mMkFCujPRXOF0+p/ZnOiq2EhBwuPdjmKTf7XHA==
   dependencies:
     tslib "^2.3.0"
 
