@@ -40,25 +40,28 @@
       <!-- <div class="action">
         <astral-invert></astral-invert>
       </div> -->
-      <div class="action">
+      <div
+        class="action"
+        *ngIf="this.enabledFeatures.includes('Screen Reader')"
+      >
         <astral-screen-reader></astral-screen-reader>
       </div>
-      <div class="action">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Contrast')">
         <astral-contrast></astral-contrast>
       </div>
-      <div class="action">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Saturation')">
         <astral-saturate></astral-saturate>
       </div>
-      <div class="action">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Bigger Text')">
         <astral-text-size></astral-text-size>
       </div>
-      <div class="action">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Text Spacing')">
         <astral-text-spacing></astral-text-spacing>
       </div>
-      <div class="action d-none d-sm-block">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Screen Mask')">
         <astral-screen-mask></astral-screen-mask>
       </div>
-      <div class="action">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Line Height')">
         <astral-line-height></astral-line-height>
       </div>
     </div>
