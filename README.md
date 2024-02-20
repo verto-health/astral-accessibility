@@ -10,7 +10,7 @@ Astral is currently in an alpha phase. You can use it today with much of its fea
 
 Astral Accessibility is an open source accessibility widget that can be easily embedded to any website. It provides a set of
 accessibility features that can be used by people with accessibility needs to improve their experience on the web. Read why we
-started this project [here](blue.verto.health/advancing-accessibility-with-astral/).
+started this project [here](https://blue.verto.health/advancing-accessibility-with-astral/).
 
 [Click here](https://astral-accessibility.pages.dev/) for a demo!
 
