@@ -91,6 +91,7 @@ export class ScreenReaderComponent {
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
   isApple = false;
+  isEdgeAndroid = false;
   synthesisAvailable = true;
 
   constructor(private renderer: Renderer2) {}
@@ -114,13 +115,15 @@ export class ScreenReaderComponent {
     }
   }
 
-  getDefaultVoice(voices: Array<SpeechSynthesisVoice>, isApple = false) {
+  getDefaultVoice(voices: Array<SpeechSynthesisVoice>, isApple = false, isEdgeAndroid = false) {
     const defaultVoice = "Daniel";
-    if (voices.length === 0) {
+
+    // Note: Edge Android doesn't have any voices, but still works without setting the voice
+    if (voices.length > 0 || isEdgeAndroid) {
+      this.synthesisAvailable = true;
+    } else {
       this.synthesisAvailable = false;
       return null;
-    } else {
-      this.synthesisAvailable = true;
     }
 
     // use voice Daniel whenever available
@@ -151,8 +154,12 @@ export class ScreenReaderComponent {
 
   ngOnInit() {
     const apple = /iPhone|iPad|iPod|Safari/i;
+    const edgeAndroid = /EdgA/i;
+
     if (apple.test(this.userAgent) && !/Chrome/.test(this.userAgent)) {
       this.isApple = true;
+    } else if (edgeAndroid.test(this.userAgent)) {
+      this.isEdgeAndroid = true;
     }
 
     // How to use Web Speech API
@@ -162,7 +169,7 @@ export class ScreenReaderComponent {
     voices = speechSynthesis.getVoices();
 
     // default settings, currently user has no way of modifying these
-    this.speech.voice = this.getDefaultVoice(voices, this.isApple);
+    this.speech.voice = this.getDefaultVoice(voices, this.isApple, this.isEdgeAndroid);
     this.speech.lang = "en";
     this.speech.rate = 1;
     this.speech.pitch = 1;
@@ -173,7 +180,7 @@ export class ScreenReaderComponent {
     if (!voices.length) {
       speechSynthesis.addEventListener("voiceschanged", () => {
         voices = speechSynthesis.getVoices();
-        this.speech.voice = this.getDefaultVoice(voices, this.isApple);
+        this.speech.voice = this.getDefaultVoice(voices, this.isApple, this.isEdgeAndroid);
       });
     }
 
