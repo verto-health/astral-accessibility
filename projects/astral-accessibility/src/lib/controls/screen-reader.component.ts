@@ -115,7 +115,11 @@ export class ScreenReaderComponent {
     }
   }
 
-  getDefaultVoice(voices: Array<SpeechSynthesisVoice>, isApple = false, isEdgeAndroid = false) {
+  getDefaultVoice(
+    voices: Array<SpeechSynthesisVoice>,
+    isApple = false,
+    isEdgeAndroid = false,
+  ) {
     const defaultVoice = "Daniel";
 
     // Note: Edge Android doesn't have any voices, but still works without setting the voice
@@ -169,7 +173,11 @@ export class ScreenReaderComponent {
     voices = speechSynthesis.getVoices();
 
     // default settings, currently user has no way of modifying these
-    this.speech.voice = this.getDefaultVoice(voices, this.isApple, this.isEdgeAndroid);
+    this.speech.voice = this.getDefaultVoice(
+      voices,
+      this.isApple,
+      this.isEdgeAndroid,
+    );
     this.speech.lang = "en";
     this.speech.rate = 1;
     this.speech.pitch = 1;
@@ -180,7 +188,11 @@ export class ScreenReaderComponent {
     if (!voices.length) {
       speechSynthesis.addEventListener("voiceschanged", () => {
         voices = speechSynthesis.getVoices();
-        this.speech.voice = this.getDefaultVoice(voices, this.isApple, this.isEdgeAndroid);
+        this.speech.voice = this.getDefaultVoice(
+          voices,
+          this.isApple,
+          this.isEdgeAndroid,
+        );
       });
     }
 
