@@ -3,11 +3,11 @@ name: Release Drafter
 on:
   push:
     branches:
-      - release-management
+      - main
   pull_request:
     types: [opened, reopened, synchronize]
     branches:
-      - release-management
+      - main
 
 permissions:
   contents: read
