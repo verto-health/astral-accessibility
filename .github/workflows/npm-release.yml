@@ -5,7 +5,7 @@ name: Create npm registry release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   bump-package-json-release:
