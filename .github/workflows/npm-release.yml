@@ -1,0 +1,66 @@
+# Copyright 2023 (Unpublished) Verto Inc.
+
+name: Create npm registry release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  bump-package-json-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.RELEASE_MANAGER_APP_ID }}
+          private-key: ${{ secrets.RELEASE_MANAGER_PRIVATE_KEY }}
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+          ref: main
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+          registry-url: "https://npm.pkg.github.com"
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+
+      - name: Set tag
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+
+      - name: Update package.json version
+        run: npm pkg set 'version'="$RELEASE_VERSION"
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+
+      - name: Setup Git credentials
+        run: |
+          git config --global user.name "Astral Release Bot"
+          git config --global user.email "astral-release@verto.ca"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push
+        run: |
+          git add package.json
+          git commit -m "Bump version to $RELEASE_VERSION"
+          git push
+          git tag -fa "$RELEASE_VERSION" -m "Bump version to $RELEASE_VERSION"
+          git push origin --tags --force
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+
+      - name: Run yarn
+        run: |
+          yarn
+      - name: Publish release
+        run: |
+          yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
