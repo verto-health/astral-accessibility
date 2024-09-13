@@ -9,7 +9,7 @@
       "sourceRoot": "projects/astral-accessibility/src",
       "prefix": "lib",
       "architect": {
-        "build": {
+        "e2e": {
           "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/astral-accessibility-angular-output",
@@ -47,6 +47,21 @@
             }
           },
           "defaultConfiguration": "production"
+        },
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/astral-accessibility/ng-package.json"
+          },
+          "configurations": {
+            "development": {
+              "tsConfig": "projects/astral-accessibility/tsconfig.app.json"
+            },
+            "production": {
+              "tsConfig": "projects/astral-accessibility/tsconfig.app.json"
+            }
+          },
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
