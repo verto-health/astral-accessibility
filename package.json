@@ -1,6 +1,6 @@
 {
   "name": "astral-accessibility",
-  "version": "0.1.0",
+  "version": "v0.1.1",
   "author": "verto-health",
   "license": "MIT",
   "main": "dist/astral-accessibility",
