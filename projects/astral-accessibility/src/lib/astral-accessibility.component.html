@@ -6,6 +6,7 @@
   <div>
     <div class="astral-inverted-corner"></div>
     <button
+      [attr.aria-label]="(modalVisible ? 'Close' : 'Open') + ' Accessibility Panel'"
       [class]="astralAccessibilityIcon"
       (click)="modalVisible = !modalVisible"
     >
@@ -53,33 +54,32 @@
     [class]="
       modalVisible ? astralAccessibilityPanel + ' active' : 'astral-modal'
     "
+    attr.aria-label="Actions panel"
   >
-    <div class="actions">
-      <!-- <div class="action">
-        <astral-invert></astral-invert>
-      </div> -->
+    <div class="actions" attr.aria-label="Actions panel">
       <div
         class="action"
         *ngIf="this.enabledFeatures.includes('Screen Reader')"
+        attr.aria-label="Screen reader options"
       >
         <astral-screen-reader></astral-screen-reader>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Contrast')">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Contrast')" attr.aria-label="Contrast options">
         <astral-contrast></astral-contrast>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Saturation')">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Saturation')" attr.aria-label="Saturation options">
         <astral-saturate></astral-saturate>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Bigger Text')">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Bigger Text')" attr.aria-label="Bigger Text options">
         <astral-text-size></astral-text-size>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Text Spacing')">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Text Spacing')" attr.aria-label="Text Spacing options">
         <astral-text-spacing></astral-text-spacing>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Screen Mask')">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Screen Mask')" attr.aria-label="Screen Masking options">
         <astral-screen-mask></astral-screen-mask>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Line Height')">
+      <div class="action" *ngIf="this.enabledFeatures.includes('Line Height')" attr.aria-label="Line Height options">
         <astral-line-height></astral-line-height>
       </div>
     </div>

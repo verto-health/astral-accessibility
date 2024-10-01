@@ -101,13 +101,10 @@ export class ScreenReaderComponent {
 
     if (element) {
       if (this.states[this.currentState] != this.base) {
-        if (element.ariaLabel) {
-          // it has aria-label, use aria-label
-          this.speech.text = element.ariaLabel;
-        } else {
-          // otherwise get text content
-          this.speech.text = element.textContent || "";
-        }
+        const ariaLabel = element.getAttribute("aria-label") || element.getAttribute("attr.aria-label");
+        // use aria label if exists, otherwise text content, and lastly empty string
+        this.speech.text = ariaLabel || element.textContent || "";
+        
         // cancel before speech, otherwise doesn't work
         speechSynthesis.cancel();
         speechSynthesis.speak(this.speech);
