@@ -1,5 +1,5 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
@@ -75,8 +75,10 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class TextSpacingComponent {
+export class TextSpacingComponent implements OnInit {
   document = inject(DOCUMENT);
+
+  private readonly STATE_KEY = "astral-textSpacing-state";
 
   currentState = 0;
   base = "Text Spacing";
@@ -84,35 +86,45 @@ export class TextSpacingComponent {
 
   _style: HTMLStyleElement;
 
+  ngOnInit(): void {
+    const storedState = sessionStorage.getItem(this.STATE_KEY);
+    if (storedState !== null) {
+      this.currentState = parseInt(storedState, 10);
+      this._runStateLogic();
+    }
+  }
+
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
+    sessionStorage.setItem(this.STATE_KEY, this.currentState.toString());
   }
 
   private _runStateLogic() {
-    this._style?.remove?.();
-    this._style = this.document.createElement("style");
+    // The _style element seems unused for the actual text spacing logic,
+    // which relies on adding/removing classes from documentElement.
+    // Removing it here to avoid confusion, unless it serves a hidden purpose
+    // for visual state indication not obvious from the class names.
+    // this._style?.remove?.();
+    // this._style = this.document.createElement("style");
+
+    // Ensure clean state by removing all potentially active classes first
+    this.document.documentElement.classList.remove("astral_light_spacing");
+    this.document.documentElement.classList.remove("astral_moderate_spacing");
+    this.document.documentElement.classList.remove("astral_heavy_spacing");
 
     if (this.states[this.currentState] === "Light Spacing") {
       this.document.documentElement.classList.add("astral_light_spacing");
-    } else {
-      this.document.documentElement.classList.remove("astral_light_spacing");
-    }
-
-    if (this.states[this.currentState] === "Moderate Spacing") {
+    } else if (this.states[this.currentState] === "Moderate Spacing") {
       this.document.documentElement.classList.add("astral_moderate_spacing");
-    } else {
-      this.document.documentElement.classList.remove("astral_moderate_spacing");
-    }
-
-    if (this.states[this.currentState] === "Heavy Spacing") {
+    } else if (this.states[this.currentState] === "Heavy Spacing") {
       this.document.documentElement.classList.add("astral_heavy_spacing");
-    } else {
-      this.document.documentElement.classList.remove("astral_heavy_spacing");
     }
+    // else if base state, all classes are already removed.
 
-    this.document.body.appendChild(this._style);
+    // Appending an empty _style tag seems unnecessary.
+    // this.document.body.appendChild(this._style);
   }
 }

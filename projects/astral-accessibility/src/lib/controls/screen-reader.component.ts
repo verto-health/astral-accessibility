@@ -94,6 +94,8 @@ export class ScreenReaderComponent {
   isEdgeAndroid = false;
   synthesisAvailable = true;
 
+  private readonly STATE_KEY = "astral-screenReader-state";
+
   constructor(private renderer: Renderer2) {}
 
   readText(x: number, y: number) {
@@ -228,34 +230,119 @@ export class ScreenReaderComponent {
 
   _style: HTMLStyleElement;
 
+  ngOnInit(): void {
+    // Existing ngOnInit logic should be largely preserved.
+    // We'll add the sessionStorage part here.
+    const apple = /iPhone|iPad|iPod|Safari/i;
+    const edgeAndroid = /EdgA/i;
+
+    if (apple.test(this.userAgent) && !/Chrome/.test(this.userAgent)) {
+      this.isApple = true;
+    } else if (edgeAndroid.test(this.userAgent)) {
+      this.isEdgeAndroid = true;
+    }
+
+    let voices = speechSynthesis.getVoices();
+    this.speech.voice = this.getDefaultVoice(
+      voices,
+      this.isApple,
+      this.isEdgeAndroid,
+    );
+    this.speech.lang = "en";
+    this.speech.rate = 1; // Default rate, will be adjusted by _runStateLogic if state loaded
+    this.speech.pitch = 1;
+    this.speech.volume = 1;
+
+    if (!voices.length) {
+      speechSynthesis.addEventListener("voiceschanged", () => {
+        voices = speechSynthesis.getVoices();
+        this.speech.voice = this.getDefaultVoice(
+          voices,
+          this.isApple,
+          this.isEdgeAndroid,
+        );
+      });
+    }
+
+    this.globalListenFunction = this.renderer.listen(
+      "document",
+      "click",
+      (e) => {
+        this.readText(e.x, e.y);
+      },
+    );
+    this.globalListenFunction = this.renderer.listen(
+      "document",
+      "touchstart",
+      (e) => {
+        var touch = e.touches[0] || e.changedTouches[0];
+        this.readText(touch.pageX, touch.pageY);
+      },
+    );
+
+    // Load persisted state
+    const storedState = sessionStorage.getItem(this.STATE_KEY);
+    if (storedState !== null) {
+      this.currentState = parseInt(storedState, 10);
+      // Apply the rate based on loaded state, but only if synthesis is available
+      if (this.synthesisAvailable) {
+        this._runStateLogic();
+      }
+    } else {
+      // If no stored state, ensure it's in base state (e.g. rate is default, no speech active)
+      // This is mostly handled by default initialization, but _runStateLogic can ensure cleanup.
+       if (this.synthesisAvailable) {
+        this._runStateLogic(); // Ensures speech.rate is set according to initial currentState (0)
+      }
+    }
+  }
+
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
+    if (this.synthesisAvailable) {
+      sessionStorage.setItem(this.STATE_KEY, this.currentState.toString());
+    }
   }
 
   private _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 
+    if (!this.synthesisAvailable) {
+      // If synthesis became unavailable after init, ensure we don't try to act on it.
+      // Also, ensure UI reflects it's off if state was loaded.
+      if (this.states[this.currentState] !== this.base) {
+          // speech.rate changes are irrelevant if it can't speak.
+          // If it was speaking and became unavailable, cancel.
+          speechSynthesis.cancel();
+      }
+      // No _style manipulation needed for screen reader logic itself.
+      return;
+    }
+
+    this._style?.remove?.(); // This line seems to be for other components, might be vestigial here.
+    this._style = this.document.createElement("style"); // Same as above.
+
     if (this.states[this.currentState] === "Read Normal") {
       this.speech.rate = 0.8;
-    }
-
-    if (this.states[this.currentState] === "Read Fast") {
+    } else if (this.states[this.currentState] === "Read Fast") {
       this.speech.rate = this.isApple ? 1.3 : 1.7;
-    }
-
-    if (this.states[this.currentState] === "Read Slow") {
+    } else if (this.states[this.currentState] === "Read Slow") {
       this.speech.rate = 0.4;
-    }
-
-    if (this.states[this.currentState] === this.base) {
+    } else if (this.states[this.currentState] === this.base) {
+      // Default rate when returning to base, or for initial state 0.
+      // Actual speaking is stopped when readText() checks state, or here explicitly.
+      this.speech.rate = 1; // Reset to a sensible default rate
       if (speechSynthesis.speaking) {
         speechSynthesis.cancel();
       }
     }
-    this.document.body.appendChild(this._style);
+    // Appending this._style to body seems unnecessary for screen reader functionality.
+    // If it's for other visual cues tied to screen reader state, it can remain.
+    // For now, assuming it's not critical for screen reader audio logic.
+    // this.document.body.appendChild(this._style);
   }
 }

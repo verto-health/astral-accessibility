@@ -1,5 +1,5 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, Renderer2, inject } from "@angular/core";
+import { Component, Renderer2, inject, OnInit } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
@@ -69,8 +69,10 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ScreenMaskComponent {
+export class ScreenMaskComponent implements OnInit {
   constructor(private renderer: Renderer2) {}
+
+  private readonly STATE_KEY = "astral-screenMask-state";
 
   cursorY = 0;
   screenHeight: number = window.innerHeight;
@@ -173,11 +175,20 @@ export class ScreenMaskComponent {
 
   _style: HTMLStyleElement;
 
+  ngOnInit(): void {
+    const storedState = sessionStorage.getItem(this.STATE_KEY);
+    if (storedState !== null) {
+      this.currentState = parseInt(storedState, 10);
+      this._runStateLogic();
+    }
+  }
+
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 3;
 
     this._runStateLogic();
+    sessionStorage.setItem(this.STATE_KEY, this.currentState.toString());
   }
 
   private _runStateLogic() {

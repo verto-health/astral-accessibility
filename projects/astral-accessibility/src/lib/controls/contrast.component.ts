@@ -1,5 +1,5 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
 @Component({
@@ -82,8 +82,10 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class ContrastComponent {
+export class ContrastComponent implements OnInit {
   document = inject(DOCUMENT);
+
+  private readonly STATE_KEY = "astral-contrast-state";
 
   currentState = 0;
   base = "Contrast";
@@ -91,11 +93,20 @@ export class ContrastComponent {
 
   _style: HTMLStyleElement;
 
+  ngOnInit(): void {
+    const storedState = sessionStorage.getItem(this.STATE_KEY);
+    if (storedState !== null) {
+      this.currentState = parseInt(storedState, 10);
+      this._runStateLogic();
+    }
+  }
+
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
+    sessionStorage.setItem(this.STATE_KEY, this.currentState.toString());
   }
 
   private _runStateLogic() {

@@ -2,6 +2,10 @@ import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
+import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { Component, inject, OnInit } from "@angular/core";
+import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+
 @Component({
   selector: "astral-text-size",
   standalone: true,
@@ -75,8 +79,11 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   `,
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
-export class TextSizeComponent {
+export class TextSizeComponent implements OnInit {
   document = inject(DOCUMENT);
+
+  private readonly STATE_KEY = "astral-textSize-state";
+  private readonly SCALE_KEY = "astral-textSize-scale";
 
   currentState = 0;
   currentScale = 1;
@@ -107,6 +114,27 @@ export class TextSizeComponent {
       this.observer.observe(this.targetNode, this.config);
     });
     /* No observer here, we don't want it to be on by default */
+  }
+
+  ngOnInit(): void {
+    const storedState = sessionStorage.getItem(this.STATE_KEY);
+    const storedScale = sessionStorage.getItem(this.SCALE_KEY);
+
+    if (storedState !== null && storedScale !== null) {
+      this.currentState = parseInt(storedState, 10);
+      this.currentScale = parseFloat(storedScale);
+
+      if (this.currentState === 0) {
+        this.restoreTextSize(document.body);
+      } else {
+        // Apply loaded state, assuming transition from base scale 1
+        this.updateTextSize(document.body, this.currentScale, 1);
+      }
+
+      if (this.currentState !== 0) {
+        this.observer.observe(this.targetNode, this.config);
+      }
+    }
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
@@ -166,6 +194,10 @@ export class TextSizeComponent {
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
+
+    sessionStorage.setItem(this.STATE_KEY, this.currentState.toString());
+    sessionStorage.setItem(this.SCALE_KEY, this.currentScale.toString());
+
     if (this.currentState !== 0) {
       // is not base state, don't need observer for base state
       this.observer.observe(this.targetNode, this.config);
