@@ -1,6 +1,9 @@
 {
   "name": "astral-accessibility",
-  "version": "0.1.0",
+  "version": "v0.1.1",
+  "author": "verto-health",
+  "license": "MIT",
+  "main": "dist/astral-accessibility",
   "scripts": {
     "ng": "ng",
     "start": "ng serve astral-accessibility",
@@ -8,13 +11,12 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "cypress": "cypress open",
-    "build:lib": "ng build --single-bundle --output-hashing=none",
+    "build:lib": "ng e2e --single-bundle --output-hashing=none",
     "build:lib:dev": "ng build --watch --configuration=development --single-bundle",
     "start:demo-server": "lite-server -c projects/demo/lite-server-config.json",
     "start:demo": "npm-run-all -p build:lib:dev start:demo-server",
     "start:test-server": "npm-run-all build:lib start:demo-server"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^14.1.0",
     "@angular/common": "^14.1.0",
