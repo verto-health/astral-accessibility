@@ -34,7 +34,7 @@
     "@angular/cli": "~14.2.12",
     "@angular/compiler-cli": "^14.1.0",
     "@types/jasmine": "~4.0.0",
-    "bootstrap": "^5.3.1",
+    "bootstrap": "^5.3.7",
     "cypress": "^12.17.4",
     "jasmine-core": "~4.2.0",
     "karma": "~6.4.2",
