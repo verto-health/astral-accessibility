@@ -202,3 +202,86 @@ body {
     }
   }
 }
+
+/* Navigation inside card */
+nav {
+  background: #1a1a2e;
+  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+nav a {
+  color: #ccc;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  display: block;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+
+nav a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+nav a.active {
+  color: #ffd73b;
+  border-bottom: 3px solid #ffd73b;
+}
+
+/* Page content */
+.page h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.page .subtitle {
+  color: #555;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.page p {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.page h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.page ul {
+  line-height: 2;
+}
+
+.page ul a {
+  color: #0055cc;
+}
+
+.page button {
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  border: 2px solid #1a1a2e;
+  border-radius: 6px;
+  background: #fff;
+  margin: 0.5rem 0 1rem;
+}
+
+@media (max-width: 550px) {
+  nav {
+    padding: 0 0.5rem;
+  }
+
+  nav a {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.7rem;
+  }
+}

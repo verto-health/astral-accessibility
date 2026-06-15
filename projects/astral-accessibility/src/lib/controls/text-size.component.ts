@@ -87,6 +87,7 @@ export class TextSizeComponent {
   _style: HTMLStyleElement;
 
   private observer: MutationObserver;
+  private _rescaleFrame: ReturnType<typeof requestAnimationFrame> | null = null;
 
   // Select the node that will be observed for mutations
   targetNode = document.body;
@@ -95,16 +96,15 @@ export class TextSizeComponent {
   config = { attributes: true, childList: true, subtree: true };
 
   constructor() {
-    this.observer = new MutationObserver((mutations: MutationRecord[]) => {
-      this.observer.disconnect();
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node instanceof HTMLElement) {
-            this.updateTextSize(node as HTMLElement, this.currentScale);
-          }
-        });
+    this.observer = new MutationObserver(() => {
+      if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
+      this._rescaleFrame = requestAnimationFrame(() => {
+        this._rescaleFrame = null;
+        this.observer.disconnect();
+        this.restoreTextSize(document.body);
+        this.updateTextSize(document.body, this.currentScale, 1);
+        this.observer.observe(this.targetNode, this.config);
       });
-      this.observer.observe(this.targetNode, this.config);
     });
     /* No observer here, we don't want it to be on by default */
   }
