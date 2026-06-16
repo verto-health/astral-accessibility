@@ -46,3 +46,6 @@ Thumbs.db
 
 # Superpowers docs
 docs/superpowers/
+
+# Cloudflare local secrets
+.dev.vars

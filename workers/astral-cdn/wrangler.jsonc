@@ -2,7 +2,7 @@
   // Cloudflare Worker — astral-accessibility versioned CDN
   "name": "astral-cdn",
   "main": "src/index.ts",
-  "compatibility_date": "2024-01-01",
+  "compatibility_date": "2026-01-01",
   "kv_namespaces": [
     {
       "binding": "ASTRAL_JS",

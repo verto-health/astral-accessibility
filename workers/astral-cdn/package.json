@@ -2,6 +2,7 @@
   "name": "astral-cdn",
   "private": true,
   "scripts": {
+    "dev": "wrangler dev",
     "test": "vitest run",
     "test:watch": "vitest",
     "deploy": "wrangler deploy"
