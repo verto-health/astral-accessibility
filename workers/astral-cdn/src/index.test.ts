@@ -78,7 +78,7 @@ describe("Worker routing", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("application/javascript");
     expect(await res.text()).toBe('console.log("latest")');
-    expect(res.headers.get("Cache-Control")).toBe("no-cache");
+    expect(res.headers.get("Cache-Control")).toBe("no-cache, must-revalidate");
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
 
