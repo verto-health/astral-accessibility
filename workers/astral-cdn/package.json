@@ -1,0 +1,17 @@
+{
+  "name": "astral-cdn",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.16.16",
+    "@cloudflare/workers-types": "^4.20240524.0",
+    "typescript": "~4.7.2",
+    "vitest": "^4.1.0",
+    "wrangler": "^4.101.0"
+  }
+}

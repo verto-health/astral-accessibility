@@ -127,13 +127,13 @@ describe("template spec", () => {
       .contains(/^S/g)
       .each((elmt) => {
         if (initialStyling.has(elmt.get(0))) {
-          const initialSize = initialStyling
-            .get(elmt.get(0))
-            ["font-size"].replaceAll(/\D/g, "");
+          const initialSize = parseFloat(
+            initialStyling.get(elmt.get(0))["font-size"],
+          );
           cy.wrap(elmt).should(
             "have.css",
             "font-size",
-            `${initialSize * mediumTextScale}px`,
+            `${parseFloat((initialSize * mediumTextScale).toFixed(4))}px`,
           );
         }
       });
@@ -146,13 +146,13 @@ describe("template spec", () => {
       .contains(/^S/g)
       .each((elmt) => {
         if (initialStyling.has(elmt.get(0))) {
-          const initialSize = initialStyling
-            .get(elmt.get(0))
-            ["font-size"].replaceAll(/\D/g, "");
+          const initialSize = parseFloat(
+            initialStyling.get(elmt.get(0))["font-size"],
+          );
           cy.wrap(elmt).should(
             "have.css",
             "font-size",
-            `${initialSize * largeTextScale}px`,
+            `${parseFloat((initialSize * largeTextScale).toFixed(4))}px`,
           );
         }
       });
@@ -165,13 +165,13 @@ describe("template spec", () => {
       .contains(/^S/g)
       .each((elmt) => {
         if (initialStyling.has(elmt.get(0))) {
-          const initialSize = initialStyling
-            .get(elmt.get(0))
-            ["font-size"].replaceAll(/\D/g, "");
+          const initialSize = parseFloat(
+            initialStyling.get(elmt.get(0))["font-size"],
+          );
           cy.wrap(elmt).should(
             "have.css",
             "font-size",
-            `${initialSize * extraLargeTextScale}px`,
+            `${parseFloat((initialSize * extraLargeTextScale).toFixed(4))}px`,
           );
         }
       });
@@ -184,9 +184,9 @@ describe("template spec", () => {
       .contains(/^S/g)
       .each((elmt) => {
         if (initialStyling.has(elmt.get(0))) {
-          const initialSize = initialStyling
-            .get(elmt.get(0))
-            ["font-size"].replaceAll(/\D/g, "");
+          const initialSize = parseFloat(
+            initialStyling.get(elmt.get(0))["font-size"],
+          );
           cy.wrap(elmt).should("have.css", "font-size", `${initialSize}px`);
         }
       });
