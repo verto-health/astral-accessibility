@@ -96,7 +96,8 @@ jobs:
         run: |
           EXISTING=$(yarn wrangler kv key get "versions" --namespace-id "$KV_NAMESPACE_ID" 2>/dev/null || echo "[]")
           UPDATED=$(node -e "
-            const v = JSON.parse(process.argv[2] || '[]');
+            let v; try { v = JSON.parse(process.argv[2]); } catch (_) { v = []; }
+            if (!Array.isArray(v)) v = [];
             const tag = process.argv[3];
             if (!v.includes(tag)) v.push(tag);
             process.stdout.write(JSON.stringify(v));
