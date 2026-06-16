@@ -42,10 +42,26 @@ Astral is built with Angular Elements. You can use it in your website in under 3
 Note: By default this function all will add all available features, for enabling only certain features, see the section below on Customizing Widget.
 
 ```html
-<script src="https://astral-accessibility.pages.dev/main.js"></script>
+<script src="https://astral-cdn.vertolink.com/latest/main.js"></script>
 <script>
   initializeAstral();
 </script>
+```
+
+### CDN channels
+
+Astral is served from `https://astral-cdn.vertolink.com/{channel}/main.js`. Three channels are available:
+
+| Channel  | URL                                               | Use when                                                                                 |
+| -------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `latest` | `https://astral-cdn.vertolink.com/latest/main.js` | You want the most recent stable build from `main`. Updates automatically.                |
+| `v1.2.3` | `https://astral-cdn.vertolink.com/v1.2.3/main.js` | You want a specific release pinned forever. Replace `v1.2.3` with any published version. |
+| `dev`    | `https://astral-cdn.vertolink.com/dev/main.js`    | Preview builds from the `dev` branch. May be unstable.                                   |
+
+To see all available version tags:
+
+```
+https://astral-cdn.vertolink.com/versions
 ```
 
 ## Customizing Widget
