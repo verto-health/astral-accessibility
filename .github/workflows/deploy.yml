@@ -32,6 +32,17 @@ jobs:
       - name: Build library
         run: yarn build:lib
 
+      - name: Patch wrangler.jsonc with KV namespace ID
+        run: |
+          sed -i "s/<PASTE_KV_NAMESPACE_ID_HERE>/$KV_NAMESPACE_ID/" wrangler.jsonc
+        working-directory: workers/astral-cdn
+        env:
+          KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
+
+      - name: Test Worker
+        run: npm test
+        working-directory: workers/astral-cdn
+
       - name: Deploy Worker
         run: npx wrangler deploy
         working-directory: workers/astral-cdn
