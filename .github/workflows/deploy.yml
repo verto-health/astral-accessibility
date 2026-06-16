@@ -7,14 +7,27 @@ on:
     tags:
       - "v*"
 
+concurrency:
+  group: deploy-cdn
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
       - name: Install dependencies
         run: yarn install
+
+      - name: Install worker dependencies
+        run: npm install
+        working-directory: workers/astral-cdn
 
       - name: Build library
         run: yarn build:lib
@@ -40,7 +53,6 @@ jobs:
       - name: Publish to KV as version (tag only)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          VERSION="${{ github.ref_name }}"
           if npx wrangler kv key get "$VERSION" --namespace-id "$KV_NAMESPACE_ID" &>/dev/null; then
             echo "Version $VERSION already exists in KV — skipping immutable write"
           else
@@ -54,11 +66,11 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
+          VERSION: ${{ github.ref_name }}
 
       - name: Update versions list (tag only)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          VERSION="${{ github.ref_name }}"
           EXISTING=$(npx wrangler kv key get "versions" --namespace-id "$KV_NAMESPACE_ID" 2>/dev/null || echo "[]")
           UPDATED=$(node -e "
             const v = JSON.parse(process.argv[2] || '[]');
@@ -66,22 +78,28 @@ jobs:
             if (!v.includes(tag)) v.push(tag);
             process.stdout.write(JSON.stringify(v));
           " "$EXISTING" "$VERSION")
-          npx wrangler kv key put "versions" "$UPDATED" --namespace-id "$KV_NAMESPACE_ID"
+          printf '%s' "$UPDATED" > /tmp/versions.json
+          npx wrangler kv key put "versions" --path /tmp/versions.json --namespace-id "$KV_NAMESPACE_ID"
           echo "versions list: $UPDATED"
         working-directory: workers/astral-cdn
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
+          VERSION: ${{ github.ref_name }}
 
       - name: Smoke test
         run: |
-          sleep 3
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$WORKER_URL/latest/main.js")
-          if [ "$STATUS" != "200" ]; then
-            echo "Smoke test FAILED: HTTP $STATUS"
-            exit 1
-          fi
-          echo "Smoke test passed: HTTP $STATUS"
+          for i in 1 2 3 4 5; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$WORKER_URL/latest/main.js")
+            if [ "$STATUS" = "200" ]; then
+              echo "Smoke test passed: HTTP $STATUS"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $STATUS — retrying in 5s..."
+            sleep 5
+          done
+          echo "Smoke test FAILED after 5 attempts"
+          exit 1
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
