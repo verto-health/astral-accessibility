@@ -113,6 +113,10 @@ jobs:
 
       - name: Smoke test
         run: |
+          if [ -z "$WORKER_URL" ]; then
+            echo "WORKER_URL secret not set — skipping smoke test"
+            exit 0
+          fi
           for i in 1 2 3 4 5; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$WORKER_URL/$CHANNEL/main.js")
             if [ "$STATUS" = "200" ]; then
