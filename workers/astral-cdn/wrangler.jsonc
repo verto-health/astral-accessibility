@@ -1,0 +1,12 @@
+{
+  // Cloudflare Worker — astral-accessibility versioned CDN
+  "name": "astral-cdn",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-01-01",
+  "kv_namespaces": [
+    {
+      "binding": "ASTRAL_JS",
+      "id": "<PASTE_KV_NAMESPACE_ID_HERE>"
+    }
+  ]
+}
