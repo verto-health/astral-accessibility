@@ -82,6 +82,15 @@ describe("Worker routing", () => {
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
 
+  it("returns dev channel JS with no-cache header", async () => {
+    await env.ASTRAL_JS.put("dev", 'console.log("dev")');
+    const res = await call("/dev/main.js");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Content-Type")).toBe("application/javascript");
+    expect(res.headers.get("Cache-Control")).toBe("no-cache, must-revalidate");
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
+  });
+
   it("returns versions JSON array", async () => {
     await env.ASTRAL_JS.put("versions", '["v1.0.0","v1.1.0"]');
     const res = await call("/versions");

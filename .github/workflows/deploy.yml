@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
     tags:
       - "v*"
 
@@ -32,6 +33,15 @@ jobs:
       - name: Build library
         run: yarn build:lib
 
+      - name: Determine channel
+        id: channel
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "name=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Patch wrangler.jsonc with KV namespace ID
         run: |
           sed -i "s/<PASTE_KV_NAMESPACE_ID_HERE>/$KV_NAMESPACE_ID/" wrangler.jsonc
@@ -50,16 +60,18 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
 
-      - name: Publish to KV as latest
+      - name: Publish to KV channel
         run: |
-          npx wrangler kv key put "latest" \
+          npx wrangler kv key put "$CHANNEL" \
             --path ../../dist/astral-accessibility-angular-output/main.js \
             --namespace-id "$KV_NAMESPACE_ID"
+          echo "Published to KV channel: $CHANNEL"
         working-directory: workers/astral-cdn
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
+          CHANNEL: ${{ steps.channel.outputs.name }}
 
       - name: Publish to KV as version (tag only)
         if: startsWith(github.ref, 'refs/tags/v')
@@ -102,9 +114,9 @@ jobs:
       - name: Smoke test
         run: |
           for i in 1 2 3 4 5; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$WORKER_URL/latest/main.js")
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$WORKER_URL/$CHANNEL/main.js")
             if [ "$STATUS" = "200" ]; then
-              echo "Smoke test passed: HTTP $STATUS"
+              echo "Smoke test passed: HTTP $STATUS ($CHANNEL)"
               exit 0
             fi
             echo "Attempt $i: HTTP $STATUS — retrying in 5s..."
@@ -114,3 +126,4 @@ jobs:
           exit 1
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
+          CHANNEL: ${{ steps.channel.outputs.name }}

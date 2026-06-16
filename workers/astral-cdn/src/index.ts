@@ -2,9 +2,12 @@ export interface Env {
   ASTRAL_JS: KVNamespace;
 }
 
-const JS_HEADERS = (versioned: boolean): HeadersInit => ({
+// Keys matching v<digit> are immutable releases; everything else (latest, dev, …) is a mutable channel.
+const isRelease = (key: string) => /^v\d/.test(key);
+
+const JS_HEADERS = (release: boolean): HeadersInit => ({
   "Content-Type": "application/javascript",
-  "Cache-Control": versioned
+  "Cache-Control": release
     ? "public, max-age=31536000, immutable"
     : "no-cache, must-revalidate",
   "Access-Control-Allow-Origin": "*",
@@ -71,7 +74,7 @@ export default {
     }
 
     return new Response(js, {
-      headers: JS_HEADERS(version !== "latest"),
+      headers: JS_HEADERS(isRelease(version)),
     });
   },
 };
