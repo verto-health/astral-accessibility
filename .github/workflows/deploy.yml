@@ -27,7 +27,7 @@ jobs:
         run: yarn install
 
       - name: Install worker dependencies
-        run: npm install
+        run: yarn install
         working-directory: workers/astral-cdn
 
       - name: Build library
@@ -50,11 +50,11 @@ jobs:
           KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
 
       - name: Test Worker
-        run: npm test
+        run: yarn test
         working-directory: workers/astral-cdn
 
       - name: Deploy Worker
-        run: npx wrangler deploy
+        run: yarn wrangler deploy
         working-directory: workers/astral-cdn
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
 
       - name: Publish to KV channel
         run: |
-          npx wrangler kv key put "$CHANNEL" \
+          yarn wrangler kv key put "$CHANNEL" \
             --path ../../dist/astral-accessibility-angular-output/main.js \
             --namespace-id "$KV_NAMESPACE_ID"
           echo "Published to KV channel: $CHANNEL"
@@ -76,10 +76,10 @@ jobs:
       - name: Publish to KV as version (tag only)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          if npx wrangler kv key get "$VERSION" --namespace-id "$KV_NAMESPACE_ID" &>/dev/null; then
+          if yarn wrangler kv key get "$VERSION" --namespace-id "$KV_NAMESPACE_ID" &>/dev/null; then
             echo "Version $VERSION already exists in KV — skipping immutable write"
           else
-            npx wrangler kv key put "$VERSION" \
+            yarn wrangler kv key put "$VERSION" \
               --path ../../dist/astral-accessibility-angular-output/main.js \
               --namespace-id "$KV_NAMESPACE_ID"
             echo "Published $VERSION to KV"
@@ -94,7 +94,7 @@ jobs:
       - name: Update versions list (tag only)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          EXISTING=$(npx wrangler kv key get "versions" --namespace-id "$KV_NAMESPACE_ID" 2>/dev/null || echo "[]")
+          EXISTING=$(yarn wrangler kv key get "versions" --namespace-id "$KV_NAMESPACE_ID" 2>/dev/null || echo "[]")
           UPDATED=$(node -e "
             const v = JSON.parse(process.argv[2] || '[]');
             const tag = process.argv[3];
@@ -102,7 +102,7 @@ jobs:
             process.stdout.write(JSON.stringify(v));
           " "$EXISTING" "$VERSION")
           printf '%s' "$UPDATED" > /tmp/versions.json
-          npx wrangler kv key put "versions" --path /tmp/versions.json --namespace-id "$KV_NAMESPACE_ID"
+          yarn wrangler kv key put "versions" --path /tmp/versions.json --namespace-id "$KV_NAMESPACE_ID"
           echo "versions list: $UPDATED"
         working-directory: workers/astral-cdn
         env:
