@@ -35,10 +35,7 @@ export default {
     }
 
     if (path === "/main.js") {
-      return Response.redirect(
-        new URL("/latest/main.js", url).toString(),
-        301
-      );
+      return Response.redirect(new URL("/latest/main.js", url).toString(), 301);
     }
 
     if (path === "/versions") {

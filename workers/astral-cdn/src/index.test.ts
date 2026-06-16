@@ -17,7 +17,7 @@ async function call(path: string): Promise<Response> {
   const res = await worker.fetch(
     new Request(`https://cdn.example.com${path}`),
     env,
-    ctx
+    ctx,
   );
   await waitOnExecutionContext(ctx);
   return res;
@@ -38,7 +38,7 @@ describe("Worker routing", () => {
     // 301 (permanent) — /main.js is a legacy alias, its target is not expected to change
     expect(res.status).toBe(301);
     expect(res.headers.get("Location")).toBe(
-      "https://cdn.example.com/latest/main.js"
+      "https://cdn.example.com/latest/main.js",
     );
   });
 
@@ -61,7 +61,7 @@ describe("Worker routing", () => {
     expect(await res.text()).toBe('console.log("v1")');
     expect(res.headers.get("Content-Type")).toBe("application/javascript");
     expect(res.headers.get("Cache-Control")).toBe(
-      "public, max-age=31536000, immutable"
+      "public, max-age=31536000, immutable",
     );
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
