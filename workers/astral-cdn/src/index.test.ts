@@ -25,12 +25,17 @@ async function call(path: string): Promise<Response> {
 
 describe("Worker routing", () => {
   beforeEach(async () => {
-    const { keys } = await env.ASTRAL_JS.list();
-    await Promise.all(keys.map((k) => env.ASTRAL_JS.delete(k.name)));
+    let cursor: string | undefined;
+    do {
+      const page = await env.ASTRAL_JS.list({ cursor });
+      await Promise.all(page.keys.map((k) => env.ASTRAL_JS.delete(k.name)));
+      cursor = page.list_complete ? undefined : page.cursor;
+    } while (cursor);
   });
 
   it("redirects /main.js to /latest/main.js", async () => {
     const res = await call("/main.js");
+    // 301 (permanent) — /main.js is a legacy alias, its target is not expected to change
     expect(res.status).toBe(301);
     expect(res.headers.get("Location")).toBe(
       "https://cdn.example.com/latest/main.js"
@@ -43,9 +48,10 @@ describe("Worker routing", () => {
     expect(await res.text()).toBe("Version not found");
   });
 
-  it("returns 404 for unknown routes", async () => {
+  it("returns 404 for a path that matches no route pattern", async () => {
     const res = await call("/unknown/path");
     expect(res.status).toBe(404);
+    expect(await res.text()).toBe("Not Found");
   });
 
   it("returns JS for a known version with immutable cache header", async () => {
@@ -60,10 +66,17 @@ describe("Worker routing", () => {
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
 
+  it("returns 404 when latest key is missing", async () => {
+    const res = await call("/latest/main.js");
+    expect(res.status).toBe(404);
+    expect(await res.text()).toBe("Version not found");
+  });
+
   it("returns latest JS with no-cache header", async () => {
     await env.ASTRAL_JS.put("latest", 'console.log("latest")');
     const res = await call("/latest/main.js");
     expect(res.status).toBe(200);
+    expect(res.headers.get("Content-Type")).toBe("application/javascript");
     expect(await res.text()).toBe('console.log("latest")');
     expect(res.headers.get("Cache-Control")).toBe("no-cache");
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
@@ -80,6 +93,7 @@ describe("Worker routing", () => {
   it("returns empty array when versions key is missing", async () => {
     const res = await call("/versions");
     expect(res.status).toBe(200);
+    expect(res.headers.get("Content-Type")).toBe("application/json");
     expect(await res.text()).toBe("[]");
   });
 });
