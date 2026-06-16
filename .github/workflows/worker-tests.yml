@@ -1,0 +1,29 @@
+name: Worker Tests
+
+on:
+  push:
+    paths:
+      - workers/astral-cdn/**
+      - .github/workflows/worker-tests.yml
+  pull_request:
+    paths:
+      - workers/astral-cdn/**
+      - .github/workflows/worker-tests.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install worker dependencies
+        run: npm install
+        working-directory: workers/astral-cdn
+
+      - name: Run Worker tests
+        run: npm test
+        working-directory: workers/astral-cdn
