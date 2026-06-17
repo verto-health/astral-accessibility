@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { AstralAccessibilityComponent } from "./astral-accessibility.component";
+import { AstralTranslationService } from "./astral-translation.service";
 
 describe("AstralAccessibilityComponent", () => {
   let component: AstralAccessibilityComponent;
@@ -8,7 +9,8 @@ describe("AstralAccessibilityComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AstralAccessibilityComponent],
+      imports: [AstralAccessibilityComponent],
+      providers: [AstralTranslationService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AstralAccessibilityComponent);

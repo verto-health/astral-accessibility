@@ -1,6 +1,8 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject, Renderer2 } from "@angular/core";
+import { Component, inject, NgZone, Renderer2 } from "@angular/core";
+import { Subscription } from "rxjs";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
 
 @Component({
   selector: "astral-screen-reader",
@@ -56,7 +58,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 
           <div class="state-dots-wrap">
             <span>{{
-              synthesisAvailable ? states[currentState] : unavailableMessage
+              synthesisAvailable ? labels[currentState] : unavailableLabel
             }}</span>
             <div
               class="dots"
@@ -88,13 +90,31 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 })
 export class ScreenReaderComponent {
   globalListenFunction: Function;
+  private langSub: Subscription;
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
   isApple = false;
   isEdgeAndroid = false;
   synthesisAvailable = true;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(
+    private renderer: Renderer2,
+    private translation: AstralTranslationService,
+    private ngZone: NgZone,
+  ) {}
+
+  get labels(): string[] {
+    return [
+      this.translation.t("screenReader.base"),
+      this.translation.t("screenReader.readNormal"),
+      this.translation.t("screenReader.readFast"),
+      this.translation.t("screenReader.readSlow"),
+    ];
+  }
+
+  get unavailableLabel(): string {
+    return this.translation.t("screenReader.unavailable");
+  }
 
   readText(x: number, y: number) {
     let element = document.elementFromPoint(x, y);
@@ -120,8 +140,6 @@ export class ScreenReaderComponent {
     isApple = false,
     isEdgeAndroid = false,
   ) {
-    const defaultVoice = "Daniel";
-
     // Note: Edge Android doesn't have any voices, but still works without setting the voice
     if (voices.length > 0 || isEdgeAndroid) {
       this.synthesisAvailable = true;
@@ -130,30 +148,35 @@ export class ScreenReaderComponent {
       return null;
     }
 
-    // use voice Daniel whenever available
-    const voice = voices.findIndex((v) => {
-      return v.name.toUpperCase().includes(defaultVoice.toUpperCase());
-    });
-    if (voice) {
-      this.synthesisAvailable = true;
-      return voices[voice];
+    const baseLang = this.translation.currentLang.split("-")[0];
+
+    // use voice Daniel whenever available (English only)
+    if (baseLang === "en") {
+      const danielIndex = voices.findIndex((v) =>
+        v.name.toUpperCase().includes("DANIEL"),
+      );
+      if (danielIndex) {
+        this.synthesisAvailable = true;
+        return voices[danielIndex];
+      }
     }
 
-    // if voice Daniel not found, then pick another default voice that is not Flo
+    // pick a voice matching the current language, avoiding Flo
+    let filtered = voices.filter((voice) =>
+      new RegExp(`^${baseLang}`, "i").test(voice.lang),
+    );
+    if (!filtered.length) {
+      return null;
+    }
     let i = 0;
-    voices = voices.filter((voice) => /en-US/i.test(voice.lang));
     while (
-      !voices[i].default &&
-      i < voices.length &&
-      !voices[i].voiceURI.toUpperCase().includes("FLO")
+      i < filtered.length &&
+      !filtered[i].default &&
+      !filtered[i].voiceURI.toUpperCase().includes("FLO")
     ) {
       i++;
     }
-    if (i < voices.length) {
-      return voices[i];
-    } else {
-      return voices[0] || null;
-    }
+    return filtered[i] ?? filtered[0] ?? null;
   }
 
   ngOnInit() {
@@ -178,7 +201,7 @@ export class ScreenReaderComponent {
       this.isApple,
       this.isEdgeAndroid,
     );
-    this.speech.lang = "en";
+    this.speech.lang = this.translation.currentLang;
     this.speech.rate = 1;
     this.speech.pitch = 1;
     this.speech.volume = 1;
@@ -187,14 +210,35 @@ export class ScreenReaderComponent {
     // https://www.bennadel.com/blog/3955-having-fun-with-the-speechsynthesis-api-in-angular-11-0-5.htm
     if (!voices.length) {
       speechSynthesis.addEventListener("voiceschanged", () => {
-        voices = speechSynthesis.getVoices();
-        this.speech.voice = this.getDefaultVoice(
-          voices,
-          this.isApple,
-          this.isEdgeAndroid,
-        );
+        this.ngZone.run(() => {
+          voices = speechSynthesis.getVoices();
+          this.speech.voice = this.getDefaultVoice(
+            voices,
+            this.isApple,
+            this.isEdgeAndroid,
+          );
+        });
       });
     }
+
+    this.langSub = this.translation.langChange.subscribe((lang) => {
+      this.ngZone.run(() => {
+        this.speech.lang = lang;
+        const currentVoices = speechSynthesis.getVoices();
+        if (currentVoices.length) {
+          this.speech.voice = this.getDefaultVoice(
+            currentVoices,
+            this.isApple,
+            this.isEdgeAndroid,
+          );
+        } else {
+          // voices not yet loaded — don't call getDefaultVoice (it would set
+          // synthesisAvailable = false); voiceschanged will pick the right
+          // voice once they arrive
+          this.speech.voice = null;
+        }
+      });
+    });
 
     // find the element that the user tapped/clicked on
     this.globalListenFunction = this.renderer.listen(
@@ -215,15 +259,14 @@ export class ScreenReaderComponent {
   }
 
   ngOnDestroy() {
-    // remove listener
-    this.globalListenFunction();
+    this.globalListenFunction?.();
+    this.langSub?.unsubscribe();
   }
 
   document = inject(DOCUMENT);
 
   currentState = 0;
   base = "Screen Reader";
-  unavailableMessage = "Screen Reader unavailable on device";
   states = [this.base, "Read Normal", "Read Fast", "Read Slow"];
 
   _style: HTMLStyleElement;

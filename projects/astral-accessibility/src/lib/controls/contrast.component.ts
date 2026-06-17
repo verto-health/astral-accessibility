@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
 
 @Component({
   selector: "astral-contrast",
@@ -51,7 +52,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ labels[currentState] }}</span>
             <div
               class="dots"
               [ngClass]="{ inactive: states[currentState] === base }"
@@ -85,9 +86,20 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 export class ContrastComponent {
   document = inject(DOCUMENT);
 
+  constructor(private translation: AstralTranslationService) {}
+
   currentState = 0;
   base = "Contrast";
   states = [this.base, "Invert", "High Contrast", "Dark High Contrast"];
+
+  get labels(): string[] {
+    return [
+      this.translation.t("contrast.base"),
+      this.translation.t("contrast.invert"),
+      this.translation.t("contrast.high"),
+      this.translation.t("contrast.darkHigh"),
+    ];
+  }
 
   _style: HTMLStyleElement;
 

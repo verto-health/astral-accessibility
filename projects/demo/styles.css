@@ -210,6 +210,36 @@ nav {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.lang-select {
+  background: transparent;
+  color: #ccc;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.lang-select:focus {
+  outline: 2px solid #ffd73b;
+  outline-offset: 2px;
+}
+
+.lang-select option {
+  background: #1a1a2e;
+  color: #ccc;
 }
 
 nav a {

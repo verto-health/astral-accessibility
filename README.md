@@ -97,6 +97,53 @@ Optionally we can choose which widgets should appear by passing an object inside
 </script>
 ```
 
+## Language Support
+
+Astral supports multiple languages for the widget UI labels and text-to-speech voice selection. The built-in languages are:
+
+| Code      | Language            |
+| --------- | ------------------- |
+| `en`      | English (default)   |
+| `fr`      | French              |
+| `zh-Hant` | Traditional Chinese |
+
+### Setting the language at initialisation
+
+Pass a `language` key to `initializeAstral`:
+
+```html
+<script>
+  initializeAstral({
+    enabledFeatures: ["Screen Reader", "Contrast"],
+    language: "fr",
+  });
+</script>
+```
+
+### Switching language at runtime
+
+After initialisation, call `window.astralSetLanguage` with a language code. This updates both the widget labels and the screen reader's text-to-speech voice:
+
+```js
+window.astralSetLanguage("zh-Hant");
+```
+
+A typical pattern when your page has its own language switcher:
+
+```html
+<select id="lang-select">
+  <option value="en">English</option>
+  <option value="fr">Français</option>
+  <option value="zh-Hant">繁體中文</option>
+</select>
+
+<script>
+  document.getElementById("lang-select").addEventListener("change", (e) => {
+    window.astralSetLanguage(e.target.value);
+  });
+</script>
+```
+
 ## Development Setup
 
 1. Clone the repository

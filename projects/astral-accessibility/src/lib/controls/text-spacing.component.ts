@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
 
 @Component({
   selector: "astral-text-spacing",
@@ -44,7 +45,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ labels[currentState] }}</span>
             <div
               class="dots"
               [ngClass]="{ inactive: states[currentState] === base }"
@@ -76,6 +77,17 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent {
+  constructor(private translation: AstralTranslationService) {}
+
+  get labels(): string[] {
+    return [
+      this.translation.t("textSpacing.base"),
+      this.translation.t("textSpacing.light"),
+      this.translation.t("textSpacing.moderate"),
+      this.translation.t("textSpacing.heavy"),
+    ];
+  }
+
   document = inject(DOCUMENT);
 
   currentState = 0;
