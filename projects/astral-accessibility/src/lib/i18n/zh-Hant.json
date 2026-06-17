@@ -1,0 +1,36 @@
+{
+  "contrast.base": "對比度",
+  "contrast.invert": "反轉",
+  "contrast.high": "高對比度",
+  "contrast.darkHigh": "深色高對比度",
+
+  "screenReader.base": "螢幕閱讀器",
+  "screenReader.readNormal": "正常閱讀",
+  "screenReader.readFast": "快速閱讀",
+  "screenReader.readSlow": "慢速閱讀",
+  "screenReader.unavailable": "此裝置不支援螢幕閱讀器",
+
+  "saturation.base": "飽和度",
+  "saturation.low": "低飽和度",
+  "saturation.high": "高飽和度",
+  "saturation.desaturated": "去飽和",
+
+  "textSize.base": "放大文字",
+  "textSize.medium": "中等文字",
+  "textSize.large": "大型文字",
+  "textSize.extraLarge": "超大文字",
+
+  "textSpacing.base": "文字間距",
+  "textSpacing.light": "輕度間距",
+  "textSpacing.moderate": "中度間距",
+  "textSpacing.heavy": "重度間距",
+
+  "screenMask.base": "螢幕遮罩",
+  "screenMask.largeCursor": "大型游標",
+  "screenMask.readingMask": "閱讀遮罩",
+
+  "lineHeight.base": "行高",
+  "lineHeight.light": "輕度行高",
+  "lineHeight.moderate": "中度行高",
+  "lineHeight.heavy": "重度行高"
+}

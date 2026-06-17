@@ -2,6 +2,7 @@ import { DOCUMENT } from "@angular/common";
 import { createCustomElement } from "@angular/elements";
 import { createApplication } from "@angular/platform-browser";
 import { AstralAccessibilityComponent } from "./lib/astral-accessibility.component";
+import { AstralTranslationService } from "./lib/astral-translation.service";
 import "zone.js";
 
 (window as any).initializeAstral = async function initializeAstral(
@@ -38,6 +39,11 @@ import "zone.js";
       JSON.stringify(features),
     );
     doc.body.appendChild(astralAccessibilityElement);
+
+    const translationService = app.injector.get(AstralTranslationService);
+    (window as any).astralSetLanguage = (lang: string) => {
+      translationService.setLanguage(lang);
+    };
   } catch (err) {
     console.error(err);
   }

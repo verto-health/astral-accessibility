@@ -8,6 +8,7 @@ import { TextSpacingComponent } from "./controls/text-spacing.component";
 import { ScreenReaderComponent } from "./controls/screen-reader.component";
 import { ScreenMaskComponent } from "./controls/screen-mask.component";
 import { LineHeightComponent } from "./controls/line-height.component";
+import { AstralTranslationService } from "./astral-translation.service";
 
 @Component({
   selector: "astral-accessibility",
@@ -35,6 +36,8 @@ export class AstralAccessibilityComponent {
   options: Record<string, any> = {};
   enabledFeatures: String[] = [];
 
+  constructor(private translationService: AstralTranslationService) {}
+
   ngOnInit() {
     const astralElement = document.querySelector("astral-accessibility");
     const astralOptions = astralElement?.getAttribute("astral-features");
@@ -42,6 +45,9 @@ export class AstralAccessibilityComponent {
     if (astralOptions) {
       this.options = JSON.parse(astralOptions);
       this.enabledFeatures = this.options["enabledFeatures"];
+      if (this.options["language"]) {
+        this.translationService.setLanguage(this.options["language"]);
+      }
     }
 
     const phones =

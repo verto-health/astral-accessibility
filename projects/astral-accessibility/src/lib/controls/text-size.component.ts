@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
 
 @Component({
   selector: "astral-text-size",
@@ -44,7 +45,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ labels[currentState] }}</span>
             <div
               class="dots"
               [ngClass]="{ inactive: states[currentState] === base }"
@@ -95,7 +96,7 @@ export class TextSizeComponent {
   // Options for the observer (which mutations to observe)
   config = { attributes: true, childList: true, subtree: true };
 
-  constructor() {
+  constructor(private translation: AstralTranslationService) {
     this.observer = new MutationObserver(() => {
       if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
       this._rescaleFrame = requestAnimationFrame(() => {
@@ -107,6 +108,15 @@ export class TextSizeComponent {
       });
     });
     /* No observer here, we don't want it to be on by default */
+  }
+
+  get labels(): string[] {
+    return [
+      this.translation.t("textSize.base"),
+      this.translation.t("textSize.medium"),
+      this.translation.t("textSize.large"),
+      this.translation.t("textSize.extraLarge"),
+    ];
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {

@@ -1,6 +1,7 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, Renderer2, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
 
 @Component({
   selector: "astral-screen-mask",
@@ -42,7 +43,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ labels[currentState] }}</span>
             <div
               class="dots"
               [ngClass]="{ inactive: states[currentState] === base }"
@@ -70,7 +71,18 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenMaskComponent {
-  constructor(private renderer: Renderer2) {}
+  constructor(
+    private renderer: Renderer2,
+    private translation: AstralTranslationService,
+  ) {}
+
+  get labels(): string[] {
+    return [
+      this.translation.t("screenMask.base"),
+      this.translation.t("screenMask.largeCursor"),
+      this.translation.t("screenMask.readingMask"),
+    ];
+  }
 
   cursorY = 0;
   screenHeight: number = window.innerHeight;
