@@ -49,4 +49,4 @@ docs/superpowers/
 
 # Cloudflare local secrets
 .dev.vars
-.wrangler/
+.wrangler/node_modules

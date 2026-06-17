@@ -3,6 +3,7 @@ import { Component, inject, NgZone, Renderer2 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
+import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-screen-reader",
@@ -96,6 +97,8 @@ export class ScreenReaderComponent {
   isApple = false;
   isEdgeAndroid = false;
   synthesisAvailable = true;
+  stateService = inject(AstralStateService);
+  private readonly STORAGE_KEY = "screen_reader";
 
   constructor(
     private renderer: Renderer2,
@@ -256,6 +259,12 @@ export class ScreenReaderComponent {
         this.readText(touch.pageX, touch.pageY);
       },
     );
+
+    // restore persisted state
+    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
+    if (this.currentState !== 0) {
+      this._runStateLogic();
+    }
   }
 
   ngOnDestroy() {
@@ -274,8 +283,8 @@ export class ScreenReaderComponent {
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
-
     this._runStateLogic();
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
   }
 
   private _runStateLogic() {

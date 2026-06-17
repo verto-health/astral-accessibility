@@ -2,6 +2,7 @@ import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
+import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-text-spacing",
@@ -89,6 +90,8 @@ export class TextSpacingComponent {
   }
 
   document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private readonly STORAGE_KEY = "text_spacing";
 
   currentState = 0;
   base = "Text Spacing";
@@ -96,11 +99,18 @@ export class TextSpacingComponent {
 
   _style: HTMLStyleElement;
 
+  ngOnInit() {
+    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
+    if (this.currentState !== 0) {
+      this._runStateLogic();
+    }
+  }
+
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
-
     this._runStateLogic();
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
   }
 
   private _runStateLogic() {
