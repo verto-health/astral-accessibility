@@ -2,7 +2,12 @@
   name="viewport"
   content="width=device-width, initial-scale=1, minimum-scale=1"
 />
-<div class="astral-accessibility d-flex align-items-end">
+<div
+  [class]="
+    'astral-accessibility d-flex ' +
+    (isTopPosition ? 'align-items-start' : 'align-items-end')
+  "
+>
   <div>
     <div class="astral-inverted-corner"></div>
     <button
