@@ -27,8 +27,15 @@ describe("AstralTranslationService", () => {
     expect(service.t("lineHeight.heavy")).toBe("重度行高");
   });
 
-  it("falls back to English for an unknown language code", () => {
+  it("returns German strings after setLanguage('de')", () => {
     service.setLanguage("de");
+    expect(service.t("contrast.base")).toBe("Kontrast");
+    expect(service.t("screenReader.base")).toBe("Bildschirmleser");
+    expect(service.t("lineHeight.heavy")).toBe("Fettdruck");
+  });
+
+  it("falls back to English for an unknown language code", () => {
+    service.setLanguage("es");
     expect(service.t("contrast.base")).toBe("Contrast");
   });
 
@@ -43,5 +50,7 @@ describe("AstralTranslationService", () => {
     expect(service.t("contrast.base")).toBe("對比度");
     service.setLanguage("en");
     expect(service.t("contrast.base")).toBe("Contrast");
+    service.setLanguage("de");
+    expect(service.t("contrast.base")).toBe("Kontrast");
   });
 });

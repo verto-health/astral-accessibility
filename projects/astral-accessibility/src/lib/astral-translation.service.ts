@@ -18,6 +18,9 @@ export class AstralTranslationService {
   setLanguage(lang: string): void {
     this.lang = lang;
     switch (lang) {
+      case "de":
+        this.translations = DE as Record<string, string>;
+        break;
       case "fr":
         this.translations = FR as Record<string, string>;
         break;
