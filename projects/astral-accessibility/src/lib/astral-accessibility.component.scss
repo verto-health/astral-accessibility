@@ -22,6 +22,8 @@
   --actionIconActiveBackgroundColor: #ffd73b;
   --actionIconInactiveBackgroundColor: #6c6c6c;
   --actionIconDisabledBackgroundColor: #595959;
+  --toggleButtonColor: var(--actionActiveBackgroundColor);
+  --toggleIconColor: #000000;
 
   --pageWdith: 100%;
   --pageHeight: 100%;
@@ -99,11 +101,15 @@
   width: var(--iconWidth);
 
   svg {
-    background: var(--actionActiveBackgroundColor);
+    background: var(--toggleButtonColor);
     border-radius: 50%;
     width: 55px;
     height: 55px;
     padding: 11px;
+
+    path {
+      fill: var(--toggleIconColor);
+    }
   }
 }
 
@@ -116,10 +122,14 @@
 .astral-icon-mobile {
   padding: 6px;
   svg {
-    background: var(--actionActiveBackgroundColor);
+    background: var(--toggleButtonColor);
     border-radius: 50%;
     width: 49px;
     height: 49px;
+
+    path {
+      fill: var(--toggleIconColor);
+    }
   }
 }
 

@@ -127,6 +127,30 @@ Supported values:
 </script>
 ```
 
+### Customizing Toggle Button Color
+
+You can customize the background color of the toggle button to match your website's branding by passing `toggleColor` to `initializeAstral`. Any valid CSS color value is accepted (hex, RGB, named colors, etc.).
+
+```html
+<script>
+  initializeAstral({
+    toggleColor: "#0057b8",
+  });
+</script>
+```
+
+If your brand color is dark, set `toggleIconColor` to `#ffffff` so the icon remains visible:
+
+```html
+<script>
+  initializeAstral({
+    toggleColor: "#0057b8",
+    toggleIconColor: "#ffffff",
+  });
+</script>
+```
+
+> **Accessibility note:** Ensure your chosen `toggleColor` provides sufficient contrast with `toggleIconColor` (default `#000000`). WCAG AA requires a contrast ratio of at least 3:1 for graphical elements.
 ## Language Support
 
 Astral supports multiple languages for the widget UI labels and text-to-speech voice selection. The built-in languages are:
