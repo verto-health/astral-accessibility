@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
+import DE from "./i18n/de.json";
 import EN from "./i18n/en.json";
 import FR from "./i18n/fr.json";
 import ZH_HANT from "./i18n/zh-Hant.json";
