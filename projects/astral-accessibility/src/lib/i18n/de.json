@@ -1,0 +1,36 @@
+{
+  "contrast.base": "Kontrast",
+  "contrast.invert": "Invertieren",
+  "contrast.high": "Hoher Kontrast",
+  "contrast.darkHigh": "Hoher Kontrast (dunkel)",
+
+  "screenReader.base": "Bildschirmleseprogramm",
+  "screenReader.readNormal": "Normal vorlesen",
+  "screenReader.readFast": "Schnell vorlesen",
+  "screenReader.readSlow": "Langsam vorlesen",
+  "screenReader.unavailable": "Bildschirmleseprogramm auf diesem Gerät nicht verfügbar",
+
+  "saturation.base": "Sättigung",
+  "saturation.low": "Geringe Sättigung",
+  "saturation.high": "Hohe Sättigung",
+  "saturation.desaturated": "Entsättigt",
+
+  "textSize.base": "Größerer Text",
+  "textSize.medium": "Mittlerer Text",
+  "textSize.large": "Großer Text",
+  "textSize.extraLarge": "Extra großer Text",
+
+  "textSpacing.base": "Textabstand",
+  "textSpacing.light": "Geringer Abstand",
+  "textSpacing.moderate": "Mäßiger Abstand",
+  "textSpacing.heavy": "Großer Abstand",
+
+  "screenMask.base": "Bildschirmmaske",
+  "screenMask.largeCursor": "Großer Cursor",
+  "screenMask.readingMask": "Lesemaske",
+
+  "lineHeight.base": "Zeilenhöhe",
+  "lineHeight.light": "Geringe Zeilenhöhe",
+  "lineHeight.moderate": "Mittlere Zeilenhöhe",
+  "lineHeight.heavy": "Große Zeilenhöhe"
+}
