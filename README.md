@@ -151,6 +151,7 @@ If your brand color is dark, set `toggleIconColor` to `#ffffff` so the icon rema
 ```
 
 > **Accessibility note:** Ensure your chosen `toggleColor` provides sufficient contrast with `toggleIconColor` (default `#000000`). WCAG AA requires a contrast ratio of at least 3:1 for graphical elements.
+
 ## Language Support
 
 Astral supports multiple languages for the widget UI labels and text-to-speech voice selection. The built-in languages are:

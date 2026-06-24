@@ -1,5 +1,10 @@
 import { NgIf } from "@angular/common";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, HostBinding } from "@angular/core";
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  HostBinding,
+} from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
 import { SaturateComponent } from "./controls/saturate.component";
