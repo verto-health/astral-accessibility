@@ -97,6 +97,36 @@ Optionally we can choose which widgets should appear by passing an object inside
 </script>
 ```
 
+### Configuring Widget Position
+
+By default the widget appears in the bottom-right corner of the screen. You can change this by passing a `position` option to `initializeAstral`.
+
+Supported values:
+
+| Value          | Description                       |
+| -------------- | --------------------------------- |
+| `bottom-right` | Bottom-right corner **(default)** |
+| `bottom-left`  | Bottom-left corner                |
+| `top-right`    | Top-right corner                  |
+| `top-left`     | Top-left corner                   |
+
+```html
+<script>
+  initializeAstral({
+    position: "bottom-left",
+    enabledFeatures: [
+      "Screen Reader",
+      "Contrast",
+      "Saturation",
+      "Bigger Text",
+      "Text Spacing",
+      "Screen Mask",
+      "Line Height",
+    ],
+  });
+</script>
+```
+
 ## Language Support
 
 Astral supports multiple languages for the widget UI labels and text-to-speech voice selection. The built-in languages are:

@@ -5,8 +5,6 @@
   flex-direction: column;
   position: fixed;
   z-index: 999999;
-  bottom: 43px;
-  right: 0px;
   transition: max-width 0.1s ease-in-out;
 
   --iconWidth: 70px;
@@ -28,6 +26,44 @@
   --pageWdith: 100%;
   --pageHeight: 100%;
   --pageBackgroundColor: #fff;
+}
+
+:host(.astral-position-bottom-right) {
+  bottom: 43px;
+  right: 0px;
+}
+
+:host(.astral-position-bottom-left) {
+  bottom: 43px;
+  left: 0px;
+}
+
+:host(.astral-position-top-right) {
+  top: 43px;
+  right: 0px;
+}
+
+:host(.astral-position-top-left) {
+  top: 43px;
+  left: 0px;
+}
+
+:host(.astral-position-bottom-left),
+:host(.astral-position-top-left) {
+  .astral-icon {
+    border-radius: 0 20px 20px 0;
+    padding-right: 8px;
+    padding-left: 16px;
+    margin-right: 0;
+    margin-left: -4px;
+  }
+
+  .astral-modal {
+    margin-right: 0;
+    margin-left: -8px;
+    padding-right: 10px;
+    padding-left: 18px;
+  }
 }
 
 .astral-position {

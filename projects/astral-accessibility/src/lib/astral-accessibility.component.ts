@@ -1,5 +1,5 @@
 import { NgIf } from "@angular/common";
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostBinding } from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
 import { SaturateComponent } from "./controls/saturate.component";
@@ -9,6 +9,12 @@ import { ScreenReaderComponent } from "./controls/screen-reader.component";
 import { ScreenMaskComponent } from "./controls/screen-mask.component";
 import { LineHeightComponent } from "./controls/line-height.component";
 import { AstralTranslationService } from "./astral-translation.service";
+
+export type AstralPosition =
+  | "bottom-right"
+  | "bottom-left"
+  | "top-right"
+  | "top-left";
 
 @Component({
   selector: "astral-accessibility",
@@ -35,6 +41,16 @@ export class AstralAccessibilityComponent {
   astralAccessibilityIcon = "astral-icon";
   options: Record<string, any> = {};
   enabledFeatures: String[] = [];
+  position: AstralPosition = "bottom-right";
+
+  @HostBinding("class")
+  get hostClass(): string {
+    return `astral-position-${this.position}`;
+  }
+
+  get isTopPosition(): boolean {
+    return this.position.startsWith("top");
+  }
 
   constructor(private translationService: AstralTranslationService) {}
 
@@ -45,6 +61,8 @@ export class AstralAccessibilityComponent {
     if (astralOptions) {
       this.options = JSON.parse(astralOptions);
       this.enabledFeatures = this.options["enabledFeatures"];
+      this.position =
+        (this.options["position"] as AstralPosition) || "bottom-right";
       if (this.options["language"]) {
         this.translationService.setLanguage(this.options["language"]);
       }
