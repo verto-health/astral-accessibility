@@ -120,6 +120,70 @@ describe("AstralAccessibilityComponent", () => {
     });
   });
 
+  describe("toggle button color from astral-features attribute", () => {
+    function createWithOptions(options: Record<string, unknown>) {
+      const merged = { enabledFeatures: [], ...options };
+      const original = document.querySelector.bind(document);
+      spyOn(document, "querySelector").and.callFake((selector: string) => {
+        if (selector === "astral-accessibility") {
+          return {
+            getAttribute: (_attr: string) => JSON.stringify(merged),
+          } as unknown as Element;
+        }
+        return original(selector);
+      });
+
+      const fixture = TestBed.createComponent(AstralAccessibilityComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    beforeEach(async () => {
+      await configure();
+    });
+
+    it("sets --toggleButtonColor when toggleColor is provided", () => {
+      const fixture = createWithOptions({ toggleColor: "#0057b8" });
+      expect(
+        fixture.nativeElement.style.getPropertyValue("--toggleButtonColor"),
+      ).toBe("#0057b8");
+    });
+
+    it("sets --toggleIconColor when toggleIconColor is provided", () => {
+      const fixture = createWithOptions({ toggleIconColor: "#ffffff" });
+      expect(
+        fixture.nativeElement.style.getPropertyValue("--toggleIconColor"),
+      ).toBe("#ffffff");
+    });
+
+    it("sets both CSS variables when both options are provided", () => {
+      const fixture = createWithOptions({
+        toggleColor: "#0057b8",
+        toggleIconColor: "#ffffff",
+      });
+      expect(
+        fixture.nativeElement.style.getPropertyValue("--toggleButtonColor"),
+      ).toBe("#0057b8");
+      expect(
+        fixture.nativeElement.style.getPropertyValue("--toggleIconColor"),
+      ).toBe("#ffffff");
+    });
+
+    it("does not set --toggleButtonColor when toggleColor is omitted", () => {
+      const fixture = createWithOptions({});
+      expect(
+        fixture.nativeElement.style.getPropertyValue("--toggleButtonColor"),
+      ).toBe("");
+    });
+
+    it("does not set --toggleIconColor when toggleIconColor is omitted", () => {
+      const fixture = createWithOptions({});
+      expect(
+        fixture.nativeElement.style.getPropertyValue("--toggleIconColor"),
+      ).toBe("");
+    });
+  });
+
   describe("template alignment class", () => {
     let component: AstralAccessibilityComponent;
     let fixture: ComponentFixture<AstralAccessibilityComponent>;
