@@ -97,6 +97,108 @@ Optionally we can choose which widgets should appear by passing an object inside
 </script>
 ```
 
+### Configuring Widget Position
+
+By default the widget appears in the bottom-right corner of the screen. You can change this by passing a `position` option to `initializeAstral`.
+
+Supported values:
+
+| Value          | Description                       |
+| -------------- | --------------------------------- |
+| `bottom-right` | Bottom-right corner **(default)** |
+| `bottom-left`  | Bottom-left corner                |
+| `top-right`    | Top-right corner                  |
+| `top-left`     | Top-left corner                   |
+
+```html
+<script>
+  initializeAstral({
+    position: "bottom-left",
+    enabledFeatures: [
+      "Screen Reader",
+      "Contrast",
+      "Saturation",
+      "Bigger Text",
+      "Text Spacing",
+      "Screen Mask",
+      "Line Height",
+    ],
+  });
+</script>
+```
+
+### Customizing Toggle Button Color
+
+You can customize the background color of the toggle button to match your website's branding by passing `toggleColor` to `initializeAstral`. Any valid CSS color value is accepted (hex, RGB, named colors, etc.).
+
+```html
+<script>
+  initializeAstral({
+    toggleColor: "#0057b8",
+  });
+</script>
+```
+
+If your brand color is dark, set `toggleIconColor` to `#ffffff` so the icon remains visible:
+
+```html
+<script>
+  initializeAstral({
+    toggleColor: "#0057b8",
+    toggleIconColor: "#ffffff",
+  });
+</script>
+```
+
+> **Accessibility note:** Ensure your chosen `toggleColor` provides sufficient contrast with `toggleIconColor` (default `#000000`). WCAG AA requires a contrast ratio of at least 3:1 for graphical elements.
+
+## Language Support
+
+Astral supports multiple languages for the widget UI labels and text-to-speech voice selection. The built-in languages are:
+
+| Code      | Language            |
+| --------- | ------------------- |
+| `en`      | English (default)   |
+| `fr`      | French              |
+| `zh-Hant` | Traditional Chinese |
+
+### Setting the language at initialisation
+
+Pass a `language` key to `initializeAstral`:
+
+```html
+<script>
+  initializeAstral({
+    enabledFeatures: ["Screen Reader", "Contrast"],
+    language: "fr",
+  });
+</script>
+```
+
+### Switching language at runtime
+
+After initialisation, call `window.astralSetLanguage` with a language code. This updates both the widget labels and the screen reader's text-to-speech voice:
+
+```js
+window.astralSetLanguage("zh-Hant");
+```
+
+A typical pattern when your page has its own language switcher:
+
+```html
+<select id="lang-select">
+  <option value="en">English</option>
+  <option value="fr">Français</option>
+  <option value="zh-Hant">繁體中文</option>
+</select>
+
+<script>
+  document.getElementById("lang-select").addEventListener("change", (e) => {
+    window.astralSetLanguage(e.target.value);
+  });
+</script>
+```
+
 ## Development Setup
 
 1. Clone the repository

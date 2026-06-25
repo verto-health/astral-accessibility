@@ -1,6 +1,8 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
+import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-text-size",
@@ -44,7 +46,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ labels[currentState] }}</span>
             <div
               class="dots"
               [ngClass]="{ inactive: states[currentState] === base }"
@@ -77,6 +79,8 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 })
 export class TextSizeComponent {
   document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private readonly STORAGE_KEY = "text_size";
 
   currentState = 0;
   currentScale = 1;
@@ -89,13 +93,10 @@ export class TextSizeComponent {
   private observer: MutationObserver;
   private _rescaleFrame: ReturnType<typeof requestAnimationFrame> | null = null;
 
-  // Select the node that will be observed for mutations
   targetNode = document.body;
-
-  // Options for the observer (which mutations to observe)
   config = { attributes: true, childList: true, subtree: true };
 
-  constructor() {
+  constructor(private translation: AstralTranslationService) {
     this.observer = new MutationObserver(() => {
       if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
       this._rescaleFrame = requestAnimationFrame(() => {
@@ -106,13 +107,27 @@ export class TextSizeComponent {
         this.observer.observe(this.targetNode, this.config);
       });
     });
-    /* No observer here, we don't want it to be on by default */
+  }
+
+  ngOnInit() {
+    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
+    if (this.currentState !== 0) {
+      this._runStateLogic();
+      this.observer.observe(this.targetNode, this.config);
+    }
+  }
+
+  get labels(): string[] {
+    return [
+      this.translation.t("textSize.base"),
+      this.translation.t("textSize.medium"),
+      this.translation.t("textSize.large"),
+      this.translation.t("textSize.extraLarge"),
+    ];
   }
 
   updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
-    // keep initial styling
     if (!this.initialStyles.has(node)) {
-      // store initial styling of fontSize, lineHeight, and wordSpacing
       this.initialStyles.set(node, {
         "font-size": node.style.fontSize,
         "line-height": node.style.lineHeight,
@@ -121,8 +136,7 @@ export class TextSizeComponent {
     }
 
     const children = node.children;
-    const excludeNodes = ["SCRIPT"];
-    // traverse and update children first
+    const excludeNodes = ["SCRIPT", "ASTRAL-ACCESSIBILITY"];
     if (children.length > 0) {
       for (const child of children) {
         if (!excludeNodes.includes(child.nodeName))
@@ -166,8 +180,8 @@ export class TextSizeComponent {
     this.currentState = this.currentState % 4;
 
     this._runStateLogic();
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
     if (this.currentState !== 0) {
-      // is not base state, don't need observer for base state
       this.observer.observe(this.targetNode, this.config);
     }
   }
@@ -190,7 +204,6 @@ export class TextSizeComponent {
     if (!(this.states[this.currentState] === this.base)) {
       this.updateTextSize(document.body, this.currentScale, previousScale);
     } else {
-      // is base state
       this.restoreTextSize(document.body);
       this.currentScale = 1;
     }

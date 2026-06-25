@@ -12,7 +12,8 @@
     "build:lib:dev": "ng build astral-accessibility --watch --configuration=development --single-bundle",
     "start:demo-server": "lite-server -c projects/demo/lite-server-config.json",
     "start:demo": "lite-server -c projects/demo/lite-server-config.json",
-    "start:test-server": "npm-run-all build:lib start:demo-server"
+    "start:test-server": "npm-run-all build:lib start:demo-server",
+    "format": "prettier --write \"projects/**/*.{ts,html,scss,json}\" \"*.json\""
   },
   "private": true,
   "dependencies": {

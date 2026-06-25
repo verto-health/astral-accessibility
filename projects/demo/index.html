@@ -19,10 +19,7 @@
             <h1>Astral Accessibility</h1>
           </div>
         </div>
-        <nav id="demo-nav"></nav>
-        <div class="introduction">
-          <div id="app"></div>
-        </div>
+        <div id="app-root"></div>
       </div>
     </div>
 
@@ -44,6 +41,7 @@
       import { h, render } from "https://esm.sh/preact@10";
       import { useState, useEffect } from "https://esm.sh/preact@10/hooks";
       import htm from "https://esm.sh/htm@3";
+      import { DEMO_TRANSLATIONS } from "./demo-translations.js";
 
       const html = htm.bind(h);
 
@@ -67,383 +65,260 @@
         >`;
       }
 
-      function Router() {
+      // --- Nav ---
+      function Nav({ t, language, onLanguageChange }) {
+        return html`
+          <nav>
+            <div class="nav-links">
+              <${Link} href="#/">${t.nav.home}<//>
+              <${Link} href="#/screen-reader">${t.nav.screenReader}<//>
+              <${Link} href="#/contrast">${t.nav.contrast}<//>
+              <${Link} href="#/saturation">${t.nav.saturation}<//>
+              <${Link} href="#/bigger-text">${t.nav.biggerText}<//>
+              <${Link} href="#/text-spacing">${t.nav.textSpacing}<//>
+              <${Link} href="#/screen-mask">${t.nav.screenMask}<//>
+              <${Link} href="#/line-height">${t.nav.lineHeight}<//>
+            </div>
+            <select
+              class="lang-select"
+              value=${language}
+              onChange=${(e) => onLanguageChange(e.target.value)}
+              aria-label="Select language"
+            >
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="zh-Hant">繁體中文</option>
+            </select>
+          </nav>
+        `;
+      }
+
+      // --- Pages ---
+      function HomePage({ t }) {
+        const p = t.home;
+        const nav = t.nav;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3Features}</h3>
+            <p>${p.featuresIntro}</p>
+            <ul>
+              <li>
+                <a href="#/screen-reader">${nav.screenReader}</a> —
+                ${p.featureScreenReaderDesc}
+              </li>
+              <li>
+                <a href="#/contrast">${nav.contrast}</a> —
+                ${p.featureContrastDesc}
+              </li>
+              <li>
+                <a href="#/saturation">${nav.saturation}</a> —
+                ${p.featureSaturationDesc}
+              </li>
+              <li>
+                <a href="#/bigger-text">${nav.biggerText}</a> —
+                ${p.featureBiggerTextDesc}
+              </li>
+              <li>
+                <a href="#/text-spacing">${nav.textSpacing}</a> —
+                ${p.featureTextSpacingDesc}
+              </li>
+              <li>
+                <a href="#/screen-mask">${nav.screenMask}</a> —
+                ${p.featureScreenMaskDesc}
+              </li>
+              <li>
+                <a href="#/line-height">${nav.lineHeight}</a> —
+                ${p.featureLineHeightDesc}
+              </li>
+            </ul>
+            <h3>${p.h3About}</h3>
+            <p>${p.aboutText}</p>
+          </div>
+        `;
+      }
+
+      function ScreenReaderPage({ t }) {
+        const p = t.screenReader;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3TryIt}</h3>
+            <p>${p.tryItP1}</p>
+            <p>${p.tryItP2}</p>
+            <h3>${p.h3AriaDemo}</h3>
+            <p>${p.ariaP}</p>
+            <button aria-label=${p.buttonAriaLabel}>${p.buttonText}</button>
+            <h3>${p.h3PlainText}</h3>
+            <p>${p.plainP1}</p>
+            <p>${p.plainP2}</p>
+          </div>
+        `;
+      }
+
+      function ContrastPage({ t }) {
+        const p = t.contrast;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3WhyMatters}</h3>
+            <p>${p.whyP1}</p>
+            <p>${p.whyP2}</p>
+            <h3>${p.h3Enable}</h3>
+            <p>${p.enableP1}</p>
+            <p>${p.enableP2}</p>
+          </div>
+        `;
+      }
+
+      function SaturationPage({ t }) {
+        const p = t.saturation;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3WhoBenefits}</h3>
+            <p>${p.whoP1}</p>
+            <p>${p.whoP2}</p>
+            <h3>${p.h3ColoredDemo}</h3>
+            <p style="color: #0055cc">${p.blueText}</p>
+            <p style="color: #cc4400">${p.orangeText}</p>
+            <p style="color: #007700">${p.greenText}</p>
+            <p>${p.coloredP}</p>
+          </div>
+        `;
+      }
+
+      function BiggerTextPage({ t }) {
+        const p = t.biggerText;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3HowWorks}</h3>
+            <p>${p.howP1}</p>
+            <p>${p.howP2}</p>
+            <h3>${p.h3SampleText}</h3>
+            <p style="font-size: 12px">${p.sample12px}</p>
+            <p style="font-size: 16px">${p.sample16px}</p>
+            <p style="font-size: 20px">${p.sample20px}</p>
+            <h3>${p.h3Navigate}</h3>
+            <p>${p.navigateP}</p>
+          </div>
+        `;
+      }
+
+      function TextSpacingPage({ t }) {
+        const p = t.textSpacing;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3Benefits}</h3>
+            <p>${p.benefitsP1}</p>
+            <p>${p.benefitsP2}</p>
+            <h3>${p.h3DenseDemo}</h3>
+            <p>${p.denseIntro}</p>
+            <p style="font-size: 0.9rem; max-width: 600px">${p.denseText}</p>
+          </div>
+        `;
+      }
+
+      function ScreenMaskPage({ t }) {
+        const p = t.screenMask;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3WhoHelps}</h3>
+            <p>${p.whoP1}</p>
+            <p>${p.whoP2}</p>
+            <h3>${p.h3TryHere}</h3>
+            <p>${p.tryP1}</p>
+            <p>${p.tryP2}</p>
+            <p>${p.tryP3}</p>
+            <p style="margin-bottom: 2rem">${p.line1}</p>
+            <p style="margin-bottom: 2rem">${p.line2}</p>
+            <p style="margin-bottom: 2rem">${p.line3}</p>
+          </div>
+        `;
+      }
+
+      function LineHeightPage({ t }) {
+        const p = t.lineHeight;
+        return html`
+          <div class="page">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+            <h3>${p.h3WhyMatters}</h3>
+            <p>${p.whyP1}</p>
+            <p>${p.whyP2}</p>
+            <h3>${p.h3DenseDemo}</h3>
+            <p style="line-height: 1.2; max-width: 620px">${p.denseP}</p>
+            <h3>${p.h3NormalPara}</h3>
+            <p>${p.normalP}</p>
+          </div>
+        `;
+      }
+
+      // --- Router ---
+      function Router({ route, t }) {
+        switch (route) {
+          case "screen-reader":
+            return html`<${ScreenReaderPage} t=${t} />`;
+          case "contrast":
+            return html`<${ContrastPage} t=${t} />`;
+          case "saturation":
+            return html`<${SaturationPage} t=${t} />`;
+          case "bigger-text":
+            return html`<${BiggerTextPage} t=${t} />`;
+          case "text-spacing":
+            return html`<${TextSpacingPage} t=${t} />`;
+          case "screen-mask":
+            return html`<${ScreenMaskPage} t=${t} />`;
+          case "line-height":
+            return html`<${LineHeightPage} t=${t} />`;
+          default:
+            return html`<${HomePage} t=${t} />`;
+        }
+      }
+
+      // --- App root ---
+      function App() {
+        const [language, setLanguage] = useState("en");
         const [route, setRoute] = useState(getRoute());
+
         useEffect(() => {
           const onHash = () => setRoute(getRoute());
           window.addEventListener("hashchange", onHash);
           return () => window.removeEventListener("hashchange", onHash);
         }, []);
 
-        switch (route) {
-          case "screen-reader":
-            return html`<${ScreenReaderPage} />`;
-          case "contrast":
-            return html`<${ContrastPage} />`;
-          case "saturation":
-            return html`<${SaturationPage} />`;
-          case "bigger-text":
-            return html`<${BiggerTextPage} />`;
-          case "text-spacing":
-            return html`<${TextSpacingPage} />`;
-          case "screen-mask":
-            return html`<${ScreenMaskPage} />`;
-          case "line-height":
-            return html`<${LineHeightPage} />`;
-          default:
-            return html`<${HomePage} />`;
+        const t = DEMO_TRANSLATIONS[language];
+
+        function handleLanguageChange(lang) {
+          setLanguage(lang);
+          document.documentElement.lang = lang;
+          if (window.astralSetLanguage) window.astralSetLanguage(lang);
         }
-      }
 
-      // --- Pages ---
-
-      function HomePage() {
         return html`
-          <div class="page">
-            <h2>Welcome</h2>
-            <p class="subtitle">
-              Astral Accessibility is a widget that provides reading and visual
-              accessibility tools for web applications. Use the button in the
-              bottom-right corner to open the panel and try each feature.
-            </p>
-            <h3>Features</h3>
-            <p>
-              Navigate to each feature page to see the tool in action on a
-              dedicated page.
-            </p>
-            <ul>
-              <li>
-                <a href="#/screen-reader">Screen Reader</a> — reads out text
-                when you click on elements
-              </li>
-              <li>
-                <a href="#/contrast">Contrast</a> — high-contrast and dark modes
-                for better legibility
-              </li>
-              <li>
-                <a href="#/saturation">Saturation</a> — adjust colour saturation
-                or switch to greyscale
-              </li>
-              <li>
-                <a href="#/bigger-text">Bigger Text</a> — scale text up to
-                Medium, Large, or Extra Large
-              </li>
-              <li>
-                <a href="#/text-spacing">Text Spacing</a> — increase letter
-                spacing for readability
-              </li>
-              <li>
-                <a href="#/screen-mask">Screen Mask</a> — dim the screen with a
-                focus band that follows your cursor
-              </li>
-              <li>
-                <a href="#/line-height">Line Height</a> — increase vertical
-                spacing between lines
-              </li>
-            </ul>
-            <h3>About this demo</h3>
-            <p>
-              Each page contains text so you can observe how the accessibility
-              tools affect real content. Enable a setting, then navigate between
-              pages to confirm the setting persists.
-            </p>
+          <${Nav}
+            t=${t}
+            language=${language}
+            onLanguageChange=${handleLanguageChange}
+          />
+          <div class="introduction">
+            <${Router} route=${route} t=${t} />
           </div>
-        `;
-      }
-
-      function ScreenReaderPage() {
-        return html`
-          <div class="page">
-            <h2>Screen Reader</h2>
-            <p class="subtitle">
-              The screen reader reads out content when you click on any element.
-              If an <code>aria-label</code> is present it uses that; otherwise
-              it reads the element's visible text. Three speeds are available:
-              normal, fast, and slow.
-            </p>
-            <h3>Try it</h3>
-            <p>
-              Enable the Screen Reader from the widget, then click anywhere on
-              this page. Headings, paragraphs, links, and labelled inputs should
-              all be read aloud.
-            </p>
-            <p>
-              Assistive technology benefits users with low vision, dyslexia, and
-              attention difficulties. By hearing content read back, users can
-              confirm what they are interacting with without needing to read
-              every word on screen.
-            </p>
-            <h3>Aria label demo</h3>
-            <p>
-              The button below has an <code>aria-label</code> that differs from
-              its visible text. The screen reader should speak the label, not
-              the text.
-            </p>
-            <button aria-label="Submit the registration form">Sign up</button>
-            <h3>Plain text demo</h3>
-            <p>
-              This paragraph has no special markup. Clicking it should read the
-              raw text content aloud at the currently selected speed.
-            </p>
-            <p>
-              Accessibility is not a feature — it is a quality. Building
-              inclusive interfaces ensures that every user, regardless of
-              ability, can engage with digital content on equal footing.
-            </p>
-          </div>
-        `;
-      }
-
-      function ContrastPage() {
-        return html`
-          <div class="page">
-            <h2>Contrast</h2>
-            <p class="subtitle">
-              The contrast tool modifies background and foreground colours to
-              increase the difference between text and its surroundings. Three
-              modes are available: invert colours, high contrast, and dark high
-              contrast.
-            </p>
-            <h3>Why contrast matters</h3>
-            <p>
-              Low contrast between text and background is one of the most common
-              barriers for users with low vision or colour blindness. WCAG 2.1
-              requires a contrast ratio of at least 4.5:1 for normal text and
-              3:1 for large text.
-            </p>
-            <p>
-              High-contrast modes benefit users in bright environments too —
-              sunlight reflecting off a screen can reduce effective contrast
-              significantly.
-            </p>
-            <h3>Enable and compare</h3>
-            <p>
-              Open the accessibility widget and cycle through the contrast
-              options. Observe how the background and text colours change on
-              this page and in the navigation bar above.
-            </p>
-            <p>
-              After switching modes, navigate to another feature page and back
-              to confirm the contrast setting is preserved across navigation.
-            </p>
-          </div>
-        `;
-      }
-
-      function SaturationPage() {
-        return html`
-          <div class="page">
-            <h2>Saturation</h2>
-            <p class="subtitle">
-              The saturation tool adjusts how vivid the colours appear on
-              screen. Three modes let you lower saturation, increase it, or
-              remove colour entirely for a greyscale view.
-            </p>
-            <h3>Who benefits</h3>
-            <p>
-              Users with colour vision deficiency may find reduced or altered
-              saturation easier to distinguish. Greyscale mode removes colour as
-              a carrier of meaning entirely, which is useful for testing whether
-              a design is accessible without relying on colour alone.
-            </p>
-            <p>
-              Oversaturation can be useful for users with certain visual
-              processing differences who perceive low-saturation displays as
-              washed out.
-            </p>
-            <h3>Coloured content demo</h3>
-            <p style="color: #0055cc">This sentence is rendered in blue.</p>
-            <p style="color: #cc4400">
-              This sentence is rendered in orange-red.
-            </p>
-            <p style="color: #007700">This sentence is rendered in green.</p>
-            <p>
-              Cycle through the saturation settings from the widget and observe
-              how the coloured sentences above change. Greyscale mode should
-              render all three paragraphs in similar shades of grey.
-            </p>
-          </div>
-        `;
-      }
-
-      function BiggerTextPage() {
-        return html`
-          <div class="page">
-            <h2>Bigger Text</h2>
-            <p class="subtitle">
-              The Bigger Text tool scales all text on the page. Three levels are
-              available: Medium (1.2×), Large (1.5×), and Extra Large (1.8×).
-            </p>
-            <h3>How it works</h3>
-            <p>
-              Text scaling is applied by traversing the DOM and adjusting the
-              computed font size of each text-bearing element. A
-              MutationObserver watches for new nodes added during navigation so
-              that dynamically rendered content is scaled too.
-            </p>
-            <p>
-              Enable a text size level, then navigate to another page and back.
-              The font should remain at the selected size without growing larger
-              on each navigation.
-            </p>
-            <h3>Sample text at various sizes</h3>
-            <p style="font-size: 12px">
-              This paragraph uses a 12px base font size.
-            </p>
-            <p style="font-size: 16px">
-              This paragraph uses a 16px base font size.
-            </p>
-            <p style="font-size: 20px">
-              This paragraph uses a 20px base font size.
-            </p>
-            <h3>Navigate and return</h3>
-            <p>
-              Set the text size to Large, navigate to the Screen Reader page,
-              then return here. The paragraph sizes above should be exactly 1.5×
-              their original values — not 1.5× compounded over multiple
-              navigations.
-            </p>
-          </div>
-        `;
-      }
-
-      function TextSpacingPage() {
-        return html`
-          <div class="page">
-            <h2>Text Spacing</h2>
-            <p class="subtitle">
-              The Text Spacing tool increases the letter spacing between
-              characters, making dense text easier to scan and read.
-            </p>
-            <h3>Benefits for readers</h3>
-            <p>
-              Wider letter spacing benefits users with dyslexia, who often
-              report that tightly packed characters blur together. It also helps
-              users reading in a second language, where individual character
-              recognition plays a larger role in comprehension.
-            </p>
-            <p>
-              WCAG 2.1 Success Criterion 1.4.12 requires that no loss of content
-              occurs when letter spacing is increased to at least 0.12× the font
-              size. This tool goes beyond that baseline.
-            </p>
-            <h3>Dense text demo</h3>
-            <p>
-              The following paragraph is intentionally compact. Enable Text
-              Spacing from the widget and observe how the characters spread
-              apart:
-            </p>
-            <p style="font-size: 0.9rem; max-width: 600px">
-              Accessibility standards exist to ensure that the broadest possible
-              audience can use digital interfaces effectively. When developers
-              implement these standards consistently, the result is a product
-              that works for everyone — not just the majority.
-            </p>
-          </div>
-        `;
-      }
-
-      function ScreenMaskPage() {
-        return html`
-          <div class="page">
-            <h2>Screen Mask</h2>
-            <p class="subtitle">
-              The Screen Mask dims the background and highlights a horizontal
-              band that follows your cursor as you move it up and down the page.
-            </p>
-            <h3>Who it helps</h3>
-            <p>
-              Users with attention deficit disorders, visual tracking
-              difficulties, or photosensitivity benefit from isolating a single
-              line of focus. The mask reduces the cognitive load of filtering
-              out surrounding content while reading.
-            </p>
-            <p>
-              It is also useful on information-dense pages — such as tables or
-              code listings — where accidentally jumping to the wrong row is a
-              common frustration.
-            </p>
-            <h3>Try it here</h3>
-            <p>
-              Enable the Screen Mask from the widget, then move your cursor
-              slowly down this page. The focus band should track your vertical
-              position, dimming everything above and below the highlighted area.
-            </p>
-            <p>
-              Move your cursor quickly — the band should follow smoothly without
-              lag. Then navigate to another page and back to confirm the mask
-              remains active.
-            </p>
-            <p>
-              The following lines are spaced generously to make the focus band
-              easier to observe as it moves:
-            </p>
-            <p style="margin-bottom: 2rem">Line one — move your cursor here.</p>
-            <p style="margin-bottom: 2rem">
-              Line two — now move your cursor here.
-            </p>
-            <p style="margin-bottom: 2rem">Line three — and now here.</p>
-          </div>
-        `;
-      }
-
-      function LineHeightPage() {
-        return html`
-          <div class="page">
-            <h2>Line Height</h2>
-            <p class="subtitle">
-              The Line Height tool increases the vertical spacing between lines
-              of text, making paragraphs easier to follow from one line to the
-              next.
-            </p>
-            <h3>Why spacing matters</h3>
-            <p>
-              Insufficient line height forces the eye to work harder when moving
-              from the end of one line to the beginning of the next. For users
-              with low vision or cognitive differences, this extra effort
-              accumulates across a long document and leads to faster fatigue.
-            </p>
-            <p>
-              WCAG 2.1 Success Criterion 1.4.12 specifies a minimum line height
-              of 1.5× the font size. Many designs fall short of this baseline.
-              This tool lets users override the page's default spacing to meet
-              their own needs.
-            </p>
-            <h3>Dense paragraph demo</h3>
-            <p style="line-height: 1.2; max-width: 620px">
-              This paragraph has a deliberately tight line height of 1.2. Enable
-              Line Height from the accessibility widget and watch this paragraph
-              open up. The increased spacing should make it noticeably easier to
-              read through to the end of each line without losing your place.
-            </p>
-            <h3>Normal paragraph</h3>
-            <p>
-              This paragraph uses the default line height set by the stylesheet.
-              Use it as a reference to compare how the tight paragraph above
-              changes relative to unmodified content when you adjust the line
-              height setting.
-            </p>
-          </div>
-        `;
-      }
-
-      // --- Nav ---
-      function Nav() {
-        return html`
-          <${Link} href="#/">Home<//>
-          <${Link} href="#/screen-reader">Screen Reader<//>
-          <${Link} href="#/contrast">Contrast<//>
-          <${Link} href="#/saturation">Saturation<//>
-          <${Link} href="#/bigger-text">Bigger Text<//>
-          <${Link} href="#/text-spacing">Text Spacing<//>
-          <${Link} href="#/screen-mask">Screen Mask<//>
-          <${Link} href="#/line-height">Line Height<//>
         `;
       }
 
       // --- Mount ---
-      render(html`<${Nav} />`, document.getElementById("demo-nav"));
-      render(html`<${Router} />`, document.getElementById("app"));
+      render(html`<${App} />`, document.getElementById("app-root"));
     </script>
   </body>
 </html>

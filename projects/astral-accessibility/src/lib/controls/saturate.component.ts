@@ -1,6 +1,8 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
+import { AstralTranslationService } from "../astral-translation.service";
+import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-saturate",
@@ -56,7 +58,7 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
             </svg>
           </div>
           <div class="state-dots-wrap">
-            <span>{{ states[currentState] }}</span>
+            <span>{{ labels[currentState] }}</span>
             <div *ngIf="states[currentState] != base" class="dots">
               <div
                 class="dot"
@@ -87,17 +89,37 @@ import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class SaturateComponent {
+  constructor(private translation: AstralTranslationService) {}
+
+  get labels(): string[] {
+    return [
+      this.translation.t("saturation.base"),
+      this.translation.t("saturation.low"),
+      this.translation.t("saturation.high"),
+      this.translation.t("saturation.desaturated"),
+    ];
+  }
+
   document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private readonly STORAGE_KEY = "saturate";
 
   currentState = 0;
   base = "Saturation";
   states = [this.base, "Low Saturation", "High Saturation", "Desaturated"];
 
+  ngOnInit() {
+    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
+    if (this.currentState !== 0) {
+      this._runStateLogic();
+    }
+  }
+
   nextState() {
     this.currentState += 1;
     this.currentState = this.currentState % 4;
-
     this._runStateLogic();
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
   }
 
   private _runStateLogic() {

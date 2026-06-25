@@ -3,12 +3,11 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
-    paths:
-      - .github/workflows/cypress.yml
-      - projects/**/*
-      - package.json
-      - yarn.lock
+    branches:
+      - main
+      - dev
 
 jobs:
   test:

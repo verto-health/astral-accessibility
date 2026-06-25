@@ -1,0 +1,36 @@
+{
+  "contrast.base": "Contrast",
+  "contrast.invert": "Invert",
+  "contrast.high": "High Contrast",
+  "contrast.darkHigh": "Dark High Contrast",
+
+  "screenReader.base": "Screen Reader",
+  "screenReader.readNormal": "Read Normal",
+  "screenReader.readFast": "Read Fast",
+  "screenReader.readSlow": "Read Slow",
+  "screenReader.unavailable": "Screen Reader unavailable on device",
+
+  "saturation.base": "Saturation",
+  "saturation.low": "Low Saturation",
+  "saturation.high": "High Saturation",
+  "saturation.desaturated": "Desaturated",
+
+  "textSize.base": "Bigger Text",
+  "textSize.medium": "Medium Text",
+  "textSize.large": "Large Text",
+  "textSize.extraLarge": "Extra Large Text",
+
+  "textSpacing.base": "Text Spacing",
+  "textSpacing.light": "Light Spacing",
+  "textSpacing.moderate": "Moderate Spacing",
+  "textSpacing.heavy": "Heavy Spacing",
+
+  "screenMask.base": "Screen Mask",
+  "screenMask.largeCursor": "Large Cursor",
+  "screenMask.readingMask": "Reading Mask",
+
+  "lineHeight.base": "Line Height",
+  "lineHeight.light": "Light Height",
+  "lineHeight.moderate": "Moderate Height",
+  "lineHeight.heavy": "Heavy Height"
+}

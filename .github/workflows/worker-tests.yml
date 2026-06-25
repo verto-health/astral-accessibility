@@ -2,13 +2,13 @@ name: Worker Tests
 
 on:
   push:
-    paths:
-      - workers/astral-cdn/**
-      - .github/workflows/worker-tests.yml
+    branches:
+      - main
+      - dev
   pull_request:
-    paths:
-      - workers/astral-cdn/**
-      - .github/workflows/worker-tests.yml
+    branches:
+      - main
+      - dev
 
 jobs:
   test:
