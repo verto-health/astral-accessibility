@@ -12,6 +12,8 @@ describe("Persistence: settings survive page reload", () => {
   });
 
   it("persists contrast (Invert) across page reload", () => {
+    cy.document().find("astral-contrast").click(); // → Dark High Contrast
+    cy.document().find("astral-contrast").click(); // → High Contrast
     cy.document().find("astral-contrast").click(); // → Invert
     cy.document().find("html").should("have.class", "astral_inverted");
 
@@ -21,7 +23,7 @@ describe("Persistence: settings survive page reload", () => {
   });
 
   it("persists contrast (High Contrast) across page reload", () => {
-    cy.document().find("astral-contrast").click(); // → Invert
+    cy.document().find("astral-contrast").click(); // → Dark High Contrast
     cy.document().find("astral-contrast").click(); // → High Contrast
 
     cy.reload();
@@ -113,6 +115,8 @@ describe("Persistence: settings survive page reload", () => {
   });
 
   it("persists multiple settings simultaneously across page reload", () => {
+    cy.document().find("astral-contrast").click(); // → Dark High Contrast
+    cy.document().find("astral-contrast").click(); // → High Contrast
     cy.document().find("astral-contrast").click(); // → Invert
     cy.document().find("astral-saturate").click(); // → Low Saturation
     cy.document().find("astral-text-spacing").click(); // → Light Spacing
@@ -127,6 +131,8 @@ describe("Persistence: settings survive page reload", () => {
   });
 
   it("resets all settings when sessionStorage is cleared before reload", () => {
+    cy.document().find("astral-contrast").click(); // → Dark High Contrast
+    cy.document().find("astral-contrast").click(); // → High Contrast
     cy.document().find("astral-contrast").click(); // → Invert
     cy.document().find("astral-saturate").click(); // → Low Saturation
 

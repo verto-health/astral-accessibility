@@ -10,9 +10,14 @@ describe("template spec", () => {
     ally.find(".astral-modal").should("have.class", "active");
 
     const contrastComponent = cy.document().find("astral-contrast");
-    // inverted
+    // dark high contrast
     contrastComponent.click();
-    cy.document().find("html").should("have.class", "astral_inverted");
+    cy.document()
+      .find("html")
+      .find(".card")
+      .should("have.css", "background-color", "rgb(0, 0, 0)")
+      .and("have.css", "color", "rgb(255, 255, 255)")
+      .and("have.css", "font-weight", "700");
 
     // high contrast
     contrastComponent.click();
@@ -23,14 +28,9 @@ describe("template spec", () => {
       .should("have.css", "background-color", "rgba(0, 0, 0, 0)")
       .and("have.css", "color", "rgb(0, 0, 0)");
 
-    // dakr high contrast
+    // inverted
     contrastComponent.click();
-    cy.document()
-      .find("html")
-      .find(".card")
-      .should("have.css", "background-color", "rgb(0, 0, 0)")
-      .and("have.css", "color", "rgb(255, 255, 255)")
-      .and("have.css", "font-weight", "700");
+    cy.document().find("html").should("have.class", "astral_inverted");
 
     // revert
     contrastComponent.click();

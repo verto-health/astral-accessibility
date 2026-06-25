@@ -60,7 +60,9 @@ import { AstralStateService } from "../astral-state.service";
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Invert' }"
+                [ngClass]="{
+                  active: states[currentState] === 'Dark High Contrast'
+                }"
               ></div>
               <div
                 class="dot"
@@ -68,9 +70,7 @@ import { AstralStateService } from "../astral-state.service";
               ></div>
               <div
                 class="dot"
-                [ngClass]="{
-                  active: states[currentState] === 'Dark High Contrast'
-                }"
+                [ngClass]="{ active: states[currentState] === 'Invert' }"
               ></div>
             </div>
           </div>
@@ -93,14 +93,14 @@ export class ContrastComponent {
 
   currentState = 0;
   base = "Contrast";
-  states = [this.base, "Invert", "High Contrast", "Dark High Contrast"];
+  states = [this.base, "Dark High Contrast", "High Contrast", "Invert"];
 
   get labels(): string[] {
     return [
       this.translation.t("contrast.base"),
-      this.translation.t("contrast.invert"),
-      this.translation.t("contrast.high"),
       this.translation.t("contrast.darkHigh"),
+      this.translation.t("contrast.high"),
+      this.translation.t("contrast.invert"),
     ];
   }
 
