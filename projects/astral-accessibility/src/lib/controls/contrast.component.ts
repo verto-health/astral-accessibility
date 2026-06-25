@@ -60,7 +60,9 @@ import { AstralStateService } from "../astral-state.service";
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Invert' }"
+                [ngClass]="{
+                  active: states[currentState] === 'Dark High Contrast'
+                }"
               ></div>
               <div
                 class="dot"
@@ -68,9 +70,7 @@ import { AstralStateService } from "../astral-state.service";
               ></div>
               <div
                 class="dot"
-                [ngClass]="{
-                  active: states[currentState] === 'Dark High Contrast'
-                }"
+                [ngClass]="{ active: states[currentState] === 'Invert' }"
               ></div>
             </div>
           </div>
