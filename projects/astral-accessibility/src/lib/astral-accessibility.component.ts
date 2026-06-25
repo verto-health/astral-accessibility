@@ -1,5 +1,10 @@
 import { NgIf } from "@angular/common";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, HostBinding } from "@angular/core";
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  HostBinding,
+} from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
 import { SaturateComponent } from "./controls/saturate.component";
@@ -52,7 +57,10 @@ export class AstralAccessibilityComponent {
     return this.position.startsWith("top");
   }
 
-  constructor(private translationService: AstralTranslationService) {}
+  constructor(
+    private translationService: AstralTranslationService,
+    private elementRef: ElementRef,
+  ) {}
 
   ngOnInit() {
     const astralElement = document.querySelector("astral-accessibility");
@@ -65,6 +73,20 @@ export class AstralAccessibilityComponent {
         (this.options["position"] as AstralPosition) || "bottom-right";
       if (this.options["language"]) {
         this.translationService.setLanguage(this.options["language"]);
+      }
+
+      if (this.options["toggleColor"]) {
+        this.elementRef.nativeElement.style.setProperty(
+          "--toggleButtonColor",
+          this.options["toggleColor"],
+        );
+      }
+
+      if (this.options["toggleIconColor"]) {
+        this.elementRef.nativeElement.style.setProperty(
+          "--toggleIconColor",
+          this.options["toggleIconColor"],
+        );
       }
     }
 
