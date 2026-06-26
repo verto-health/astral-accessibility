@@ -1,5 +1,5 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, Renderer2, inject } from "@angular/core";
+import { Component, Renderer2, inject, signal } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
@@ -10,15 +10,15 @@ import { AstralStateService } from "../astral-state.service";
   template: `
     <button
       (click)="nextState()"
-      [ngClass]="{ 'in-use': states[currentState] != base }"
+      [ngClass]="{ 'in-use': states[currentState()] != base }"
     >
       <div class="title">
         <div class="icon-state-wrap">
           <div
             class="icon action-icon"
             [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
+              inactive: states[currentState()] == base,
+              active: states[currentState()] != base
             }"
           >
             <svg
@@ -44,19 +44,19 @@ import { AstralStateService } from "../astral-state.service";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ labels[currentState] }}</span>
+            <span>{{ labels[currentState()] }}</span>
             <div
               class="dots"
-              [ngClass]="{ inactive: states[currentState] === base }"
+              [ngClass]="{ inactive: states[currentState()] === base }"
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Large Cursor' }"
+                [ngClass]="{ active: states[currentState()] === 'Large Cursor' }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState] === 'Reading Mask'
+                  active: states[currentState()] === 'Reading Mask'
                 }"
               ></div>
             </div>
@@ -65,7 +65,7 @@ import { AstralStateService } from "../astral-state.service";
       </div>
 
       <astral-widget-checkmark
-        [isActive]="states[currentState] !== base"
+        [isActive]="states[currentState()] !== base"
       ></astral-widget-checkmark>
     </button>
   `,
@@ -180,31 +180,30 @@ export class ScreenMaskComponent {
 
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = signal(0);
   base = "Screen Mask";
   states = [this.base, "Large Cursor", "Reading Mask"];
 
   _style: HTMLStyleElement;
 
   ngOnInit() {
-    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
-    if (this.currentState !== 0) {
+    this.currentState.set(this.stateService.loadState(this.STORAGE_KEY));
+    if (this.currentState() !== 0) {
       this._runStateLogic();
     }
   }
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 3;
+    this.currentState.update(v => (v + 1) % 3);
     this._runStateLogic();
-    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
 
   private _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === "Large Cursor") {
+    if (this.states[this.currentState()] === "Large Cursor") {
       this._style.textContent = `
         body, *{
           cursor: url('data:image/png;base64,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'), auto;
@@ -212,7 +211,7 @@ export class ScreenMaskComponent {
         `;
     }
 
-    if (this.states[this.currentState] === "Reading Mask") {
+    if (this.states[this.currentState()] === "Reading Mask") {
       const screenMaskContainer = this.renderer.createElement("div");
       const maskTop = this.renderer.createElement("div");
       const maskBottom = this.renderer.createElement("div");

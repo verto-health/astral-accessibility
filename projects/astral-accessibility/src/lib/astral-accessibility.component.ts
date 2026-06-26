@@ -1,10 +1,12 @@
 import { NgIf } from "@angular/common";
 import {
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   HostBinding,
   inject,
+  signal,
 } from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
@@ -44,21 +46,18 @@ export class AstralAccessibilityComponent {
   private translationService = inject(AstralTranslationService);
   private elementRef = inject(ElementRef);
 
-  modalVisible = false;
+  modalVisible = signal(false);
   userAgent = navigator.userAgent;
   astralAccessibilityPanel = "astral-modal";
   astralAccessibilityIcon = "astral-icon";
   options: Record<string, any> = {};
   enabledFeatures: String[] = [];
-  position: AstralPosition = "bottom-right";
+  position = signal<AstralPosition>("bottom-right");
+  isTopPosition = computed(() => this.position().startsWith("top"));
 
   @HostBinding("class")
   get hostClass(): string {
-    return `astral-position-${this.position}`;
-  }
-
-  get isTopPosition(): boolean {
-    return this.position.startsWith("top");
+    return `astral-position-${this.position()}`;
   }
 
   ngOnInit() {
@@ -68,8 +67,9 @@ export class AstralAccessibilityComponent {
     if (astralOptions) {
       this.options = JSON.parse(astralOptions);
       this.enabledFeatures = this.options["enabledFeatures"];
-      this.position =
-        (this.options["position"] as AstralPosition) || "bottom-right";
+      this.position.set(
+        (this.options["position"] as AstralPosition) || "bottom-right"
+      );
       if (this.options["language"]) {
         this.translationService.setLanguage(this.options["language"]);
       }
