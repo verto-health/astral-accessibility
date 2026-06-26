@@ -14,7 +14,7 @@ Six stacked PRs, each branching from the previous, one major version per PR. Eac
 | PR | Version jump | TypeScript | Zone.js | Key theme |
 |----|-------------|------------|---------|-----------|
 | 1 | 14 → 15 | 4.7 → 4.8 | 0.11 → 0.12 | Standalone cleanup, `inject()`, required inputs |
-| 2 | 15 → 16 | 4.8 → 5.0 | 0.12 → 0.13 | Signals (dev preview), `DestroyRef`, typed forms |
+| 2 | 15 → 16 | 4.8 → 5.0 | 0.12 → 0.13 | Signals (dev preview), `DestroyRef` |
 | 3 | 16 → 17 | 5.0 → 5.2 | 0.13 → 0.14 | Drop `ngx-build-plus`, esbuild builder, `@if`/`@for` control flow |
 | 4 | 17 → 18 | 5.2 → 5.4 | 0.14 | Signal inputs/outputs/queries replace decorators |
 | 5 | 18 → 19 | 5.4 → 5.6 | 0.14 | `standalone: true` becomes implicit, `linkedSignal` |
@@ -63,7 +63,8 @@ Each PR runs `ng update @angular/core @angular/cli` for that version and applies
 ### PR 1 — v15
 - Replace constructor injection with `inject()` in all components and services
 - Add `required: true` to `@Input()` decorators where inputs are mandatory
-- Delete `AstralAccessibilityModule` — it only wraps the already-standalone root component; nothing consumes it as a module
+- Convert `AstralCheckmarkSvgComponent` to standalone (it is currently `declarations`-based inside `AstralAccessibilityModule`) and add it as a direct import in the components that use it
+- Delete `AstralAccessibilityModule` — once `AstralCheckmarkSvgComponent` is standalone, the module has no purpose
 
 ### PR 2 — v16
 - Introduce `signal()` and `computed()` for local component state (toggle open/closed, active feature flags)
