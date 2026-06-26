@@ -21,7 +21,7 @@ describe("CSS-class component persistence", () => {
     stateService.saveState("contrast", 2);
     const fixture = TestBed.createComponent(ContrastComponent);
     fixture.detectChanges();
-    expect(fixture.componentInstance.currentState).toBe(2);
+    expect(fixture.componentInstance.currentState()).toBe(2);
   });
 
   it("ContrastComponent saves state on nextState()", () => {
@@ -35,7 +35,7 @@ describe("CSS-class component persistence", () => {
     stateService.saveState("saturate", 3);
     const fixture = TestBed.createComponent(SaturateComponent);
     fixture.detectChanges();
-    expect(fixture.componentInstance.currentState).toBe(3);
+    expect(fixture.componentInstance.currentState()).toBe(3);
   });
 
   it("SaturateComponent saves state on nextState()", () => {
@@ -49,7 +49,7 @@ describe("CSS-class component persistence", () => {
     stateService.saveState("text_spacing", 1);
     const fixture = TestBed.createComponent(TextSpacingComponent);
     fixture.detectChanges();
-    expect(fixture.componentInstance.currentState).toBe(1);
+    expect(fixture.componentInstance.currentState()).toBe(1);
   });
 
   it("TextSpacingComponent saves state on nextState()", () => {
@@ -63,7 +63,7 @@ describe("CSS-class component persistence", () => {
     stateService.saveState("line_height", 2);
     const fixture = TestBed.createComponent(LineHeightComponent);
     fixture.detectChanges();
-    expect(fixture.componentInstance.currentState).toBe(2);
+    expect(fixture.componentInstance.currentState()).toBe(2);
   });
 
   it("LineHeightComponent saves state on nextState()", () => {
@@ -130,7 +130,7 @@ describe("TextSizeComponent persistence", () => {
     stateService.saveState("text_size", 2);
     const fixture = TestBed.createComponent(TextSizeComponent);
     fixture.detectChanges();
-    expect(fixture.componentInstance.currentState).toBe(2);
+    expect(fixture.componentInstance.currentState()).toBe(2);
   });
 
   it("should save state on nextState()", () => {
@@ -154,7 +154,7 @@ describe("ScreenReaderComponent persistence", () => {
     stateService.saveState("screen_reader", 2);
     const fixture = TestBed.createComponent(ScreenReaderComponent);
     fixture.detectChanges();
-    expect(fixture.componentInstance.currentState).toBe(2);
+    expect(fixture.componentInstance.currentState()).toBe(2);
   });
 
   it("should save state on nextState()", () => {

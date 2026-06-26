@@ -50,5 +50,5 @@ import { NgIf } from "@angular/common";
   imports: [NgIf],
 })
 export class AstralCheckmarkSvgComponent {
-  @Input() isActive!: boolean;
+  @Input({ required: true }) isActive!: boolean;
 }

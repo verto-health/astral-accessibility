@@ -43,12 +43,12 @@ describe("ContrastComponent", () => {
 
   describe("cycle order", () => {
     it("starts at base state", () => {
-      expect(component.states[component.currentState]).toBe("Contrast");
+      expect(component.states[component.currentState()]).toBe("Contrast");
     });
 
     it("cycles Dark High Contrast first", () => {
       component.nextState();
-      expect(component.states[component.currentState]).toBe(
+      expect(component.states[component.currentState()]).toBe(
         "Dark High Contrast",
       );
     });
@@ -56,14 +56,14 @@ describe("ContrastComponent", () => {
     it("cycles High Contrast second", () => {
       component.nextState();
       component.nextState();
-      expect(component.states[component.currentState]).toBe("High Contrast");
+      expect(component.states[component.currentState()]).toBe("High Contrast");
     });
 
     it("cycles Invert third", () => {
       component.nextState();
       component.nextState();
       component.nextState();
-      expect(component.states[component.currentState]).toBe("Invert");
+      expect(component.states[component.currentState()]).toBe("Invert");
     });
 
     it("wraps back to base after Invert", () => {
@@ -71,7 +71,7 @@ describe("ContrastComponent", () => {
       component.nextState();
       component.nextState();
       component.nextState();
-      expect(component.states[component.currentState]).toBe("Contrast");
+      expect(component.states[component.currentState()]).toBe("Contrast");
     });
   });
 });

@@ -1,5 +1,5 @@
 import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
@@ -10,15 +10,15 @@ import { AstralStateService } from "../astral-state.service";
   template: `
     <button
       (click)="nextState()"
-      [ngClass]="{ 'in-use': states[currentState] !== base }"
+      [ngClass]="{ 'in-use': states[currentState()] !== base }"
     >
       <div class="title">
         <div class="icon-state-wrap">
           <div
             class="icon action-icon "
             [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
+              inactive: states[currentState()] == base,
+              active: states[currentState()] != base
             }"
           >
             <svg
@@ -46,23 +46,23 @@ import { AstralStateService } from "../astral-state.service";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ labels[currentState] }}</span>
+            <span>{{ labels[currentState()] }}</span>
             <div
               class="dots"
-              [ngClass]="{ inactive: states[currentState] === base }"
+              [ngClass]="{ inactive: states[currentState()] === base }"
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Medium Text' }"
+                [ngClass]="{ active: states[currentState()] === 'Medium Text' }"
               ></div>
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Large Text' }"
+                [ngClass]="{ active: states[currentState()] === 'Large Text' }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState] === 'Extra Large Text'
+                  active: states[currentState()] === 'Extra Large Text'
                 }"
               ></div>
             </div>
@@ -71,7 +71,7 @@ import { AstralStateService } from "../astral-state.service";
       </div>
 
       <astral-widget-checkmark
-        [isActive]="states[currentState] !== base"
+        [isActive]="states[currentState()] !== base"
       ></astral-widget-checkmark>
     </button>
   `,
@@ -83,7 +83,7 @@ export class TextSizeComponent {
   private translation = inject(AstralTranslationService);
   private readonly STORAGE_KEY = "text_size";
 
-  currentState = 0;
+  currentState = signal(0);
   currentScale = 1;
   base = "Bigger Text";
   states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
@@ -108,8 +108,8 @@ export class TextSizeComponent {
   });
 
   ngOnInit() {
-    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
-    if (this.currentState !== 0) {
+    this.currentState.set(this.stateService.loadState(this.STORAGE_KEY));
+    if (this.currentState() !== 0) {
       this._runStateLogic();
       this.observer.observe(this.targetNode, this.config);
     }
@@ -174,12 +174,11 @@ export class TextSizeComponent {
 
   nextState() {
     this.observer.disconnect();
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState.update(v => (v + 1) % 4);
 
     this._runStateLogic();
-    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
-    if (this.currentState !== 0) {
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState());
+    if (this.currentState() !== 0) {
       this.observer.observe(this.targetNode, this.config);
     }
   }
@@ -187,19 +186,19 @@ export class TextSizeComponent {
   private _runStateLogic() {
     let previousScale = this.currentScale;
 
-    if (this.states[this.currentState] === "Medium Text") {
+    if (this.states[this.currentState()] === "Medium Text") {
       this.currentScale = 1.2;
     }
 
-    if (this.states[this.currentState] === "Large Text") {
+    if (this.states[this.currentState()] === "Large Text") {
       this.currentScale = 1.5;
     }
 
-    if (this.states[this.currentState] === "Extra Large Text") {
+    if (this.states[this.currentState()] === "Extra Large Text") {
       this.currentScale = 1.8;
     }
 
-    if (!(this.states[this.currentState] === this.base)) {
+    if (!(this.states[this.currentState()] === this.base)) {
       this.updateTextSize(document.body, this.currentScale, previousScale);
     } else {
       this.restoreTextSize(document.body);
