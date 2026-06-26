@@ -80,6 +80,7 @@ import { AstralStateService } from "../astral-state.service";
 export class TextSizeComponent {
   document = inject(DOCUMENT);
   stateService = inject(AstralStateService);
+  private translation = inject(AstralTranslationService);
   private readonly STORAGE_KEY = "text_size";
 
   currentState = 0;
@@ -90,24 +91,21 @@ export class TextSizeComponent {
 
   _style: HTMLStyleElement;
 
-  private observer: MutationObserver;
   private _rescaleFrame: ReturnType<typeof requestAnimationFrame> | null = null;
 
   targetNode = document.body;
   config = { attributes: true, childList: true, subtree: true };
 
-  constructor(private translation: AstralTranslationService) {
-    this.observer = new MutationObserver(() => {
-      if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
-      this._rescaleFrame = requestAnimationFrame(() => {
-        this._rescaleFrame = null;
-        this.observer.disconnect();
-        this.restoreTextSize(document.body);
-        this.updateTextSize(document.body, this.currentScale, 1);
-        this.observer.observe(this.targetNode, this.config);
-      });
+  private observer = new MutationObserver(() => {
+    if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
+    this._rescaleFrame = requestAnimationFrame(() => {
+      this._rescaleFrame = null;
+      this.observer.disconnect();
+      this.restoreTextSize(document.body);
+      this.updateTextSize(document.body, this.currentScale, 1);
+      this.observer.observe(this.targetNode, this.config);
     });
-  }
+  });
 
   ngOnInit() {
     this.currentState = this.stateService.loadState(this.STORAGE_KEY);

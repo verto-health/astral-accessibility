@@ -78,7 +78,10 @@ import { AstralStateService } from "../astral-state.service";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent {
-  constructor(private translation: AstralTranslationService) {}
+  document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private translation = inject(AstralTranslationService);
+  private readonly STORAGE_KEY = "text_spacing";
 
   get labels(): string[] {
     return [
@@ -88,10 +91,6 @@ export class TextSpacingComponent {
       this.translation.t("textSpacing.heavy"),
     ];
   }
-
-  document = inject(DOCUMENT);
-  stateService = inject(AstralStateService);
-  private readonly STORAGE_KEY = "text_spacing";
 
   currentState = 0;
   base = "Text Spacing";

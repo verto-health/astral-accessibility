@@ -30,8 +30,8 @@ describe("AstralTranslationService", () => {
   it("returns German strings after setLanguage('de')", () => {
     service.setLanguage("de");
     expect(service.t("contrast.base")).toBe("Kontrast");
-    expect(service.t("screenReader.base")).toBe("Bildschirmleser");
-    expect(service.t("lineHeight.heavy")).toBe("Fettdruck");
+    expect(service.t("screenReader.base")).toBe("Bildschirmleseprogramm");
+    expect(service.t("lineHeight.heavy")).toBe("Große Zeilenhöhe");
   });
 
   it("falls back to English for an unknown language code", () => {

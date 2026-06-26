@@ -90,6 +90,10 @@ import { AstralStateService } from "../astral-state.service";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {
+  private renderer = inject(Renderer2);
+  private translation = inject(AstralTranslationService);
+  private ngZone = inject(NgZone);
+
   globalListenFunction: Function;
   private langSub: Subscription;
   speech = new SpeechSynthesisUtterance();
@@ -99,12 +103,6 @@ export class ScreenReaderComponent {
   synthesisAvailable = true;
   stateService = inject(AstralStateService);
   private readonly STORAGE_KEY = "screen_reader";
-
-  constructor(
-    private renderer: Renderer2,
-    private translation: AstralTranslationService,
-    private ngZone: NgZone,
-  ) {}
 
   get labels(): string[] {
     return [

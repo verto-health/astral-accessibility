@@ -4,6 +4,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   HostBinding,
+  inject,
 } from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
@@ -40,6 +41,9 @@ export type AstralPosition =
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AstralAccessibilityComponent {
+  private translationService = inject(AstralTranslationService);
+  private elementRef = inject(ElementRef);
+
   modalVisible = false;
   userAgent = navigator.userAgent;
   astralAccessibilityPanel = "astral-modal";
@@ -56,11 +60,6 @@ export class AstralAccessibilityComponent {
   get isTopPosition(): boolean {
     return this.position.startsWith("top");
   }
-
-  constructor(
-    private translationService: AstralTranslationService,
-    private elementRef: ElementRef,
-  ) {}
 
   ngOnInit() {
     const astralElement = document.querySelector("astral-accessibility");

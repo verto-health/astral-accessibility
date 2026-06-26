@@ -72,11 +72,8 @@ import { AstralStateService } from "../astral-state.service";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenMaskComponent {
-  constructor(
-    private renderer: Renderer2,
-    private translation: AstralTranslationService,
-  ) {}
-
+  private renderer = inject(Renderer2);
+  private translation = inject(AstralTranslationService);
   stateService = inject(AstralStateService);
   private readonly STORAGE_KEY = "screen_mask";
 
