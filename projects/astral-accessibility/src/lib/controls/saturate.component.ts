@@ -6,7 +6,6 @@ import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-saturate",
-  standalone: true,
   template: `
     <button
       (click)="nextState()"

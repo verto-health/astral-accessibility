@@ -2,7 +2,6 @@ import { Component, input } from "@angular/core";
 
 @Component({
   selector: "astral-widget-checkmark",
-  standalone: true,
   template: `
     @if (isActive()) {
     <div class="icon active active-check">

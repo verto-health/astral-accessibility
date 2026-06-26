@@ -27,7 +27,6 @@ export type AstralPosition =
   selector: "astral-accessibility",
   templateUrl: "./astral-accessibility.component.html",
   styleUrls: ["./astral-accessibility.component.scss"],
-  standalone: true,
   imports: [
     InvertComponent,
     ContrastComponent,

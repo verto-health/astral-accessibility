@@ -5,9 +5,8 @@ import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
-  selector: "astral-line-height",
-  standalone: true,
-  template: `
+    selector: "astral-line-height",
+    template: `
     <button
       (click)="nextState()"
       [ngClass]="{ 'in-use': states[currentState()] != base }"
@@ -72,7 +71,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgClass, AstralCheckmarkSvgComponent],
+    imports: [NgClass, AstralCheckmarkSvgComponent]
 })
 export class LineHeightComponent {
   document = inject(DOCUMENT);

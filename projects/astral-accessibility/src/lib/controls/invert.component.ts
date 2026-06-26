@@ -4,7 +4,6 @@ import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-invert",
-  standalone: true,
   template: `
     <button
       (click)="inverted ? removeInvertCss() : invertPage()"
