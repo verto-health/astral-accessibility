@@ -87,9 +87,8 @@ import { AstralStateService } from "../astral-state.service";
 export class ContrastComponent {
   document = inject(DOCUMENT);
   stateService = inject(AstralStateService);
+  private translation = inject(AstralTranslationService);
   private readonly STORAGE_KEY = "contrast";
-
-  constructor(private translation: AstralTranslationService) {}
 
   currentState = 0;
   base = "Contrast";

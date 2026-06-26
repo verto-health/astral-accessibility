@@ -89,7 +89,10 @@ import { AstralStateService } from "../astral-state.service";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class SaturateComponent {
-  constructor(private translation: AstralTranslationService) {}
+  document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private translation = inject(AstralTranslationService);
+  private readonly STORAGE_KEY = "saturate";
 
   get labels(): string[] {
     return [
@@ -99,10 +102,6 @@ export class SaturateComponent {
       this.translation.t("saturation.desaturated"),
     ];
   }
-
-  document = inject(DOCUMENT);
-  stateService = inject(AstralStateService);
-  private readonly STORAGE_KEY = "saturate";
 
   currentState = 0;
   base = "Saturation";

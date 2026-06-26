@@ -71,10 +71,11 @@ import { AstralStateService } from "../astral-state.service";
   imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
 })
 export class LineHeightComponent {
-  constructor(
-    private renderer: Renderer2,
-    private translation: AstralTranslationService,
-  ) {}
+  document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private renderer = inject(Renderer2);
+  private translation = inject(AstralTranslationService);
+  private readonly STORAGE_KEY = "line_height";
 
   get labels(): string[] {
     return [
@@ -84,10 +85,6 @@ export class LineHeightComponent {
       this.translation.t("lineHeight.heavy"),
     ];
   }
-
-  document = inject(DOCUMENT);
-  stateService = inject(AstralStateService);
-  private readonly STORAGE_KEY = "line_height";
 
   currentState = 0;
   base = "Line Height";
