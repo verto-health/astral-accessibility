@@ -1,12 +1,5 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import {
-  Component,
-  DestroyRef,
-  inject,
-  NgZone,
-  Renderer2,
-  signal,
-} from "@angular/core";
+import { DOCUMENT, NgClass } from "@angular/common";
+import { Component, DestroyRef, inject, NgZone, Renderer2, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
@@ -94,7 +87,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {
   private renderer = inject(Renderer2);
@@ -229,26 +222,26 @@ export class ScreenReaderComponent {
       });
     }
 
-    this.translation.langChange
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((lang) => {
-        this.ngZone.run(() => {
-          this.speech.lang = lang;
-          const currentVoices = speechSynthesis.getVoices();
-          if (currentVoices.length) {
-            this.speech.voice = this.getDefaultVoice(
-              currentVoices,
-              this.isApple,
-              this.isEdgeAndroid,
-            );
-          } else {
-            // voices not yet loaded — don't call getDefaultVoice (it would set
-            // synthesisAvailable = false); voiceschanged will pick the right
-            // voice once they arrive
-            this.speech.voice = null;
-          }
-        });
+    this.translation.langChange.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((lang) => {
+      this.ngZone.run(() => {
+        this.speech.lang = lang;
+        const currentVoices = speechSynthesis.getVoices();
+        if (currentVoices.length) {
+          this.speech.voice = this.getDefaultVoice(
+            currentVoices,
+            this.isApple,
+            this.isEdgeAndroid,
+          );
+        } else {
+          // voices not yet loaded — don't call getDefaultVoice (it would set
+          // synthesisAvailable = false); voiceschanged will pick the right
+          // voice once they arrive
+          this.speech.voice = null;
+        }
       });
+    });
 
     // find the element that the user tapped/clicked on
     this.globalListenFunction = this.renderer.listen(
@@ -285,7 +278,7 @@ export class ScreenReaderComponent {
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState.update((v) => (v + 1) % 4);
+    this.currentState.update(v => (v + 1) % 4);
     this._runStateLogic();
     this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
