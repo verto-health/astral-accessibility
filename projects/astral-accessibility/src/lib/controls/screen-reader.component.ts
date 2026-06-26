@@ -1,4 +1,4 @@
-import { DOCUMENT, NgClass } from "@angular/common";
+import { NgClass } from "@angular/common";
 import {
   Component,
   DestroyRef,
@@ -6,6 +6,7 @@ import {
   NgZone,
   Renderer2,
   signal,
+  DOCUMENT,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
