@@ -37,7 +37,7 @@
     "@types/jasmine": "~4.0.0",
     "bootstrap": "^5.3.1",
     "cypress": "^12.17.4",
-    "jasmine-core": "~4.2.0",
+    "jasmine-core": "~4.6.1",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.1",
