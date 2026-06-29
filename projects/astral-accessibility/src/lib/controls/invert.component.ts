@@ -1,5 +1,5 @@
-import { DOCUMENT, NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { Component, inject, DOCUMENT } from "@angular/core";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({

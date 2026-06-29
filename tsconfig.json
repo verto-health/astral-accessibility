@@ -10,6 +10,7 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    // Required: suppresses TS5.x deprecation warning on suppressImplicitAnyIndexErrors; removing causes build failures.
     "ignoreDeprecations": "5.0",
     "strictPropertyInitialization": false,
     "noImplicitOverride": true,
@@ -20,12 +21,13 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
     "allowSyntheticDefaultImports": true,
     "lib": ["es2020", "dom", "dom.iterable"],
+    // Required: Angular's inject() field initializers depend on decorator-based class field semantics; removing this would silently break DI at runtime.
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

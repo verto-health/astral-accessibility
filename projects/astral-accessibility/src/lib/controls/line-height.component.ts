@@ -1,5 +1,5 @@
-import { DOCUMENT, NgClass } from "@angular/common";
-import { Component, Renderer2, inject, signal } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { Component, Renderer2, inject, signal, DOCUMENT } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
