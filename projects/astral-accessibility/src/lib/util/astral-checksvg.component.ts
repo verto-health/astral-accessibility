@@ -1,10 +1,10 @@
-import { Component, Input } from "@angular/core";
+import { Component, input } from "@angular/core";
 
 @Component({
   selector: "astral-widget-checkmark",
   standalone: true,
   template: `
-    @if (isActive) {
+    @if (isActive()) {
     <div class="icon active active-check">
       <svg
         width="17px"
@@ -51,5 +51,5 @@ import { Component, Input } from "@angular/core";
   imports: [],
 })
 export class AstralCheckmarkSvgComponent {
-  @Input({ required: true }) isActive!: boolean;
+  isActive = input.required<boolean>();
 }
