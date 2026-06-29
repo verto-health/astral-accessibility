@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { DOCUMENT, NgClass } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
@@ -59,7 +59,8 @@ import { AstralStateService } from "../astral-state.service";
           </div>
           <div class="state-dots-wrap">
             <span>{{ labels[currentState()] }}</span>
-            <div *ngIf="states[currentState()] != base" class="dots">
+            @if (states[currentState()] != base) {
+            <div class="dots">
               <div
                 class="dot"
                 [ngClass]="{
@@ -77,6 +78,7 @@ import { AstralStateService } from "../astral-state.service";
                 [ngClass]="{ active: states[currentState()] === 'Desaturated' }"
               ></div>
             </div>
+            }
           </div>
         </div>
       </div>
@@ -86,7 +88,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class SaturateComponent {
   document = inject(DOCUMENT);

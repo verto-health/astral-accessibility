@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { DOCUMENT, NgClass } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { AstralStateService } from "../astral-state.service";
 
@@ -18,14 +18,15 @@ import { AstralStateService } from "../astral-state.service";
         ></i>
         <span>Invert Colours</span>
       </div>
+      @if (inverted) {
       <i
-        *ngIf="inverted"
         class="pi pi-check icon active active-check"
         style="font-weight: 900"
       ></i>
+      }
     </button>
   `,
-  imports: [NgIf, NgClass],
+  imports: [NgClass],
 })
 export class InvertComponent {
   document = inject(DOCUMENT);

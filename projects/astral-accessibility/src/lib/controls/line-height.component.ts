@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { DOCUMENT, NgClass } from "@angular/common";
 import { Component, Renderer2, inject, signal } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
@@ -72,7 +72,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class LineHeightComponent {
   document = inject(DOCUMENT);

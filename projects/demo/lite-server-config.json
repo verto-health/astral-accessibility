@@ -1,7 +1,13 @@
 {
   "port": 8000,
-  "files": ["./src/**/*.{html,htm,css,js}"],
+  "files": [
+    "projects/demo/**/*.{html,htm,css,js}",
+    "dist/astral-accessibility-angular-output/browser/*.js"
+  ],
   "server": {
-    "baseDir": ["projects/demo"]
+    "baseDir": [
+      "projects/demo",
+      "dist/astral-accessibility-angular-output/browser"
+    ]
   }
 }

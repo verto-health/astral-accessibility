@@ -1,4 +1,3 @@
-import { NgIf } from "@angular/common";
 import {
   Component,
   computed,
@@ -30,7 +29,6 @@ export type AstralPosition =
   styleUrls: ["./astral-accessibility.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
     InvertComponent,
     ContrastComponent,
     SaturateComponent,

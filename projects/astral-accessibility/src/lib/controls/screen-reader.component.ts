@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
+import { DOCUMENT, NgClass } from "@angular/common";
 import {
   Component,
   DestroyRef,
@@ -94,7 +94,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {
   private renderer = inject(Renderer2);
