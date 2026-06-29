@@ -9,7 +9,7 @@ import { AstralStateService } from "../astral-state.service";
     <button
       (click)="inverted ? removeInvertCss() : invertPage()"
       [ngClass]="{ 'in-use': inverted }"
-      >
+    >
       <!-- <img engage-asset src="../../assets/images/accessibility.png"/> -->
       <div class="d-flex align-items-center">
         <i
@@ -19,13 +19,13 @@ import { AstralStateService } from "../astral-state.service";
         <span>Invert Colours</span>
       </div>
       @if (inverted) {
-        <i
-          class="pi pi-check icon active active-check"
-          style="font-weight: 900"
-        ></i>
+      <i
+        class="pi pi-check icon active active-check"
+        style="font-weight: 900"
+      ></i>
       }
     </button>
-    `,
+  `,
   imports: [NgClass],
 })
 export class InvertComponent {

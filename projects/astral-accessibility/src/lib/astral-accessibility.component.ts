@@ -1,4 +1,3 @@
-
 import {
   Component,
   computed,
@@ -37,8 +36,8 @@ export type AstralPosition =
     TextSpacingComponent,
     ScreenReaderComponent,
     ScreenMaskComponent,
-    LineHeightComponent
-],
+    LineHeightComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AstralAccessibilityComponent {
