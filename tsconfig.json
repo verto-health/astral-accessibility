@@ -4,9 +4,7 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "paths": {
-      "astral-accessibility": [
-        "dist/astral-accessibility"
-      ]
+      "astral-accessibility": ["dist/astral-accessibility"]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -27,11 +25,7 @@
     "target": "ES2022",
     "module": "es2020",
     "allowSyntheticDefaultImports": true,
-    "lib": [
-      "es2020",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["es2020", "dom", "dom.iterable"],
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
