@@ -116,6 +116,10 @@
 .astral-close-icon {
   svg {
     background: var(--modalBackgroundColor);
+
+    path {
+      fill: #ffffff;
+    }
   }
 }
 

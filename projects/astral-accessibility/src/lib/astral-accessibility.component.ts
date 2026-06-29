@@ -84,6 +84,15 @@ export class AstralAccessibilityComponent {
           this.options["toggleIconColor"],
         );
       }
+
+      const customStyles = this.options["customStyles"];
+      if (customStyles && typeof customStyles === "object") {
+        for (const [property, value] of Object.entries(customStyles)) {
+          if (typeof value === "string") {
+            this.elementRef.nativeElement.style.setProperty(property, value);
+          }
+        }
+      }
     }
 
     const phones =

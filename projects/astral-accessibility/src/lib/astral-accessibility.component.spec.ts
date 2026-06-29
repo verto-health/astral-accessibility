@@ -184,6 +184,64 @@ describe("AstralAccessibilityComponent", () => {
     });
   });
 
+  describe("customStyles from astral-features attribute", () => {
+    function createWithOptions(options: Record<string, unknown>) {
+      const merged = { enabledFeatures: [], ...options };
+      const original = document.querySelector.bind(document);
+      spyOn(document, "querySelector").and.callFake((selector: string) => {
+        if (selector === "astral-accessibility") {
+          return {
+            getAttribute: (_attr: string) => JSON.stringify(merged),
+          } as unknown as Element;
+        }
+        return original(selector);
+      });
+
+      const fixture = TestBed.createComponent(AstralAccessibilityComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    beforeEach(async () => {
+      await configure();
+    });
+
+    it("applies each customStyles entry as an inline style on the host", () => {
+      const fixture = createWithOptions({
+        customStyles: { bottom: "140px", right: "20px" },
+      });
+      expect(fixture.nativeElement.style.getPropertyValue("bottom")).toBe(
+        "140px",
+      );
+      expect(fixture.nativeElement.style.getPropertyValue("right")).toBe(
+        "20px",
+      );
+    });
+
+    it("supports setting CSS custom properties via customStyles", () => {
+      const fixture = createWithOptions({
+        customStyles: { "--modalWidth": "500px" },
+      });
+      expect(fixture.nativeElement.style.getPropertyValue("--modalWidth")).toBe(
+        "500px",
+      );
+    });
+
+    it("ignores non-string values in customStyles", () => {
+      const fixture = createWithOptions({
+        customStyles: { bottom: 140 as unknown as string, right: "20px" },
+      });
+      expect(fixture.nativeElement.style.getPropertyValue("bottom")).toBe("");
+      expect(fixture.nativeElement.style.getPropertyValue("right")).toBe(
+        "20px",
+      );
+    });
+
+    it("does not throw when customStyles is omitted", () => {
+      expect(() => createWithOptions({})).not.toThrow();
+    });
+  });
+
   describe("template alignment class", () => {
     let component: AstralAccessibilityComponent;
     let fixture: ComponentFixture<AstralAccessibilityComponent>;
