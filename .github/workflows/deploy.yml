@@ -81,7 +81,7 @@ jobs:
             echo "Version $VERSION already exists in KV — skipping immutable write"
           else
             yarn wrangler kv key put "$VERSION" \
-              --path ../../dist/astral-accessibility-angular-output/main.js \
+              --path ../../dist/astral-accessibility-angular-output/browser/main.js \
               --namespace-id "$KV_NAMESPACE_ID" \
               --remote
             echo "Published $VERSION to KV"

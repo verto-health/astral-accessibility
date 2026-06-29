@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "cypress": "cypress open",
-    "build:lib": "ng build astral-accessibility --output-hashing=none",
+    "build:lib": "ng build astral-accessibility --output-hashing=none && cp dist/astral-accessibility-angular-output/browser/main.js dist/astral-accessibility-angular-output/main.js",
     "build:lib:dev": "ng build astral-accessibility --watch --configuration=development",
     "start:demo-server": "lite-server -c projects/demo/lite-server-config.json",
     "start:demo": "lite-server -c projects/demo/lite-server-config.json",
