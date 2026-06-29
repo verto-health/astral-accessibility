@@ -155,6 +155,38 @@
   display: none;
 }
 
+:host(.astral-compact) {
+  .astral-modal {
+    padding: 8px 18px 8px 8px;
+  }
+
+  .action {
+    ::ng-deep {
+      button {
+        padding: 8px;
+        margin: 4px 0px;
+        font-size: 18px;
+      }
+
+      .icon {
+        font-size: 24px;
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+}
+
+:host(.astral-position-bottom-left.astral-compact),
+:host(.astral-position-top-left.astral-compact) {
+  .astral-modal {
+    padding: 8px 8px 8px 18px;
+  }
+}
+
 .astral-page {
   max-width: 80vw;
 

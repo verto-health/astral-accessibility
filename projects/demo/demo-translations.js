@@ -9,6 +9,7 @@ export const DEMO_TRANSLATIONS = {
       textSpacing: "Text Spacing",
       screenMask: "Screen Mask",
       lineHeight: "Line Height",
+      customizations: "Customizations",
     },
     home: {
       h2: "Welcome",
@@ -148,6 +149,33 @@ export const DEMO_TRANSLATIONS = {
       normalP:
         "This paragraph uses the default line height set by the stylesheet. Use it as a reference to compare how the tight paragraph above changes relative to unmodified content when you adjust the line height setting.",
     },
+    customizations: {
+      h2: "Customizations",
+      subtitle:
+        "Modify how the Astral widget is initialised on this page. Click Save to destroy the current widget and re-initialise it with your new settings.",
+      h3General: "General",
+      compactLabel: "Compact mode",
+      compactHelp:
+        "Reduce icons, font size, and padding for a smaller widget footprint.",
+      h3Features: "Enabled features",
+      h3Position: "Position",
+      positionBottomRight: "Bottom right",
+      positionBottomLeft: "Bottom left",
+      positionTopRight: "Top right",
+      positionTopLeft: "Top left",
+      h3Colors: "Toggle button colors",
+      toggleColorLabel: "Toggle background",
+      toggleIconColorLabel: "Toggle icon",
+      h3CustomStyles: "Custom styles",
+      customStylesHelp:
+        "Inline CSS overrides applied to the widget root. Any valid CSS property or custom variable is accepted (e.g. bottom: 140px, --modalWidth: 500px).",
+      propertyPlaceholder: "property",
+      valuePlaceholder: "value",
+      addRow: "Add row",
+      removeRow: "Remove",
+      saveButton: "Save and refresh widget",
+      savedAt: "Last applied at",
+    },
   },
 
   fr: {
@@ -160,6 +188,7 @@ export const DEMO_TRANSLATIONS = {
       textSpacing: "Espacement du texte",
       screenMask: "Masque d'écran",
       lineHeight: "Hauteur de ligne",
+      customizations: "Personnalisation",
     },
     home: {
       h2: "Bienvenue",
@@ -303,6 +332,33 @@ export const DEMO_TRANSLATIONS = {
       normalP:
         "Ce paragraphe utilise la hauteur de ligne par défaut définie par la feuille de style. Utilisez-le comme référence pour comparer comment le paragraphe serré ci-dessus change par rapport au contenu non modifié lorsque vous ajustez le paramètre de hauteur de ligne.",
     },
+    customizations: {
+      h2: "Personnalisation",
+      subtitle:
+        "Modifiez la façon dont le widget Astral est initialisé sur cette page. Cliquez sur Enregistrer pour détruire le widget actuel et le réinitialiser avec vos nouveaux paramètres.",
+      h3General: "Général",
+      compactLabel: "Mode compact",
+      compactHelp:
+        "Réduit les icônes, la taille de police et l'espacement pour un widget plus compact.",
+      h3Features: "Fonctionnalités activées",
+      h3Position: "Position",
+      positionBottomRight: "Bas droite",
+      positionBottomLeft: "Bas gauche",
+      positionTopRight: "Haut droite",
+      positionTopLeft: "Haut gauche",
+      h3Colors: "Couleurs du bouton",
+      toggleColorLabel: "Arrière-plan",
+      toggleIconColorLabel: "Icône",
+      h3CustomStyles: "Styles personnalisés",
+      customStylesHelp:
+        "Remplacements CSS en ligne appliqués à la racine du widget. Toute propriété CSS valide ou variable personnalisée est acceptée (par ex. bottom: 140px, --modalWidth: 500px).",
+      propertyPlaceholder: "propriété",
+      valuePlaceholder: "valeur",
+      addRow: "Ajouter une ligne",
+      removeRow: "Supprimer",
+      saveButton: "Enregistrer et actualiser le widget",
+      savedAt: "Dernière application",
+    },
   },
 
   "zh-Hant": {
@@ -315,6 +371,7 @@ export const DEMO_TRANSLATIONS = {
       textSpacing: "文字間距",
       screenMask: "螢幕遮罩",
       lineHeight: "行高",
+      customizations: "自訂",
     },
     home: {
       h2: "歡迎",
@@ -450,6 +507,32 @@ export const DEMO_TRANSLATIONS = {
       h3NormalPara: "正常段落",
       normalP:
         "此段落使用樣式表設定的預設行高。將其作為參考，比較當您調整行高設定時，上方緊湊段落相對於未修改內容的變化。",
+    },
+    customizations: {
+      h2: "自訂",
+      subtitle:
+        "修改此頁面上 Astral 小工具的初始化方式。點擊「儲存」以銷毀目前的小工具並使用新設定重新初始化。",
+      h3General: "一般",
+      compactLabel: "緊湊模式",
+      compactHelp: "縮小圖示、字體大小和間距，讓小工具佔用更少空間。",
+      h3Features: "已啟用的功能",
+      h3Position: "位置",
+      positionBottomRight: "右下",
+      positionBottomLeft: "左下",
+      positionTopRight: "右上",
+      positionTopLeft: "左上",
+      h3Colors: "切換按鈕顏色",
+      toggleColorLabel: "背景",
+      toggleIconColorLabel: "圖示",
+      h3CustomStyles: "自訂樣式",
+      customStylesHelp:
+        "套用至小工具根元素的行內 CSS 覆寫。接受任何有效的 CSS 屬性或自訂變數（例如 bottom: 140px、--modalWidth: 500px）。",
+      propertyPlaceholder: "屬性",
+      valuePlaceholder: "值",
+      addRow: "新增一列",
+      removeRow: "移除",
+      saveButton: "儲存並重新整理小工具",
+      savedAt: "上次套用時間",
     },
   },
 };

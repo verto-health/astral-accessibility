@@ -50,11 +50,16 @@ export class AstralAccessibilityComponent {
   options: Record<string, any> = {};
   enabledFeatures: String[] = [];
   position = signal<AstralPosition>("bottom-right");
+  compact = signal(false);
   isTopPosition = computed(() => this.position().startsWith("top"));
 
   @HostBinding("class")
   get hostClass(): string {
-    return `astral-position-${this.position()}`;
+    const classes = [`astral-position-${this.position()}`];
+    if (this.compact()) {
+      classes.push("astral-compact");
+    }
+    return classes.join(" ");
   }
 
   ngOnInit() {
@@ -67,6 +72,7 @@ export class AstralAccessibilityComponent {
       this.position.set(
         (this.options["position"] as AstralPosition) || "bottom-right",
       );
+      this.compact.set(Boolean(this.options["compact"]));
       if (this.options["language"]) {
         this.translationService.setLanguage(this.options["language"]);
       }
