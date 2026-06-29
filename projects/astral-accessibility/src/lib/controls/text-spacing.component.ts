@@ -53,7 +53,9 @@ import { AstralStateService } from "../astral-state.service";
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState()] === 'Light Spacing' }"
+                [ngClass]="{
+                  active: states[currentState()] === 'Light Spacing'
+                }"
               ></div>
               <div
                 class="dot"
@@ -63,7 +65,9 @@ import { AstralStateService } from "../astral-state.service";
               ></div>
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState()] === 'Heavy Spacing' }"
+                [ngClass]="{
+                  active: states[currentState()] === 'Heavy Spacing'
+                }"
               ></div>
             </div>
           </div>
@@ -106,7 +110,7 @@ export class TextSpacingComponent {
   }
 
   nextState() {
-    this.currentState.update(v => (v + 1) % 4);
+    this.currentState.update((v) => (v + 1) % 4);
     this._runStateLogic();
     this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }

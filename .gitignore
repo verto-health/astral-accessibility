@@ -47,6 +47,13 @@ Thumbs.db
 # Superpowers docs
 docs/superpowers/
 
+# Cypress artifacts
+cypress/videos/
+cypress/screenshots/
+
+# Claude worktrees
+.claude/worktrees/
+
 # Cloudflare local secrets
 .dev.vars
 .wrangler/node_modules

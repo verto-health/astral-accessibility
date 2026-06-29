@@ -68,7 +68,7 @@ export class AstralAccessibilityComponent {
       this.options = JSON.parse(astralOptions);
       this.enabledFeatures = this.options["enabledFeatures"];
       this.position.set(
-        (this.options["position"] as AstralPosition) || "bottom-right"
+        (this.options["position"] as AstralPosition) || "bottom-right",
       );
       if (this.options["language"]) {
         this.translationService.setLanguage(this.options["language"]);

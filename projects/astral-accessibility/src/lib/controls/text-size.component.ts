@@ -174,7 +174,7 @@ export class TextSizeComponent {
 
   nextState() {
     this.observer.disconnect();
-    this.currentState.update(v => (v + 1) % 4);
+    this.currentState.update((v) => (v + 1) % 4);
 
     this._runStateLogic();
     this.stateService.saveState(this.STORAGE_KEY, this.currentState());

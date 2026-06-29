@@ -66,7 +66,9 @@ import { AstralStateService } from "../astral-state.service";
               ></div>
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState()] === 'High Contrast' }"
+                [ngClass]="{
+                  active: states[currentState()] === 'High Contrast'
+                }"
               ></div>
               <div
                 class="dot"
@@ -113,7 +115,7 @@ export class ContrastComponent {
   }
 
   nextState() {
-    this.currentState.update(v => (v + 1) % 4);
+    this.currentState.update((v) => (v + 1) % 4);
     this._runStateLogic();
     this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
