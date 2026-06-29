@@ -16,6 +16,9 @@
     "format": "prettier --write \"projects/**/*.{ts,html,scss,json}\" \"*.json\""
   },
   "private": true,
+  "resolutions": {
+    "caniuse-lite": "^1.0.30001799"
+  },
   "dependencies": {
     "@angular/animations": "^15.2.10",
     "@angular/common": "^15.2.10",
