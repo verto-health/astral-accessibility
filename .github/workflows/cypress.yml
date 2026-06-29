@@ -29,4 +29,4 @@ jobs:
           wait-on: "http://localhost:8000"
           wait-on-timeout: 300
           browser: chrome
-          config-file: cypress.config.ts
+          config-file: cypress.config.js
