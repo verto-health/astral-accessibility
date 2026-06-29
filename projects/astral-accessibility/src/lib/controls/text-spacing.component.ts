@@ -5,8 +5,8 @@ import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
-    selector: "astral-text-spacing",
-    template: `
+  selector: "astral-text-spacing",
+  template: `
     <button
       (click)="nextState()"
       [ngClass]="{ 'in-use': states[currentState()] != base }"
@@ -78,7 +78,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-    imports: [NgClass, AstralCheckmarkSvgComponent]
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent {
   document = inject(DOCUMENT);

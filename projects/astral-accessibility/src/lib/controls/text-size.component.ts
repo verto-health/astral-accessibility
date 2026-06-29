@@ -5,8 +5,8 @@ import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
-    selector: "astral-text-size",
-    template: `
+  selector: "astral-text-size",
+  template: `
     <button
       (click)="nextState()"
       [ngClass]="{ 'in-use': states[currentState()] !== base }"
@@ -74,7 +74,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-    imports: [NgClass, AstralCheckmarkSvgComponent]
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSizeComponent {
   document = inject(DOCUMENT);

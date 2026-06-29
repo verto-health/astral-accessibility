@@ -13,8 +13,8 @@ import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
-    selector: "astral-screen-reader",
-    template: `
+  selector: "astral-screen-reader",
+  template: `
     <button
       [disabled]="!synthesisAvailable"
       (click)="nextState()"
@@ -93,7 +93,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
-    imports: [NgClass, AstralCheckmarkSvgComponent]
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {
   private renderer = inject(Renderer2);
