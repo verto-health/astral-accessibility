@@ -6,7 +6,6 @@ import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-text-size",
-  standalone: true,
   template: `
     <button
       (click)="nextState()"
@@ -87,7 +86,7 @@ export class TextSizeComponent {
   currentScale = 1;
   base = "Bigger Text";
   states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
-  private initialStyles = new WeakMap();
+  private initialStyles = new WeakMap<HTMLElement, Record<string, string>>();
 
   _style: HTMLStyleElement;
 
@@ -161,9 +160,10 @@ export class TextSizeComponent {
 
   restoreTextSize(node: HTMLElement) {
     const children = node.children;
-    if (this.initialStyles.has(node)) {
-      for (const [key, value] of Object.entries(this.initialStyles.get(node))) {
-        node.style[key] = value;
+    const saved = this.initialStyles.get(node);
+    if (saved) {
+      for (const [key, value] of Object.entries(saved)) {
+        node.style.setProperty(key, value);
       }
     }
 

@@ -20,25 +20,26 @@
     "caniuse-lite": "^1.0.30001799"
   },
   "dependencies": {
-    "@angular/animations": "^18.2.14",
-    "@angular/common": "^18.2.14",
-    "@angular/compiler": "^18.2.14",
-    "@angular/core": "^18.2.14",
-    "@angular/elements": "18.2.14",
-    "@angular/forms": "^18.2.14",
-    "@angular/platform-browser": "^18.2.14",
-    "@angular/platform-browser-dynamic": "^18.2.14",
-    "@angular/router": "^18.2.14",
+    "@angular/animations": "^19.2.25",
+    "@angular/common": "^19.2.25",
+    "@angular/compiler": "^19.2.25",
+    "@angular/core": "^19.2.25",
+    "@angular/elements": "19.2.25",
+    "@angular/forms": "^19.2.25",
+    "@angular/platform-browser": "^19.2.25",
+    "@angular/platform-browser-dynamic": "^19.2.25",
+    "@angular/router": "^19.2.25",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.2.21",
-    "@angular/cli": "~18.2.21",
-    "@angular/compiler-cli": "^18.2.14",
+    "@angular-devkit/build-angular": "^19.2.27",
+    "@angular/cli": "~19.2.27",
+    "@angular/compiler-cli": "^19.2.25",
     "@babel/helper-remap-async-to-generator": "^7.18.9",
     "@types/jasmine": "~4.0.0",
+    "@types/node": "22",
     "bootstrap": "^5.3.1",
     "browserslist": "^4.28.4",
     "caniuse-lite": "^1.0.30001799",
@@ -50,10 +51,10 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.2.0",
     "lite-server": "^2.6.1",
-    "ng-packagr": "18.2.1",
+    "ng-packagr": "19.2.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",
     "primeicons": "^6.0.1",
-    "typescript": "~5.4.5"
+    "typescript": "~5.8.3"
   }
 }

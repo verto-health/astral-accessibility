@@ -14,7 +14,6 @@ import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-screen-reader",
-  standalone: true,
   template: `
     <button
       [disabled]="!synthesisAvailable"
