@@ -51,7 +51,9 @@ import { AstralStateService } from "../astral-state.service";
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState()] === 'Large Cursor' }"
+                [ngClass]="{
+                  active: states[currentState()] === 'Large Cursor'
+                }"
               ></div>
               <div
                 class="dot"
@@ -194,7 +196,7 @@ export class ScreenMaskComponent {
   }
 
   nextState() {
-    this.currentState.update(v => (v + 1) % 3);
+    this.currentState.update((v) => (v + 1) % 3);
     this._runStateLogic();
     this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
