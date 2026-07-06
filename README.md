@@ -152,6 +152,19 @@ If your brand color is dark, set `toggleIconColor` to `#ffffff` so the icon rema
 
 > **Accessibility note:** Ensure your chosen `toggleColor` provides sufficient contrast with `toggleIconColor` (default `#000000`). WCAG AA requires a contrast ratio of at least 3:1 for graphical elements.
 
+### Compact Mode
+
+For pages where the widget needs to take less screen space, pass `compact: true` to `initializeAstral`. Compact mode reduces the icon size, button font size, button padding, button margin, and modal container padding inside the open panel. The toggle button itself is unchanged.
+
+```html
+<script>
+  initializeAstral({
+    compact: true,
+    enabledFeatures: ["Contrast", "Bigger Text", "Screen Mask"],
+  });
+</script>
+```
+
 ### Custom Container Styles
 
 For fine-grained control over the widget's positioning or sizing, pass a `customStyles` map. Each entry is applied as an inline style on the widget's root element, so any valid CSS property (including CSS custom variables) is supported. This is useful when you need to nudge the widget away from another fixed element (e.g. a chat bubble) or override the default offsets.

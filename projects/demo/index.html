@@ -78,6 +78,7 @@
               <${Link} href="#/text-spacing">${t.nav.textSpacing}<//>
               <${Link} href="#/screen-mask">${t.nav.screenMask}<//>
               <${Link} href="#/line-height">${t.nav.lineHeight}<//>
+              <${Link} href="#/customizations">${t.nav.customizations}<//>
             </div>
             <select
               class="lang-select"
@@ -264,8 +265,360 @@
         `;
       }
 
+      // --- Customizations ---
+      const ALL_FEATURES = [
+        "Screen Reader",
+        "Contrast",
+        "Saturation",
+        "Bigger Text",
+        "Text Spacing",
+        "Screen Mask",
+        "Line Height",
+      ];
+
+      const FEATURE_LABEL_KEYS = {
+        "Screen Reader": "screenReader",
+        Contrast: "contrast",
+        Saturation: "saturation",
+        "Bigger Text": "biggerText",
+        "Text Spacing": "textSpacing",
+        "Screen Mask": "screenMask",
+        "Line Height": "lineHeight",
+      };
+
+      const POSITIONS = [
+        "bottom-right",
+        "bottom-left",
+        "top-right",
+        "top-left",
+      ];
+
+      function defaultCustomization() {
+        const enabledFeatures = {};
+        ALL_FEATURES.forEach((f) => (enabledFeatures[f] = true));
+        return {
+          compact: false,
+          enabledFeatures,
+          position: "bottom-right",
+          toggleColor: "",
+          toggleIconColor: "",
+          customStyles: [],
+        };
+      }
+
+      function buildAstralOptions(custom, language) {
+        const options = {
+          enabledFeatures: ALL_FEATURES.filter(
+            (f) => custom.enabledFeatures[f],
+          ),
+          position: custom.position,
+        };
+        if (custom.compact) options.compact = true;
+        if (custom.toggleColor) options.toggleColor = custom.toggleColor;
+        if (custom.toggleIconColor)
+          options.toggleIconColor = custom.toggleIconColor;
+        const styles = custom.customStyles
+          .map((r) => [r.property.trim(), r.value.trim()])
+          .filter(([k, v]) => k && v);
+        if (styles.length) {
+          options.customStyles = Object.fromEntries(styles);
+        }
+        if (language && language !== "en") options.language = language;
+        return options;
+      }
+
+      // JS-object-literal serializer (unquoted keys when safe, single-quoted strings).
+      function serializeOptions(value, indent = "  ") {
+        const jsKey = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+        function esc(str) {
+          return str.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        }
+        function walk(v, depth) {
+          const pad = indent.repeat(depth);
+          const inner = indent.repeat(depth + 1);
+          if (v === null) return "null";
+          if (typeof v === "string") return `'${esc(v)}'`;
+          if (typeof v === "number" || typeof v === "boolean") return String(v);
+          if (Array.isArray(v)) {
+            if (!v.length) return "[]";
+            return (
+              "[\n" +
+              v.map((x) => inner + walk(x, depth + 1)).join(",\n") +
+              "\n" +
+              pad +
+              "]"
+            );
+          }
+          if (typeof v === "object") {
+            const keys = Object.keys(v);
+            if (!keys.length) return "{}";
+            return (
+              "{\n" +
+              keys
+                .map((k) => {
+                  const key = jsKey.test(k) ? k : `'${esc(k)}'`;
+                  return inner + key + ": " + walk(v[k], depth + 1);
+                })
+                .join(",\n") +
+              "\n" +
+              pad +
+              "}"
+            );
+          }
+          return String(v);
+        }
+        return walk(value, 0);
+      }
+
+      function buildSnippet(options) {
+        const close = "<\/script>";
+        return (
+          '<script src="astral-accessibility.js">' +
+          close +
+          "\n<script>\n" +
+          "  initializeAstral(" +
+          serializeOptions(options).replace(/\n/g, "\n  ") +
+          ");\n" +
+          close
+        );
+      }
+
+      function CustomizationsPage({
+        t,
+        language,
+        customization,
+        setCustomization,
+        onSave,
+        lastSavedAt,
+      }) {
+        const p = t.customizations;
+        const [copyStatus, setCopyStatus] = useState("");
+        const snippet = buildSnippet(
+          buildAstralOptions(customization, language),
+        );
+
+        async function copySnippet() {
+          try {
+            await navigator.clipboard.writeText(snippet);
+            setCopyStatus(p.copied);
+          } catch {
+            setCopyStatus(p.copyFailed);
+          }
+          setTimeout(() => setCopyStatus(""), 2000);
+        }
+
+        function toggleCompact(e) {
+          setCustomization({ ...customization, compact: e.target.checked });
+        }
+
+        function toggleFeature(name, checked) {
+          setCustomization({
+            ...customization,
+            enabledFeatures: {
+              ...customization.enabledFeatures,
+              [name]: checked,
+            },
+          });
+        }
+
+        function setPosition(pos) {
+          setCustomization({ ...customization, position: pos });
+        }
+
+        function setColorField(field, value) {
+          setCustomization({ ...customization, [field]: value });
+        }
+
+        function updateStyleRow(index, field, value) {
+          const rows = customization.customStyles.map((r, i) =>
+            i === index ? { ...r, [field]: value } : r,
+          );
+          setCustomization({ ...customization, customStyles: rows });
+        }
+
+        function addStyleRow() {
+          setCustomization({
+            ...customization,
+            customStyles: [
+              ...customization.customStyles,
+              { property: "", value: "" },
+            ],
+          });
+        }
+
+        function removeStyleRow(index) {
+          setCustomization({
+            ...customization,
+            customStyles: customization.customStyles.filter(
+              (_, i) => i !== index,
+            ),
+          });
+        }
+
+        return html`
+          <div class="page customizations">
+            <h2>${p.h2}</h2>
+            <p class="subtitle">${p.subtitle}</p>
+
+            <h3>${p.h3General}</h3>
+            <label class="cust-row">
+              <input
+                type="checkbox"
+                checked=${customization.compact}
+                onChange=${toggleCompact}
+              />
+              <span>
+                <strong>${p.compactLabel}</strong>
+                <span class="cust-help">${p.compactHelp}</span>
+              </span>
+            </label>
+
+            <h3>${p.h3Features}</h3>
+            <div class="cust-grid">
+              ${ALL_FEATURES.map(
+                (f) => html`
+                  <label class="cust-row" key=${f}>
+                    <input
+                      type="checkbox"
+                      checked=${customization.enabledFeatures[f]}
+                      onChange=${(e) => toggleFeature(f, e.target.checked)}
+                    />
+                    <span>${t.nav[FEATURE_LABEL_KEYS[f]]}</span>
+                  </label>
+                `,
+              )}
+            </div>
+
+            <h3>${p.h3Position}</h3>
+            <div class="cust-grid">
+              ${POSITIONS.map(
+                (pos) => html`
+                  <label class="cust-row" key=${pos}>
+                    <input
+                      type="radio"
+                      name="cust-position"
+                      checked=${customization.position === pos}
+                      onChange=${() => setPosition(pos)}
+                    />
+                    <span>
+                      ${p[
+                        "position" +
+                          pos
+                            .split("-")
+                            .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+                            .join("")
+                      ]}
+                    </span>
+                  </label>
+                `,
+              )}
+            </div>
+
+            <h3>${p.h3Colors}</h3>
+            <div class="cust-color-row">
+              <label>
+                <span>${p.toggleColorLabel}</span>
+                <span class="cust-color-input">
+                  <input
+                    type="color"
+                    value=${customization.toggleColor || "#ffcb00"}
+                    onInput=${(e) =>
+                      setColorField("toggleColor", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="#ffcb00"
+                    value=${customization.toggleColor}
+                    onInput=${(e) =>
+                      setColorField("toggleColor", e.target.value)}
+                  />
+                </span>
+              </label>
+              <label>
+                <span>${p.toggleIconColorLabel}</span>
+                <span class="cust-color-input">
+                  <input
+                    type="color"
+                    value=${customization.toggleIconColor || "#000000"}
+                    onInput=${(e) =>
+                      setColorField("toggleIconColor", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="#000000"
+                    value=${customization.toggleIconColor}
+                    onInput=${(e) =>
+                      setColorField("toggleIconColor", e.target.value)}
+                  />
+                </span>
+              </label>
+            </div>
+
+            <h3>${p.h3CustomStyles}</h3>
+            <p class="cust-help">${p.customStylesHelp}</p>
+            ${customization.customStyles.map(
+              (row, i) => html`
+                <div class="cust-style-row" key=${i}>
+                  <input
+                    type="text"
+                    placeholder=${p.propertyPlaceholder}
+                    value=${row.property}
+                    onInput=${(e) =>
+                      updateStyleRow(i, "property", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder=${p.valuePlaceholder}
+                    value=${row.value}
+                    onInput=${(e) => updateStyleRow(i, "value", e.target.value)}
+                  />
+                  <button type="button" onClick=${() => removeStyleRow(i)}>
+                    ${p.removeRow}
+                  </button>
+                </div>
+              `,
+            )}
+            <button type="button" class="cust-add" onClick=${addStyleRow}>
+              + ${p.addRow}
+            </button>
+
+            <div class="cust-actions">
+              <button type="button" class="cust-save" onClick=${onSave}>
+                ${p.saveButton}
+              </button>
+              ${lastSavedAt
+                ? html`<span class="cust-saved-at"
+                    >${p.savedAt}: ${lastSavedAt}</span
+                  >`
+                : null}
+            </div>
+
+            <h3>${p.h3Snippet}</h3>
+            <p class="cust-help">${p.snippetHelp}</p>
+            <div class="cust-snippet">
+              <button
+                type="button"
+                class="cust-snippet-copy"
+                onClick=${copySnippet}
+              >
+                ${copyStatus || p.copy}
+              </button>
+              <pre><code>${snippet}</code></pre>
+            </div>
+          </div>
+        `;
+      }
+
       // --- Router ---
-      function Router({ route, t }) {
+      function Router({
+        route,
+        t,
+        language,
+        customization,
+        setCustomization,
+        onSaveCustomization,
+        lastSavedAt,
+      }) {
         switch (route) {
           case "screen-reader":
             return html`<${ScreenReaderPage} t=${t} />`;
@@ -281,6 +634,15 @@
             return html`<${ScreenMaskPage} t=${t} />`;
           case "line-height":
             return html`<${LineHeightPage} t=${t} />`;
+          case "customizations":
+            return html`<${CustomizationsPage}
+              t=${t}
+              language=${language}
+              customization=${customization}
+              setCustomization=${setCustomization}
+              onSave=${onSaveCustomization}
+              lastSavedAt=${lastSavedAt}
+            />`;
           default:
             return html`<${HomePage} t=${t} />`;
         }
@@ -290,6 +652,10 @@
       function App() {
         const [language, setLanguage] = useState("en");
         const [route, setRoute] = useState(getRoute());
+        const [customization, setCustomization] = useState(
+          defaultCustomization(),
+        );
+        const [lastSavedAt, setLastSavedAt] = useState("");
 
         useEffect(() => {
           const onHash = () => setRoute(getRoute());
@@ -305,6 +671,14 @@
           if (window.astralSetLanguage) window.astralSetLanguage(lang);
         }
 
+        async function handleSaveCustomization() {
+          const options = buildAstralOptions(customization, language);
+          if (typeof window.initializeAstral === "function") {
+            await window.initializeAstral(options);
+          }
+          setLastSavedAt(new Date().toLocaleTimeString());
+        }
+
         return html`
           <${Nav}
             t=${t}
@@ -312,7 +686,15 @@
             onLanguageChange=${handleLanguageChange}
           />
           <div class="introduction">
-            <${Router} route=${route} t=${t} />
+            <${Router}
+              route=${route}
+              t=${t}
+              language=${language}
+              customization=${customization}
+              setCustomization=${setCustomization}
+              onSaveCustomization=${handleSaveCustomization}
+              lastSavedAt=${lastSavedAt}
+            />
           </div>
         `;
       }

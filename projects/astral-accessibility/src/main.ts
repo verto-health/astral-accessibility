@@ -5,6 +5,10 @@ import { AstralAccessibilityComponent } from "./lib/astral-accessibility.compone
 import { AstralTranslationService } from "./lib/astral-translation.service";
 import "zone.js";
 
+const ASTRAL_TAG = "astral-accessibility";
+
+let astralAppPromise: Promise<{ doc: Document }> | null = null;
+
 (window as any).initializeAstral = async function initializeAstral(
   features?: Record<string, any>,
 ) {
@@ -24,26 +28,34 @@ import "zone.js";
       };
     }
 
-    const app = await createApplication();
-    const widget = createCustomElement(AstralAccessibilityComponent, {
-      injector: app.injector,
-    });
-    customElements.define("astral-accessibility", widget);
+    if (!astralAppPromise) {
+      astralAppPromise = (async () => {
+        const app = await createApplication();
+        const widget = createCustomElement(AstralAccessibilityComponent, {
+          injector: app.injector,
+        });
+        if (!customElements.get(ASTRAL_TAG)) {
+          customElements.define(ASTRAL_TAG, widget);
+        }
+        const doc = app.injector.get(DOCUMENT);
+        const translationService = app.injector.get(AstralTranslationService);
+        (window as any).astralSetLanguage = (lang: string) => {
+          translationService.setLanguage(lang);
+        };
+        return { doc };
+      })();
+    }
 
-    const doc = app.injector.get(DOCUMENT);
-    const astralAccessibilityElement = doc.createElement(
-      "astral-accessibility",
-    );
+    const { doc } = await astralAppPromise;
+
+    doc.querySelectorAll(ASTRAL_TAG).forEach((el) => el.remove());
+
+    const astralAccessibilityElement = doc.createElement(ASTRAL_TAG);
     astralAccessibilityElement.setAttribute(
       "astral-features",
       JSON.stringify(features),
     );
     doc.body.appendChild(astralAccessibilityElement);
-
-    const translationService = app.injector.get(AstralTranslationService);
-    (window as any).astralSetLanguage = (lang: string) => {
-      translationService.setLanguage(lang);
-    };
   } catch (err) {
     console.error(err);
   }
