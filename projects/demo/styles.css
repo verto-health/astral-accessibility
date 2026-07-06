@@ -424,3 +424,42 @@ nav a.active {
   color: #555;
   font-size: 0.9rem;
 }
+
+.page.customizations .cust-snippet {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.page.customizations .cust-snippet pre {
+  background: #1a1a2e;
+  color: #f5f5f5;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.page.customizations .cust-snippet code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  white-space: pre;
+}
+
+.page.customizations .cust-snippet-copy {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  margin: 0;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f5f5f5;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page.customizations .cust-snippet-copy:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

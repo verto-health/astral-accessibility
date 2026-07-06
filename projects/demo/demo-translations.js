@@ -175,6 +175,12 @@ export const DEMO_TRANSLATIONS = {
       removeRow: "Remove",
       saveButton: "Save and refresh widget",
       savedAt: "Last applied at",
+      h3Snippet: "Sample code",
+      snippetHelp:
+        "Drop this into your own page to initialise the widget with the settings above.",
+      copy: "Copy",
+      copied: "Copied",
+      copyFailed: "Copy failed",
     },
   },
 
@@ -358,6 +364,12 @@ export const DEMO_TRANSLATIONS = {
       removeRow: "Supprimer",
       saveButton: "Enregistrer et actualiser le widget",
       savedAt: "Dernière application",
+      h3Snippet: "Code d'exemple",
+      snippetHelp:
+        "Copiez ceci dans votre propre page pour initialiser le widget avec les paramètres ci-dessus.",
+      copy: "Copier",
+      copied: "Copié",
+      copyFailed: "Échec de la copie",
     },
   },
 
@@ -533,6 +545,11 @@ export const DEMO_TRANSLATIONS = {
       removeRow: "移除",
       saveButton: "儲存並重新整理小工具",
       savedAt: "上次套用時間",
+      h3Snippet: "程式碼範例",
+      snippetHelp: "將此程式碼複製到您自己的頁面，即可以上述設定初始化小工具。",
+      copy: "複製",
+      copied: "已複製",
+      copyFailed: "複製失敗",
     },
   },
 };

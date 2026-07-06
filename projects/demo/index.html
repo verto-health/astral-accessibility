@@ -327,6 +327,62 @@
         return options;
       }
 
+      // JS-object-literal serializer (unquoted keys when safe, single-quoted strings).
+      function serializeOptions(value, indent = "  ") {
+        const jsKey = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+        function esc(str) {
+          return str.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        }
+        function walk(v, depth) {
+          const pad = indent.repeat(depth);
+          const inner = indent.repeat(depth + 1);
+          if (v === null) return "null";
+          if (typeof v === "string") return `'${esc(v)}'`;
+          if (typeof v === "number" || typeof v === "boolean") return String(v);
+          if (Array.isArray(v)) {
+            if (!v.length) return "[]";
+            return (
+              "[\n" +
+              v.map((x) => inner + walk(x, depth + 1)).join(",\n") +
+              "\n" +
+              pad +
+              "]"
+            );
+          }
+          if (typeof v === "object") {
+            const keys = Object.keys(v);
+            if (!keys.length) return "{}";
+            return (
+              "{\n" +
+              keys
+                .map((k) => {
+                  const key = jsKey.test(k) ? k : `'${esc(k)}'`;
+                  return inner + key + ": " + walk(v[k], depth + 1);
+                })
+                .join(",\n") +
+              "\n" +
+              pad +
+              "}"
+            );
+          }
+          return String(v);
+        }
+        return walk(value, 0);
+      }
+
+      function buildSnippet(options) {
+        const close = "<\/script>";
+        return (
+          '<script src="astral-accessibility.js">' +
+          close +
+          "\n<script>\n" +
+          "  initializeAstral(" +
+          serializeOptions(options).replace(/\n/g, "\n  ") +
+          ");\n" +
+          close
+        );
+      }
+
       function CustomizationsPage({
         t,
         language,
@@ -336,6 +392,20 @@
         lastSavedAt,
       }) {
         const p = t.customizations;
+        const [copyStatus, setCopyStatus] = useState("");
+        const snippet = buildSnippet(
+          buildAstralOptions(customization, language),
+        );
+
+        async function copySnippet() {
+          try {
+            await navigator.clipboard.writeText(snippet);
+            setCopyStatus(p.copied);
+          } catch {
+            setCopyStatus(p.copyFailed);
+          }
+          setTimeout(() => setCopyStatus(""), 2000);
+        }
 
         function toggleCompact(e) {
           setCustomization({ ...customization, compact: e.target.checked });
@@ -521,6 +591,19 @@
                     >${p.savedAt}: ${lastSavedAt}</span
                   >`
                 : null}
+            </div>
+
+            <h3>${p.h3Snippet}</h3>
+            <p class="cust-help">${p.snippetHelp}</p>
+            <div class="cust-snippet">
+              <button
+                type="button"
+                class="cust-snippet-copy"
+                onClick=${copySnippet}
+              >
+                ${copyStatus || p.copy}
+              </button>
+              <pre><code>${snippet}</code></pre>
             </div>
           </div>
         `;
