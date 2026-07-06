@@ -1,31 +1,30 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { Component, inject, signal, DOCUMENT } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-contrast",
-  standalone: true,
   template: `
     <button
       (click)="nextState()"
-      [ngClass]="{ 'in-use': states[currentState] !== base }"
+      [ngClass]="{ 'in-use': states[currentState()] !== base }"
     >
       <div class="title">
         <div class="icon-state-wrap">
           <!-- <i
             class="pi pi-minus-circle icon action-icon "
             [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
+              inactive: states[currentState()] == base,
+              active: states[currentState()] != base
             }"
           ></i> -->
           <div
             class="icon action-icon "
             [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
+              inactive: states[currentState()] == base,
+              active: states[currentState()] != base
             }"
           >
             <svg
@@ -53,24 +52,26 @@ import { AstralStateService } from "../astral-state.service";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ labels[currentState] }}</span>
+            <span>{{ labels[currentState()] }}</span>
             <div
               class="dots"
-              [ngClass]="{ inactive: states[currentState] === base }"
+              [ngClass]="{ inactive: states[currentState()] === base }"
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Invert' }"
-              ></div>
-              <div
-                class="dot"
-                [ngClass]="{ active: states[currentState] === 'High Contrast' }"
+                [ngClass]="{
+                  active: states[currentState()] === 'Dark High Contrast'
+                }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState] === 'Dark High Contrast'
+                  active: states[currentState()] === 'High Contrast'
                 }"
+              ></div>
+              <div
+                class="dot"
+                [ngClass]="{ active: states[currentState()] === 'Invert' }"
               ></div>
             </div>
           </div>
@@ -78,59 +79,57 @@ import { AstralStateService } from "../astral-state.service";
       </div>
 
       <astral-widget-checkmark
-        [isActive]="states[currentState] !== base"
+        [isActive]="states[currentState()] !== base"
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ContrastComponent {
   document = inject(DOCUMENT);
   stateService = inject(AstralStateService);
+  private translation = inject(AstralTranslationService);
   private readonly STORAGE_KEY = "contrast";
 
-  constructor(private translation: AstralTranslationService) {}
-
-  currentState = 0;
+  currentState = signal(0);
   base = "Contrast";
-  states = [this.base, "Invert", "High Contrast", "Dark High Contrast"];
+  states = [this.base, "Dark High Contrast", "High Contrast", "Invert"];
 
   get labels(): string[] {
     return [
       this.translation.t("contrast.base"),
-      this.translation.t("contrast.invert"),
-      this.translation.t("contrast.high"),
       this.translation.t("contrast.darkHigh"),
+      this.translation.t("contrast.high"),
+      this.translation.t("contrast.invert"),
     ];
   }
 
   _style: HTMLStyleElement;
 
   ngOnInit() {
-    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
-    if (this.currentState !== 0) {
+    this.currentState.set(this.stateService.loadState(this.STORAGE_KEY));
+    if (this.currentState() !== 0) {
       this._runStateLogic();
     }
   }
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState.update((v) => (v + 1) % 4);
     this._runStateLogic();
-    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
 
   private _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === "Invert") {
+    if (this.states[this.currentState()] === "Invert") {
       this.document.documentElement.classList.add("astral_inverted");
     } else {
       this.document.documentElement.classList.remove("astral_inverted");
     }
 
-    if (this.states[this.currentState] === "High Contrast") {
+    if (this.states[this.currentState()] === "High Contrast") {
       this._style.textContent = `
             body > :not(astral-accessibility) * {
                 background: transparent !important;
@@ -143,7 +142,7 @@ export class ContrastComponent {
         `;
     }
 
-    if (this.states[this.currentState] === "Dark High Contrast") {
+    if (this.states[this.currentState()] === "Dark High Contrast") {
       this._style.textContent = `
             body > :not(astral-accessibility), body > :not(astral-accessibility) * {
               background: black !important;

@@ -1,19 +1,26 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject, NgZone, Renderer2 } from "@angular/core";
-import { Subscription } from "rxjs";
+import { NgClass } from "@angular/common";
+import {
+  Component,
+  DestroyRef,
+  inject,
+  NgZone,
+  Renderer2,
+  signal,
+  DOCUMENT,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-screen-reader",
-  standalone: true,
   template: `
     <button
       [disabled]="!synthesisAvailable"
       (click)="nextState()"
       [ngClass]="{
-        'in-use': states[currentState] != base,
+        'in-use': states[currentState()] != base,
         'disabled-button': !synthesisAvailable
       }"
     >
@@ -22,8 +29,8 @@ import { AstralStateService } from "../astral-state.service";
           <div
             class="icon action-icon d-flex align-items-center"
             [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base,
+              inactive: states[currentState()] == base,
+              active: states[currentState()] != base,
               disabled: !synthesisAvailable
             }"
           >
@@ -59,23 +66,23 @@ import { AstralStateService } from "../astral-state.service";
 
           <div class="state-dots-wrap">
             <span>{{
-              synthesisAvailable ? labels[currentState] : unavailableLabel
+              synthesisAvailable ? labels[currentState()] : unavailableLabel
             }}</span>
             <div
               class="dots"
-              [ngClass]="{ inactive: states[currentState] === base }"
+              [ngClass]="{ inactive: states[currentState()] === base }"
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Read Normal' }"
+                [ngClass]="{ active: states[currentState()] === 'Read Normal' }"
               ></div>
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Read Fast' }"
+                [ngClass]="{ active: states[currentState()] === 'Read Fast' }"
               ></div>
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Read Slow' }"
+                [ngClass]="{ active: states[currentState()] === 'Read Slow' }"
               ></div>
             </div>
           </div>
@@ -83,15 +90,19 @@ import { AstralStateService } from "../astral-state.service";
       </div>
 
       <astral-widget-checkmark
-        [isActive]="states[currentState] !== base"
+        [isActive]="states[currentState()] !== base"
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {
+  private renderer = inject(Renderer2);
+  private translation = inject(AstralTranslationService);
+  private ngZone = inject(NgZone);
+
   globalListenFunction: Function;
-  private langSub: Subscription;
+  private destroyRef = inject(DestroyRef);
   speech = new SpeechSynthesisUtterance();
   userAgent = navigator.userAgent;
   isApple = false;
@@ -99,12 +110,6 @@ export class ScreenReaderComponent {
   synthesisAvailable = true;
   stateService = inject(AstralStateService);
   private readonly STORAGE_KEY = "screen_reader";
-
-  constructor(
-    private renderer: Renderer2,
-    private translation: AstralTranslationService,
-    private ngZone: NgZone,
-  ) {}
 
   get labels(): string[] {
     return [
@@ -123,7 +128,7 @@ export class ScreenReaderComponent {
     let element = document.elementFromPoint(x, y);
 
     if (element) {
-      if (this.states[this.currentState] != this.base) {
+      if (this.states[this.currentState()] != this.base) {
         if (element.ariaLabel) {
           // it has aria-label, use aria-label
           this.speech.text = element.ariaLabel;
@@ -224,24 +229,26 @@ export class ScreenReaderComponent {
       });
     }
 
-    this.langSub = this.translation.langChange.subscribe((lang) => {
-      this.ngZone.run(() => {
-        this.speech.lang = lang;
-        const currentVoices = speechSynthesis.getVoices();
-        if (currentVoices.length) {
-          this.speech.voice = this.getDefaultVoice(
-            currentVoices,
-            this.isApple,
-            this.isEdgeAndroid,
-          );
-        } else {
-          // voices not yet loaded — don't call getDefaultVoice (it would set
-          // synthesisAvailable = false); voiceschanged will pick the right
-          // voice once they arrive
-          this.speech.voice = null;
-        }
+    this.translation.langChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((lang) => {
+        this.ngZone.run(() => {
+          this.speech.lang = lang;
+          const currentVoices = speechSynthesis.getVoices();
+          if (currentVoices.length) {
+            this.speech.voice = this.getDefaultVoice(
+              currentVoices,
+              this.isApple,
+              this.isEdgeAndroid,
+            );
+          } else {
+            // voices not yet loaded — don't call getDefaultVoice (it would set
+            // synthesisAvailable = false); voiceschanged will pick the right
+            // voice once they arrive
+            this.speech.voice = null;
+          }
+        });
       });
-    });
 
     // find the element that the user tapped/clicked on
     this.globalListenFunction = this.renderer.listen(
@@ -260,50 +267,46 @@ export class ScreenReaderComponent {
       },
     );
 
+    this.destroyRef.onDestroy(() => this.globalListenFunction?.());
+
     // restore persisted state
-    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
-    if (this.currentState !== 0) {
+    this.currentState.set(this.stateService.loadState(this.STORAGE_KEY));
+    if (this.currentState() !== 0) {
       this._runStateLogic();
     }
   }
 
-  ngOnDestroy() {
-    this.globalListenFunction?.();
-    this.langSub?.unsubscribe();
-  }
-
   document = inject(DOCUMENT);
 
-  currentState = 0;
+  currentState = signal(0);
   base = "Screen Reader";
   states = [this.base, "Read Normal", "Read Fast", "Read Slow"];
 
   _style: HTMLStyleElement;
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState.update((v) => (v + 1) % 4);
     this._runStateLogic();
-    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
 
   private _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === "Read Normal") {
+    if (this.states[this.currentState()] === "Read Normal") {
       this.speech.rate = 0.8;
     }
 
-    if (this.states[this.currentState] === "Read Fast") {
+    if (this.states[this.currentState()] === "Read Fast") {
       this.speech.rate = this.isApple ? 1.3 : 1.7;
     }
 
-    if (this.states[this.currentState] === "Read Slow") {
+    if (this.states[this.currentState()] === "Read Slow") {
       this.speech.rate = 0.4;
     }
 
-    if (this.states[this.currentState] === this.base) {
+    if (this.states[this.currentState()] === this.base) {
       if (speechSynthesis.speaking) {
         speechSynthesis.cancel();
       }

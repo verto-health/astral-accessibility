@@ -13,16 +13,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: "yarn"
       - name: Install yarn packages
         run: |
           yarn install
       - name: Run Cypress for environment
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v6
         with:
           start: |
             yarn start:test-server
           wait-on: "http://localhost:8000"
           wait-on-timeout: 300
           browser: chrome
-          config-file: cypress.config.ts
+          config-file: cypress.config.js

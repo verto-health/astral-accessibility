@@ -34,7 +34,7 @@ describe("AstralAccessibilityComponent", () => {
     });
 
     it("defaults position to bottom-right", () => {
-      expect(component.position).toBe("bottom-right");
+      expect(component.position()).toBe("bottom-right");
     });
 
     it("hostClass is astral-position-bottom-right by default", () => {
@@ -42,7 +42,7 @@ describe("AstralAccessibilityComponent", () => {
     });
 
     it("isTopPosition is false by default", () => {
-      expect(component.isTopPosition).toBeFalse();
+      expect(component.isTopPosition()).toBeFalse();
     });
   });
 
@@ -59,29 +59,29 @@ describe("AstralAccessibilityComponent", () => {
 
     ALL_POSITIONS.forEach((pos) => {
       it(`hostClass returns astral-position-${pos}`, () => {
-        component.position = pos;
+        component.position.set(pos);
         expect(component.hostClass).toBe(`astral-position-${pos}`);
       });
     });
 
     it("isTopPosition is false for bottom-right", () => {
-      component.position = "bottom-right";
-      expect(component.isTopPosition).toBeFalse();
+      component.position.set("bottom-right");
+      expect(component.isTopPosition()).toBeFalse();
     });
 
     it("isTopPosition is false for bottom-left", () => {
-      component.position = "bottom-left";
-      expect(component.isTopPosition).toBeFalse();
+      component.position.set("bottom-left");
+      expect(component.isTopPosition()).toBeFalse();
     });
 
     it("isTopPosition is true for top-right", () => {
-      component.position = "top-right";
-      expect(component.isTopPosition).toBeTrue();
+      component.position.set("top-right");
+      expect(component.isTopPosition()).toBeTrue();
     });
 
     it("isTopPosition is true for top-left", () => {
-      component.position = "top-left";
-      expect(component.isTopPosition).toBeTrue();
+      component.position.set("top-left");
+      expect(component.isTopPosition()).toBeTrue();
     });
   });
 
@@ -110,13 +110,13 @@ describe("AstralAccessibilityComponent", () => {
     ALL_POSITIONS.forEach((pos) => {
       it(`reads position "${pos}" from attribute`, () => {
         const component = createWithOptions({ position: pos });
-        expect(component.position).toBe(pos);
+        expect(component.position()).toBe(pos);
       });
     });
 
     it("falls back to bottom-right when position is omitted", () => {
       const component = createWithOptions({ enabledFeatures: [] });
-      expect(component.position).toBe("bottom-right");
+      expect(component.position()).toBe("bottom-right");
     });
   });
 
@@ -184,6 +184,64 @@ describe("AstralAccessibilityComponent", () => {
     });
   });
 
+  describe("customStyles from astral-features attribute", () => {
+    function createWithOptions(options: Record<string, unknown>) {
+      const merged = { enabledFeatures: [], ...options };
+      const original = document.querySelector.bind(document);
+      spyOn(document, "querySelector").and.callFake((selector: string) => {
+        if (selector === "astral-accessibility") {
+          return {
+            getAttribute: (_attr: string) => JSON.stringify(merged),
+          } as unknown as Element;
+        }
+        return original(selector);
+      });
+
+      const fixture = TestBed.createComponent(AstralAccessibilityComponent);
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    beforeEach(async () => {
+      await configure();
+    });
+
+    it("applies each customStyles entry as an inline style on the host", () => {
+      const fixture = createWithOptions({
+        customStyles: { bottom: "140px", right: "20px" },
+      });
+      expect(fixture.nativeElement.style.getPropertyValue("bottom")).toBe(
+        "140px",
+      );
+      expect(fixture.nativeElement.style.getPropertyValue("right")).toBe(
+        "20px",
+      );
+    });
+
+    it("supports setting CSS custom properties via customStyles", () => {
+      const fixture = createWithOptions({
+        customStyles: { "--modalWidth": "500px" },
+      });
+      expect(fixture.nativeElement.style.getPropertyValue("--modalWidth")).toBe(
+        "500px",
+      );
+    });
+
+    it("ignores non-string values in customStyles", () => {
+      const fixture = createWithOptions({
+        customStyles: { bottom: 140 as unknown as string, right: "20px" },
+      });
+      expect(fixture.nativeElement.style.getPropertyValue("bottom")).toBe("");
+      expect(fixture.nativeElement.style.getPropertyValue("right")).toBe(
+        "20px",
+      );
+    });
+
+    it("does not throw when customStyles is omitted", () => {
+      expect(() => createWithOptions({})).not.toThrow();
+    });
+  });
+
   describe("template alignment class", () => {
     let component: AstralAccessibilityComponent;
     let fixture: ComponentFixture<AstralAccessibilityComponent>;
@@ -196,7 +254,7 @@ describe("AstralAccessibilityComponent", () => {
     });
 
     it("uses align-items-end for bottom-right", () => {
-      component.position = "bottom-right";
+      component.position.set("bottom-right");
       fixture.detectChanges();
       const el = fixture.nativeElement.querySelector(".astral-accessibility");
       expect(el.classList).toContain("align-items-end");
@@ -204,7 +262,7 @@ describe("AstralAccessibilityComponent", () => {
     });
 
     it("uses align-items-end for bottom-left", () => {
-      component.position = "bottom-left";
+      component.position.set("bottom-left");
       fixture.detectChanges();
       const el = fixture.nativeElement.querySelector(".astral-accessibility");
       expect(el.classList).toContain("align-items-end");
@@ -212,7 +270,7 @@ describe("AstralAccessibilityComponent", () => {
     });
 
     it("uses align-items-start for top-right", () => {
-      component.position = "top-right";
+      component.position.set("top-right");
       fixture.detectChanges();
       const el = fixture.nativeElement.querySelector(".astral-accessibility");
       expect(el.classList).toContain("align-items-start");
@@ -220,7 +278,7 @@ describe("AstralAccessibilityComponent", () => {
     });
 
     it("uses align-items-start for top-left", () => {
-      component.position = "top-left";
+      component.position.set("top-left");
       fixture.detectChanges();
       const el = fixture.nativeElement.querySelector(".astral-accessibility");
       expect(el.classList).toContain("align-items-start");

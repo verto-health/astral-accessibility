@@ -1,24 +1,23 @@
-import { DOCUMENT, NgIf, NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { Component, inject, signal, DOCUMENT } from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
   selector: "astral-text-spacing",
-  standalone: true,
   template: `
     <button
       (click)="nextState()"
-      [ngClass]="{ 'in-use': states[currentState] != base }"
+      [ngClass]="{ 'in-use': states[currentState()] != base }"
     >
       <div class="title">
         <div class="icon-state-wrap">
           <div
             class="icon action-icon"
             [ngClass]="{
-              inactive: states[currentState] == base,
-              active: states[currentState] != base
+              inactive: states[currentState()] == base,
+              active: states[currentState()] != base
             }"
           >
             <svg
@@ -46,24 +45,28 @@ import { AstralStateService } from "../astral-state.service";
           </div>
 
           <div class="state-dots-wrap">
-            <span>{{ labels[currentState] }}</span>
+            <span>{{ labels[currentState()] }}</span>
             <div
               class="dots"
-              [ngClass]="{ inactive: states[currentState] === base }"
+              [ngClass]="{ inactive: states[currentState()] === base }"
             >
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Light Spacing' }"
-              ></div>
-              <div
-                class="dot"
                 [ngClass]="{
-                  active: states[currentState] === 'Moderate Spacing'
+                  active: states[currentState()] === 'Light Spacing'
                 }"
               ></div>
               <div
                 class="dot"
-                [ngClass]="{ active: states[currentState] === 'Heavy Spacing' }"
+                [ngClass]="{
+                  active: states[currentState()] === 'Moderate Spacing'
+                }"
+              ></div>
+              <div
+                class="dot"
+                [ngClass]="{
+                  active: states[currentState()] === 'Heavy Spacing'
+                }"
               ></div>
             </div>
           </div>
@@ -71,14 +74,17 @@ import { AstralStateService } from "../astral-state.service";
       </div>
 
       <astral-widget-checkmark
-        [isActive]="states[currentState] !== base"
+        [isActive]="states[currentState()] !== base"
       ></astral-widget-checkmark>
     </button>
   `,
-  imports: [NgIf, NgClass, AstralCheckmarkSvgComponent],
+  imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent {
-  constructor(private translation: AstralTranslationService) {}
+  document = inject(DOCUMENT);
+  stateService = inject(AstralStateService);
+  private translation = inject(AstralTranslationService);
+  private readonly STORAGE_KEY = "text_spacing";
 
   get labels(): string[] {
     return [
@@ -89,47 +95,42 @@ export class TextSpacingComponent {
     ];
   }
 
-  document = inject(DOCUMENT);
-  stateService = inject(AstralStateService);
-  private readonly STORAGE_KEY = "text_spacing";
-
-  currentState = 0;
+  currentState = signal(0);
   base = "Text Spacing";
   states = [this.base, "Light Spacing", "Moderate Spacing", "Heavy Spacing"];
 
   _style: HTMLStyleElement;
 
   ngOnInit() {
-    this.currentState = this.stateService.loadState(this.STORAGE_KEY);
-    if (this.currentState !== 0) {
+    this.currentState.set(this.stateService.loadState(this.STORAGE_KEY));
+    if (this.currentState() !== 0) {
       this._runStateLogic();
     }
   }
 
   nextState() {
-    this.currentState += 1;
-    this.currentState = this.currentState % 4;
+    this.currentState.update((v) => (v + 1) % 4);
     this._runStateLogic();
-    this.stateService.saveState(this.STORAGE_KEY, this.currentState);
+    this.stateService.saveState(this.STORAGE_KEY, this.currentState());
   }
 
   private _runStateLogic() {
     this._style?.remove?.();
     this._style = this.document.createElement("style");
 
-    if (this.states[this.currentState] === "Light Spacing") {
+    if (this.states[this.currentState()] === "Light Spacing") {
       this.document.documentElement.classList.add("astral_light_spacing");
     } else {
       this.document.documentElement.classList.remove("astral_light_spacing");
     }
 
-    if (this.states[this.currentState] === "Moderate Spacing") {
+    if (this.states[this.currentState()] === "Moderate Spacing") {
       this.document.documentElement.classList.add("astral_moderate_spacing");
     } else {
       this.document.documentElement.classList.remove("astral_moderate_spacing");
     }
 
-    if (this.states[this.currentState] === "Heavy Spacing") {
+    if (this.states[this.currentState()] === "Heavy Spacing") {
       this.document.documentElement.classList.add("astral_heavy_spacing");
     } else {
       this.document.documentElement.classList.remove("astral_heavy_spacing");

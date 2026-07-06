@@ -10,16 +10,17 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "ngx-build-plus:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/astral-accessibility-angular-output",
             "index": "projects/astral-accessibility/src/index.html",
-            "main": "projects/astral-accessibility/src/main.ts",
+            "browser": "projects/astral-accessibility/src/main.ts",
             "tsConfig": "projects/astral-accessibility/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [],
             "scripts": [],
-            "singleBundle": true
+            "polyfills": [],
+            "outputHashing": "none"
           },
           "configurations": {
             "production": {
@@ -38,10 +39,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
             }
@@ -51,13 +49,17 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "astral-accessibility:build"
+            "buildTarget": "astral-accessibility:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "astral-accessibility:build:production"
+              "buildTarget": "astral-accessibility:build:production"
+            },
+            "development": {
+              "buildTarget": "astral-accessibility:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -72,5 +74,31 @@
   },
   "cli": {
     "analytics": "52ca2ef4-a985-4d88-bc7f-3211a7c9cc75"
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
   }
 }

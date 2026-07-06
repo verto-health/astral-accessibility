@@ -5,17 +5,18 @@
 <div
   [class]="
     'astral-accessibility d-flex ' +
-    (isTopPosition ? 'align-items-start' : 'align-items-end')
+    (isTopPosition() ? 'align-items-start' : 'align-items-end')
   "
 >
   <div>
     <div class="astral-inverted-corner"></div>
     <button
       [class]="astralAccessibilityIcon"
-      (click)="modalVisible = !modalVisible"
+      (click)="modalVisible.set(!modalVisible())"
     >
       <!-- <i class="pi pi-user"></i> -->
-      <div *ngIf="!modalVisible; else closeIconButton">
+      @if (!modalVisible()) {
+      <div>
         <svg viewBox="0 0 23 30" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <clipPath id="jna6sf4oza">
@@ -34,59 +35,64 @@
           </g>
         </svg>
       </div>
-      <ng-template #closeIconButton>
-        <div class="astral-close-icon">
-          <svg
-            width="19"
-            height="30"
-            viewBox="0 0 19 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M17.77 15.087C17.7721 15.4546 17.7016 15.819 17.5626 16.1593C17.4236 16.4996 17.2188 16.8092 16.96 17.0701L5.78761 28.2425C5.26166 28.7684 4.54832 29.0639 3.80451 29.0639C3.06071 29.0639 2.34737 28.7684 1.82142 28.2425C1.29547 27.7165 1 27.0032 1 26.2594C1 25.5156 1.29547 24.8022 1.82142 24.2763L11.0665 15.087L2.18452 5.86987C1.89882 5.61293 1.6692 5.2998 1.51004 4.95007C1.35087 4.60034 1.26558 4.22153 1.25949 3.83733C1.2534 3.45314 1.32665 3.07181 1.47466 2.71722C1.62267 2.36262 1.84225 2.04238 2.11967 1.77651C2.3971 1.51065 2.72639 1.30489 3.08696 1.1721C3.44753 1.0393 3.83162 0.98234 4.21522 1.00476C4.59881 1.02719 4.97365 1.12852 5.31629 1.30241C5.65894 1.47631 5.96201 1.71904 6.20657 2.01541L11.5972 7.60158L16.9879 13.1878C17.4804 13.6985 17.76 14.3776 17.77 15.087Z"
-              fill="white"
-            />
-          </svg>
-        </div>
-      </ng-template>
+      } @else {
+      <div class="astral-close-icon">
+        <svg
+          width="19"
+          height="30"
+          viewBox="0 0 19 30"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M17.77 15.087C17.7721 15.4546 17.7016 15.819 17.5626 16.1593C17.4236 16.4996 17.2188 16.8092 16.96 17.0701L5.78761 28.2425C5.26166 28.7684 4.54832 29.0639 3.80451 29.0639C3.06071 29.0639 2.34737 28.7684 1.82142 28.2425C1.29547 27.7165 1 27.0032 1 26.2594C1 25.5156 1.29547 24.8022 1.82142 24.2763L11.0665 15.087L2.18452 5.86987C1.89882 5.61293 1.6692 5.2998 1.51004 4.95007C1.35087 4.60034 1.26558 4.22153 1.25949 3.83733C1.2534 3.45314 1.32665 3.07181 1.47466 2.71722C1.62267 2.36262 1.84225 2.04238 2.11967 1.77651C2.3971 1.51065 2.72639 1.30489 3.08696 1.1721C3.44753 1.0393 3.83162 0.98234 4.21522 1.00476C4.59881 1.02719 4.97365 1.12852 5.31629 1.30241C5.65894 1.47631 5.96201 1.71904 6.20657 2.01541L11.5972 7.60158L16.9879 13.1878C17.4804 13.6985 17.76 14.3776 17.77 15.087Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+      }
       <!-- <div class="icon-background"></div> -->
     </button>
   </div>
 
   <div
     [class]="
-      modalVisible ? astralAccessibilityPanel + ' active' : 'astral-modal'
+      modalVisible() ? astralAccessibilityPanel + ' active' : 'astral-modal'
     "
   >
     <div class="actions">
       <!-- <div class="action">
-        <astral-invert></astral-invert>
-      </div> -->
-      <div
-        class="action"
-        *ngIf="this.enabledFeatures.includes('Screen Reader')"
-      >
+      <astral-invert></astral-invert>
+    </div> -->
+      @if (this.enabledFeatures.includes('Screen Reader')) {
+      <div class="action">
         <astral-screen-reader></astral-screen-reader>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Contrast')">
+      } @if (this.enabledFeatures.includes('Contrast')) {
+      <div class="action">
         <astral-contrast></astral-contrast>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Saturation')">
+      } @if (this.enabledFeatures.includes('Saturation')) {
+      <div class="action">
         <astral-saturate></astral-saturate>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Bigger Text')">
+      } @if (this.enabledFeatures.includes('Bigger Text')) {
+      <div class="action">
         <astral-text-size></astral-text-size>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Text Spacing')">
+      } @if (this.enabledFeatures.includes('Text Spacing')) {
+      <div class="action">
         <astral-text-spacing></astral-text-spacing>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Screen Mask')">
+      } @if (this.enabledFeatures.includes('Screen Mask')) {
+      <div class="action">
         <astral-screen-mask></astral-screen-mask>
       </div>
-      <div class="action" *ngIf="this.enabledFeatures.includes('Line Height')">
+      } @if (this.enabledFeatures.includes('Line Height')) {
+      <div class="action">
         <astral-line-height></astral-line-height>
       </div>
+      }
     </div>
   </div>
 </div>

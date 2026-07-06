@@ -1,9 +1,11 @@
-import { NgIf } from "@angular/common";
 import {
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   HostBinding,
+  inject,
+  signal,
 } from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
@@ -25,9 +27,7 @@ export type AstralPosition =
   selector: "astral-accessibility",
   templateUrl: "./astral-accessibility.component.html",
   styleUrls: ["./astral-accessibility.component.scss"],
-  standalone: true,
   imports: [
-    NgIf,
     InvertComponent,
     ContrastComponent,
     SaturateComponent,
@@ -40,27 +40,27 @@ export type AstralPosition =
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AstralAccessibilityComponent {
-  modalVisible = false;
+  private translationService = inject(AstralTranslationService);
+  private elementRef = inject(ElementRef);
+
+  modalVisible = signal(false);
   userAgent = navigator.userAgent;
   astralAccessibilityPanel = "astral-modal";
   astralAccessibilityIcon = "astral-icon";
   options: Record<string, any> = {};
   enabledFeatures: String[] = [];
-  position: AstralPosition = "bottom-right";
+  position = signal<AstralPosition>("bottom-right");
+  compact = signal(false);
+  isTopPosition = computed(() => this.position().startsWith("top"));
 
   @HostBinding("class")
   get hostClass(): string {
-    return `astral-position-${this.position}`;
+    const classes = [`astral-position-${this.position()}`];
+    if (this.compact()) {
+      classes.push("astral-compact");
+    }
+    return classes.join(" ");
   }
-
-  get isTopPosition(): boolean {
-    return this.position.startsWith("top");
-  }
-
-  constructor(
-    private translationService: AstralTranslationService,
-    private elementRef: ElementRef,
-  ) {}
 
   ngOnInit() {
     const astralElement = document.querySelector("astral-accessibility");
@@ -69,8 +69,10 @@ export class AstralAccessibilityComponent {
     if (astralOptions) {
       this.options = JSON.parse(astralOptions);
       this.enabledFeatures = this.options["enabledFeatures"];
-      this.position =
-        (this.options["position"] as AstralPosition) || "bottom-right";
+      this.position.set(
+        (this.options["position"] as AstralPosition) || "bottom-right",
+      );
+      this.compact.set(Boolean(this.options["compact"]));
       if (this.options["language"]) {
         this.translationService.setLanguage(this.options["language"]);
       }
@@ -87,6 +89,15 @@ export class AstralAccessibilityComponent {
           "--toggleIconColor",
           this.options["toggleIconColor"],
         );
+      }
+
+      const customStyles = this.options["customStyles"];
+      if (customStyles && typeof customStyles === "object") {
+        for (const [property, value] of Object.entries(customStyles)) {
+          if (typeof value === "string") {
+            this.elementRef.nativeElement.style.setProperty(property, value);
+          }
+        }
       }
     }
 
