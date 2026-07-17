@@ -31,7 +31,7 @@
     "@angular/router": "^20.3.25",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.1"
+    "zone.js": "~0.16.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.30",
