@@ -1,5 +1,10 @@
 import { NgClass } from "@angular/common";
-import { Component, inject, DOCUMENT } from "@angular/core";
+import {
+  Component,
+  inject,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
@@ -18,13 +23,14 @@ import { AstralStateService } from "../astral-state.service";
         <span>Invert Colours</span>
       </div>
       @if (inverted) {
-      <i
-        class="pi pi-check icon active active-check"
-        style="font-weight: 900"
-      ></i>
+        <i
+          class="pi pi-check icon active active-check"
+          style="font-weight: 900"
+        ></i>
       }
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass],
 })
 export class InvertComponent {

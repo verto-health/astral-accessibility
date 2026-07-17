@@ -7,6 +7,7 @@ import {
   Renderer2,
   signal,
   DOCUMENT,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
@@ -21,7 +22,7 @@ import { AstralStateService } from "../astral-state.service";
       (click)="nextState()"
       [ngClass]="{
         'in-use': states[currentState()] != base,
-        'disabled-button': !synthesisAvailable
+        'disabled-button': !synthesisAvailable,
       }"
     >
       <div class="title">
@@ -31,7 +32,7 @@ import { AstralStateService } from "../astral-state.service";
             [ngClass]="{
               inactive: states[currentState()] == base,
               active: states[currentState()] != base,
-              disabled: !synthesisAvailable
+              disabled: !synthesisAvailable,
             }"
           >
             <svg
@@ -94,6 +95,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {

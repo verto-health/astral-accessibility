@@ -6,6 +6,7 @@ import {
   HostBinding,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
@@ -18,10 +19,7 @@ import { LineHeightComponent } from "./controls/line-height.component";
 import { AstralTranslationService } from "./astral-translation.service";
 
 export type AstralPosition =
-  | "bottom-right"
-  | "bottom-left"
-  | "top-right"
-  | "top-left";
+  "bottom-right" | "bottom-left" | "top-right" | "top-left";
 
 @Component({
   selector: "astral-accessibility",
@@ -37,6 +35,7 @@ export type AstralPosition =
     ScreenMaskComponent,
     LineHeightComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AstralAccessibilityComponent {

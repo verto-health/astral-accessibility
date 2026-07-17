@@ -1,5 +1,11 @@
 import { NgClass } from "@angular/common";
-import { Component, inject, signal, DOCUMENT } from "@angular/core";
+import {
+  Component,
+  inject,
+  signal,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
@@ -17,7 +23,7 @@ import { AstralStateService } from "../astral-state.service";
             class="icon action-icon"
             [ngClass]="{
               inactive: states[currentState()] == base,
-              active: states[currentState()] != base
+              active: states[currentState()] != base,
             }"
           >
             <svg
@@ -53,19 +59,19 @@ import { AstralStateService } from "../astral-state.service";
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Light Spacing'
+                  active: states[currentState()] === 'Light Spacing',
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Moderate Spacing'
+                  active: states[currentState()] === 'Moderate Spacing',
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Heavy Spacing'
+                  active: states[currentState()] === 'Heavy Spacing',
                 }"
               ></div>
             </div>
@@ -78,6 +84,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class TextSpacingComponent {

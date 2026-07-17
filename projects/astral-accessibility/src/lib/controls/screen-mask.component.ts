@@ -1,5 +1,12 @@
 import { NgClass } from "@angular/common";
-import { Component, Renderer2, inject, signal, DOCUMENT } from "@angular/core";
+import {
+  Component,
+  Renderer2,
+  inject,
+  signal,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
@@ -17,7 +24,7 @@ import { AstralStateService } from "../astral-state.service";
             class="icon action-icon"
             [ngClass]="{
               inactive: states[currentState()] == base,
-              active: states[currentState()] != base
+              active: states[currentState()] != base,
             }"
           >
             <svg
@@ -51,13 +58,13 @@ import { AstralStateService } from "../astral-state.service";
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Large Cursor'
+                  active: states[currentState()] === 'Large Cursor',
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Reading Mask'
+                  active: states[currentState()] === 'Reading Mask',
                 }"
               ></div>
             </div>
@@ -70,6 +77,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenMaskComponent {

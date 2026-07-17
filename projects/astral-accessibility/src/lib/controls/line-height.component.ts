@@ -1,5 +1,12 @@
 import { NgClass } from "@angular/common";
-import { Component, Renderer2, inject, signal, DOCUMENT } from "@angular/core";
+import {
+  Component,
+  Renderer2,
+  inject,
+  signal,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
@@ -17,7 +24,7 @@ import { AstralStateService } from "../astral-state.service";
             class="icon action-icon"
             [ngClass]="{
               inactive: states[currentState()] == base,
-              active: states[currentState()] != base
+              active: states[currentState()] != base,
             }"
           >
             <svg
@@ -46,19 +53,19 @@ import { AstralStateService } from "../astral-state.service";
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Light Height'
+                  active: states[currentState()] === 'Light Height',
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Moderate Height'
+                  active: states[currentState()] === 'Moderate Height',
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Heavy Height'
+                  active: states[currentState()] === 'Heavy Height',
                 }"
               ></div>
             </div>
@@ -71,6 +78,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class LineHeightComponent {
