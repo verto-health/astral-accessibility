@@ -23,7 +23,7 @@ import { AstralStateService } from "../astral-state.service";
             class="icon action-icon "
             [ngClass]="{
               inactive: states[currentState()] == base,
-              active: states[currentState()] != base,
+              active: states[currentState()] != base
             }"
           >
             <svg
@@ -65,26 +65,26 @@ import { AstralStateService } from "../astral-state.service";
           <div class="state-dots-wrap">
             <span>{{ labels[currentState()] }}</span>
             @if (states[currentState()] != base) {
-              <div class="dots">
-                <div
-                  class="dot"
-                  [ngClass]="{
-                    active: states[currentState()] === 'Low Saturation',
-                  }"
-                ></div>
-                <div
-                  class="dot"
-                  [ngClass]="{
-                    active: states[currentState()] === 'High Saturation',
-                  }"
-                ></div>
-                <div
-                  class="dot"
-                  [ngClass]="{
-                    active: states[currentState()] === 'Desaturated',
-                  }"
-                ></div>
-              </div>
+            <div class="dots">
+              <div
+                class="dot"
+                [ngClass]="{
+                  active: states[currentState()] === 'Low Saturation'
+                }"
+              ></div>
+              <div
+                class="dot"
+                [ngClass]="{
+                  active: states[currentState()] === 'High Saturation'
+                }"
+              ></div>
+              <div
+                class="dot"
+                [ngClass]="{
+                  active: states[currentState()] === 'Desaturated'
+                }"
+              ></div>
+            </div>
             }
           </div>
         </div>

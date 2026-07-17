@@ -22,7 +22,7 @@ import { AstralStateService } from "../astral-state.service";
       (click)="nextState()"
       [ngClass]="{
         'in-use': states[currentState()] != base,
-        'disabled-button': !synthesisAvailable,
+        'disabled-button': !synthesisAvailable
       }"
     >
       <div class="title">
@@ -32,7 +32,7 @@ import { AstralStateService } from "../astral-state.service";
             [ngClass]="{
               inactive: states[currentState()] == base,
               active: states[currentState()] != base,
-              disabled: !synthesisAvailable,
+              disabled: !synthesisAvailable
             }"
           >
             <svg

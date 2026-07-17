@@ -23,10 +23,10 @@ import { AstralStateService } from "../astral-state.service";
         <span>Invert Colours</span>
       </div>
       @if (inverted) {
-        <i
-          class="pi pi-check icon active active-check"
-          style="font-weight: 900"
-        ></i>
+      <i
+        class="pi pi-check icon active active-check"
+        style="font-weight: 900"
+      ></i>
       }
     </button>
   `,

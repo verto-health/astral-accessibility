@@ -24,7 +24,7 @@ import { AstralStateService } from "../astral-state.service";
             class="icon action-icon"
             [ngClass]="{
               inactive: states[currentState()] == base,
-              active: states[currentState()] != base,
+              active: states[currentState()] != base
             }"
           >
             <svg
@@ -53,19 +53,19 @@ import { AstralStateService } from "../astral-state.service";
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Light Height',
+                  active: states[currentState()] === 'Light Height'
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Moderate Height',
+                  active: states[currentState()] === 'Moderate Height'
                 }"
               ></div>
               <div
                 class="dot"
                 [ngClass]="{
-                  active: states[currentState()] === 'Heavy Height',
+                  active: states[currentState()] === 'Heavy Height'
                 }"
               ></div>
             </div>
