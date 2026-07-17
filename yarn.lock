@@ -3366,15 +3366,10 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
-"@types/node@*", "@types/node@>=10.0.0":
-  version "18.11.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.10.tgz#4c64759f3c2343b7e6c4b9caf761c7a3a05cee34"
-  integrity sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==
-
-"@types/node@22":
-  version "22.20.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.20.0.tgz#431f5007396bc1a1a47b9c7df60f3e5e0b5b7304"
-  integrity sha512-QWlFW2wf3nTjC13/DqRnBpR4ZO36VJH/JVBkA/vcnmbTBNQIlnObqyqZE1tUR7+Ni23Lda8R1BxMfbXRpCUx5g==
+"@types/node@*", "@types/node@22", "@types/node@>=10.0.0":
+  version "22.20.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.20.1.tgz#84e7cdf63cdaa20c134aa317ccc901aa21e16f0e"
+  integrity sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==
   dependencies:
     undici-types "~6.21.0"
 
