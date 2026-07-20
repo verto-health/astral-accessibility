@@ -17,7 +17,7 @@
   },
   "private": true,
   "resolutions": {
-    "caniuse-lite": "^1.0.30001799"
+    "caniuse-lite": "^1.0.30001806"
   },
   "dependencies": {
     "@angular/animations": "^20.3.25",
@@ -42,7 +42,7 @@
     "@types/node": "22",
     "bootstrap": "^5.3.1",
     "browserslist": "^4.28.6",
-    "caniuse-lite": "^1.0.30001799",
+    "caniuse-lite": "^1.0.30001806",
     "cypress": "^12.17.4",
     "jasmine-core": "~4.2.0",
     "karma": "~6.4.4",
