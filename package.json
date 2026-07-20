@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.32",
-    "@angular/cli": "~20.3.30",
+    "@angular/cli": "~20.3.32",
     "@angular/compiler-cli": "^20.3.25",
     "@babel/helper-remap-async-to-generator": "^7.29.7",
     "@types/jasmine": "~4.0.0",
