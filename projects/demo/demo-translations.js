@@ -97,6 +97,17 @@ export const DEMO_TRANSLATIONS = {
       h3Navigate: "Navigate and return",
       navigateP:
         "Set the text size to Large, navigate to the Screen Reader page, then return here. The paragraph sizes above should be exactly 1.5× their original values — not 1.5× compounded over multiple navigations.",
+      h3FormFields: "Form fields and labels",
+      formIntro:
+        "Text scaling also applies to form controls and their labels. Enable a text size level and watch the label, text input, message box, and dropdown below grow with the rest of the page.",
+      formNameLabel: "Full name",
+      formNamePlaceholder: "Jane Doe",
+      formMessageLabel: "Message",
+      formMessagePlaceholder: "Type your message here",
+      formPriorityLabel: "Priority",
+      formPriorityLow: "Low",
+      formPriorityMedium: "Medium",
+      formPriorityHigh: "High",
     },
     textSpacing: {
       h2: "Text Spacing",
@@ -286,6 +297,17 @@ export const DEMO_TRANSLATIONS = {
       h3Navigate: "Naviguer et revenir",
       navigateP:
         "Réglez la taille du texte sur Grand, naviguez vers la page Lecteur d'écran, puis revenez ici. Les tailles de paragraphe ci-dessus devraient être exactement 1,5× leurs valeurs d'origine — pas 1,5× composé sur plusieurs navigations.",
+      h3FormFields: "Champs de formulaire et étiquettes",
+      formIntro:
+        "La mise à l'échelle du texte s'applique aussi aux champs de formulaire et à leurs étiquettes. Activez un niveau de taille de texte et observez l'étiquette, le champ de saisie, la zone de message et la liste déroulante ci-dessous s'agrandir avec le reste de la page.",
+      formNameLabel: "Nom complet",
+      formNamePlaceholder: "Jeanne Dupont",
+      formMessageLabel: "Message",
+      formMessagePlaceholder: "Saisissez votre message ici",
+      formPriorityLabel: "Priorité",
+      formPriorityLow: "Faible",
+      formPriorityMedium: "Moyenne",
+      formPriorityHigh: "Élevée",
     },
     textSpacing: {
       h2: "Espacement du texte",
@@ -469,6 +491,17 @@ export const DEMO_TRANSLATIONS = {
       h3Navigate: "導航並返回",
       navigateP:
         "將文字大小設為大，導航到螢幕閱讀器頁面，然後返回此處。上方的段落大小應恰好是其原始值的 1.5×——而不是在多次導航中複合的 1.5×。",
+      h3FormFields: "表單欄位與標籤",
+      formIntro:
+        "文字縮放同樣適用於表單控制項及其標籤。啟用文字大小等級，觀察下方的標籤、文字輸入框、訊息框和下拉選單會隨頁面其餘部分一起放大。",
+      formNameLabel: "全名",
+      formNamePlaceholder: "王小明",
+      formMessageLabel: "訊息",
+      formMessagePlaceholder: "在此輸入您的訊息",
+      formPriorityLabel: "優先順序",
+      formPriorityLow: "低",
+      formPriorityMedium: "中",
+      formPriorityHigh: "高",
     },
     textSpacing: {
       h2: "文字間距",

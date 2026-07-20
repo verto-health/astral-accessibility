@@ -141,13 +141,18 @@ export class TextSizeComponent {
       }
     }
 
+    // Form controls (e.g. <select>) render their own text independently of
+    // their children, so scale them directly even though they have child nodes.
+    const formControls = ["INPUT", "SELECT", "TEXTAREA", "BUTTON"];
+
     if (
       Array.from(node.childNodes).some(
         (child) =>
           child.nodeType === child.TEXT_NODE &&
           child.nodeValue?.replace(/\s*/i, "")?.length,
       ) ||
-      children.length === 0
+      children.length === 0 ||
+      formControls.includes(node.nodeName)
     ) {
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
