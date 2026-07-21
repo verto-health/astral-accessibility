@@ -6,6 +6,7 @@ import {
   HostBinding,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { ContrastComponent } from "./controls/contrast.component";
 import { InvertComponent } from "./controls/invert.component";
@@ -37,6 +38,7 @@ export type AstralPosition =
     ScreenMaskComponent,
     LineHeightComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AstralAccessibilityComponent {

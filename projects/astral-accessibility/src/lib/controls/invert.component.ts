@@ -1,5 +1,10 @@
 import { NgClass } from "@angular/common";
-import { Component, inject, DOCUMENT } from "@angular/core";
+import {
+  Component,
+  inject,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AstralStateService } from "../astral-state.service";
 
 @Component({
@@ -25,6 +30,7 @@ import { AstralStateService } from "../astral-state.service";
       }
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass],
 })
 export class InvertComponent {

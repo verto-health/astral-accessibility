@@ -1,5 +1,12 @@
 import { NgClass } from "@angular/common";
-import { Component, Renderer2, inject, signal, DOCUMENT } from "@angular/core";
+import {
+  Component,
+  Renderer2,
+  inject,
+  signal,
+  DOCUMENT,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
 import { AstralTranslationService } from "../astral-translation.service";
 import { AstralStateService } from "../astral-state.service";
@@ -71,6 +78,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class LineHeightComponent {
