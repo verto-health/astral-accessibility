@@ -157,7 +157,15 @@ export class TextSizeComponent {
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
 
-      node.style.fontSize = `${(currentFontSizeNum / previousScale) * scale}px`;
+      // Apply with `important` priority so the accessibility override wins over
+      // app stylesheet rules that use `!important` (e.g. `font-size: 18px !important`).
+      // A normal inline style loses to an author `!important` rule in the cascade,
+      // which otherwise leaves such elements (e.g. labels/captions) unscaled.
+      node.style.setProperty(
+        "font-size",
+        `${(currentFontSizeNum / previousScale) * scale}px`,
+        "important",
+      );
       node.style.lineHeight = `initial`;
       node.style.wordSpacing = `initial`;
     }
