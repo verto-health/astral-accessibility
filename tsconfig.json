@@ -26,7 +26,6 @@
     "target": "ES2022",
     "module": "es2020",
     "allowSyntheticDefaultImports": true,
-    "lib": ["es2020", "dom", "dom.iterable"],
     // Required: Angular's inject() field initializers depend on decorator-based class field semantics; removing this would silently break DI at runtime.
     "useDefineForClassFields": false
   },

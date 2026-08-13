@@ -39,3 +39,66 @@ describe("TextSizeComponent labels", () => {
     expect(component.labels[3]).toBe("超大文字");
   });
 });
+
+describe("TextSizeComponent form field scaling", () => {
+  let component: TextSizeComponent;
+  let container: HTMLElement;
+
+  const FIELD_IDS = ["ff-label", "ff-input", "ff-textarea", "ff-select"];
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TextSizeComponent],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TextSizeComponent);
+    component = fixture.componentInstance;
+
+    container = document.createElement("div");
+    container.innerHTML = `
+      <label id="ff-label" for="ff-input">Full name</label>
+      <input id="ff-input" type="text" value="Jane Doe" />
+      <textarea id="ff-textarea">Notes</textarea>
+      <select id="ff-select">
+        <option>Option one</option>
+        <option>Option two</option>
+      </select>
+    `;
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    container.remove();
+  });
+
+  function fontSizeOf(id: string): number {
+    return parseFloat(
+      window.getComputedStyle(document.getElementById(id)!).fontSize,
+    );
+  }
+
+  it("scales form fields and their labels by the selected factor", () => {
+    const scale = 1.5;
+    const initial: Record<string, number> = {};
+    FIELD_IDS.forEach((id) => (initial[id] = fontSizeOf(id)));
+
+    component.updateTextSize(container, scale, 1);
+
+    FIELD_IDS.forEach((id) => {
+      expect(fontSizeOf(id)).toBeCloseTo(initial[id] * scale, 1);
+    });
+  });
+
+  it("restores the original size of form fields and labels", () => {
+    const scale = 1.8;
+    const initial: Record<string, number> = {};
+    FIELD_IDS.forEach((id) => (initial[id] = fontSizeOf(id)));
+
+    component.updateTextSize(container, scale, 1);
+    component.restoreTextSize(container);
+
+    FIELD_IDS.forEach((id) => {
+      expect(fontSizeOf(id)).toBeCloseTo(initial[id], 1);
+    });
+  });
+});

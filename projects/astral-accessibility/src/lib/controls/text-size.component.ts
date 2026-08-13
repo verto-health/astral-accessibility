@@ -141,18 +141,31 @@ export class TextSizeComponent {
       }
     }
 
+    // Form controls (e.g. <select>) render their own text independently of
+    // their children, so scale them directly even though they have child nodes.
+    const formControls = ["INPUT", "SELECT", "TEXTAREA", "BUTTON"];
+
     if (
       Array.from(node.childNodes).some(
         (child) =>
           child.nodeType === child.TEXT_NODE &&
           child.nodeValue?.replace(/\s*/i, "")?.length,
       ) ||
-      children.length === 0
+      children.length === 0 ||
+      formControls.includes(node.nodeName)
     ) {
       const currentFontSize = window.getComputedStyle(node).fontSize;
       const currentFontSizeNum = parseFloat(currentFontSize);
 
-      node.style.fontSize = `${(currentFontSizeNum / previousScale) * scale}px`;
+      // Apply with `important` priority so the accessibility override wins over
+      // app stylesheet rules that use `!important` (e.g. `font-size: 18px !important`).
+      // A normal inline style loses to an author `!important` rule in the cascade,
+      // which otherwise leaves such elements (e.g. labels/captions) unscaled.
+      node.style.setProperty(
+        "font-size",
+        `${(currentFontSizeNum / previousScale) * scale}px`,
+        "important",
+      );
       node.style.lineHeight = `initial`;
       node.style.wordSpacing = `initial`;
     }

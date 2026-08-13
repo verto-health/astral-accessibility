@@ -208,6 +208,34 @@
             <p style="font-size: 20px">${p.sample20px}</p>
             <h3>${p.h3Navigate}</h3>
             <p>${p.navigateP}</p>
+            <h3>${p.h3FormFields}</h3>
+            <p>${p.formIntro}</p>
+            <form class="demo-form" onSubmit=${(e) => e.preventDefault()}>
+              <label class="demo-field">
+                <span class="demo-field-label">${p.formNameLabel}</span>
+                <input
+                  type="text"
+                  name="demo-name"
+                  placeholder=${p.formNamePlaceholder}
+                />
+              </label>
+              <label class="demo-field">
+                <span class="demo-field-label">${p.formMessageLabel}</span>
+                <textarea
+                  name="demo-message"
+                  rows="3"
+                  placeholder=${p.formMessagePlaceholder}
+                ></textarea>
+              </label>
+              <label class="demo-field">
+                <span class="demo-field-label">${p.formPriorityLabel}</span>
+                <select name="demo-priority">
+                  <option value="low">${p.formPriorityLow}</option>
+                  <option value="medium">${p.formPriorityMedium}</option>
+                  <option value="high">${p.formPriorityHigh}</option>
+                </select>
+              </label>
+            </form>
           </div>
         `;
       }
