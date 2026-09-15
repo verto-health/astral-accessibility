@@ -86,7 +86,13 @@ export class TextSizeComponent {
   currentScale = 1;
   base = "Bigger Text";
   states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
-  private initialStyles = new WeakMap<HTMLElement, Record<string, string>>();
+  // Per element: the inline styles it had before we touched it, plus its
+  // *unscaled* font size in px. Scaling is always derived from `baseFontSize`,
+  // never from the element's current computed size — see `updateTextSize`.
+  private initialStyles = new WeakMap<
+    HTMLElement,
+    { inline: Record<string, string>; baseFontSize: number }
+  >();
 
   _style: HTMLStyleElement;
 
@@ -101,7 +107,7 @@ export class TextSizeComponent {
       this._rescaleFrame = null;
       this.observer.disconnect();
       this.restoreTextSize(document.body);
-      this.updateTextSize(document.body, this.currentScale, 1);
+      this.updateTextSize(document.body, this.currentScale);
       this.observer.observe(this.targetNode, this.config);
     });
   });
@@ -123,21 +129,13 @@ export class TextSizeComponent {
     ];
   }
 
-  updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
-    if (!this.initialStyles.has(node)) {
-      this.initialStyles.set(node, {
-        "font-size": node.style.fontSize,
-        "line-height": node.style.lineHeight,
-        "word-spacing": node.style.wordSpacing,
-      });
-    }
-
+  updateTextSize(node: HTMLElement, scale: number) {
     const children = node.children;
     const excludeNodes = ["SCRIPT", "ASTRAL-ACCESSIBILITY"];
     if (children.length > 0) {
       for (const child of children) {
         if (!excludeNodes.includes(child.nodeName))
-          this.updateTextSize(child as HTMLElement, scale, previousScale);
+          this.updateTextSize(child as HTMLElement, scale);
       }
     }
 
@@ -154,16 +152,35 @@ export class TextSizeComponent {
       children.length === 0 ||
       formControls.includes(node.nodeName)
     ) {
-      const currentFontSize = window.getComputedStyle(node).fontSize;
-      const currentFontSizeNum = parseFloat(currentFontSize);
+      // Record the element's unscaled size the first time we see it. Callers
+      // restore the document before re-applying, so the computed size read here
+      // is always the element's own base size, never a size we produced.
+      let saved = this.initialStyles.get(node);
+      if (!saved) {
+        saved = {
+          inline: {
+            "font-size": node.style.fontSize,
+            "line-height": node.style.lineHeight,
+            "word-spacing": node.style.wordSpacing,
+          },
+          baseFontSize: parseFloat(window.getComputedStyle(node).fontSize),
+        };
+        this.initialStyles.set(node, saved);
+      }
 
+      // Always derive from the base size, so re-applying the same scale is
+      // idempotent. Deriving from the *current* computed size instead made every
+      // re-application multiply on top of the last one: each SPA route change
+      // re-rendered the DOM, re-fired the observer and grew the text by another
+      // `scale` factor, without bound (TICKET-12742).
+      //
       // Apply with `important` priority so the accessibility override wins over
       // app stylesheet rules that use `!important` (e.g. `font-size: 18px !important`).
       // A normal inline style loses to an author `!important` rule in the cascade,
       // which otherwise leaves such elements (e.g. labels/captions) unscaled.
       node.style.setProperty(
         "font-size",
-        `${(currentFontSizeNum / previousScale) * scale}px`,
+        `${saved.baseFontSize * scale}px`,
         "important",
       );
       node.style.lineHeight = `initial`;
@@ -175,8 +192,11 @@ export class TextSizeComponent {
     const children = node.children;
     const saved = this.initialStyles.get(node);
     if (saved) {
-      for (const [key, value] of Object.entries(saved)) {
-        node.style.setProperty(key, value);
+      for (const [key, value] of Object.entries(saved.inline)) {
+        // Clear first: the font-size we set carries `important` priority, and
+        // re-setting it without a priority would not drop that flag.
+        node.style.removeProperty(key);
+        if (value) node.style.setProperty(key, value);
       }
     }
 
@@ -197,8 +217,6 @@ export class TextSizeComponent {
   }
 
   private _runStateLogic() {
-    let previousScale = this.currentScale;
-
     if (this.states[this.currentState()] === "Medium Text") {
       this.currentScale = 1.2;
     }
@@ -212,7 +230,11 @@ export class TextSizeComponent {
     }
 
     if (!(this.states[this.currentState()] === this.base)) {
-      this.updateTextSize(document.body, this.currentScale, previousScale);
+      // Restore before applying: elements added since the last pass must be
+      // measured at their base size, which means no ancestor may still be
+      // carrying a scaled font-size when we read them.
+      this.restoreTextSize(document.body);
+      this.updateTextSize(document.body, this.currentScale);
     } else {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
