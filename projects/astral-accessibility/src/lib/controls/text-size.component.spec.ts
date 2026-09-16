@@ -1,4 +1,4 @@
-import { TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TextSizeComponent } from "./text-size.component";
 import { AstralTranslationService } from "../astral-translation.service";
 
@@ -234,6 +234,7 @@ describe("TextSizeComponent form field scaling", () => {
 
 describe("TextSizeComponent state transitions", () => {
   let component: TextSizeComponent;
+  let fixture: ComponentFixture<TextSizeComponent>;
   let mixed: HTMLElement;
 
   beforeEach(async () => {
@@ -241,7 +242,7 @@ describe("TextSizeComponent state transitions", () => {
       imports: [TextSizeComponent],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(TextSizeComponent);
+    fixture = TestBed.createComponent(TextSizeComponent);
     component = fixture.componentInstance;
 
     mixed = document.createElement("div");
@@ -251,12 +252,71 @@ describe("TextSizeComponent state transitions", () => {
   });
 
   afterEach(() => {
+    // These specs drive `nextState`, which starts a MutationObserver on
+    // document.body. Leaving it running would keep re-scaling the page for
+    // every later spec — with two leaked observers that reproduces the
+    // compounding bug inside the suite, and Jasmine randomises spec order, so
+    // it would surface as an unrelated intermittent failure.
+    while (component.currentState() !== 0) component.nextState();
+    fixture.destroy();
     component.restoreTextSize(document.body);
     mixed.remove();
     localStorage.removeItem("text_size");
   });
 
-  // Turning scaling off drops the remembered sizes, so the next time it is
+  // SPAs park DOM off-screen and bring it back (tabs, collapsed panels, cached
+  // screens). If scaling is switched off while an element is detached, the
+  // restore pass cannot reach it — so we have to still know about it when it
+  // comes back, or it stays stuck at the size we gave it.
+  function detachable(): HTMLElement {
+    const el = document.createElement("p");
+    el.style.fontSize = "20px";
+    el.textContent = "Parked off-screen";
+    document.body.appendChild(el);
+    return el;
+  }
+
+  it("does not strand a detached element at a scaled size", () => {
+    const el = detachable();
+
+    component.nextState(); // Medium
+    component.nextState(); // -> Large, 1.5x
+    expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(30, 1);
+
+    el.remove(); // the app parks it off-screen
+
+    component.nextState(); // Extra Large
+    component.nextState(); // -> off
+
+    document.body.appendChild(el); // and brings it back
+    component.restoreTextSize(document.body);
+
+    expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(20, 1);
+    el.remove();
+  });
+
+  it("does not let a stranded element compound when scaling is turned back on", () => {
+    const el = detachable();
+
+    component.nextState(); // Medium
+    component.nextState(); // -> Large, 1.5x
+
+    el.remove();
+
+    component.nextState(); // Extra Large
+    component.nextState(); // -> off
+
+    document.body.appendChild(el);
+
+    component.nextState(); // Medium
+    component.nextState(); // -> Large again
+
+    // 20 * 1.5. Measured at its stuck 30px it would come back 45.
+    expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(30, 1);
+    el.remove();
+  });
+
+  // Turning scaling off forgets the remembered sizes, so the next time it is
   // turned on the page is measured afresh and app restyles are picked up.
   it("picks up a new natural size after scaling is switched off and on", () => {
     const sheet = document.createElement("style");

@@ -89,10 +89,18 @@ export class TextSizeComponent {
   // Per element: the inline styles it had before we touched it, plus its
   // *unscaled* font size in px. Scaling is always derived from `baseFontSize`,
   // never from the element's current computed size — see `updateTextSize`.
+  //
+  // Entries live as long as the element does. `inline` is how we undo our
+  // changes, and an element parked off-screen can only be repaired when it
+  // comes back if we still hold its entry, so this map is never cleared.
   private initialStyles = new WeakMap<
     HTMLElement,
-    { inline: Record<string, string>; baseFontSize: number }
+    { inline: Record<string, string>; baseFontSize: number; generation: number }
   >();
+
+  // Bumped whenever scaling is switched off, to retire every recorded
+  // `baseFontSize` without discarding the `inline` records alongside them.
+  private baseGeneration = 0;
 
   _style: HTMLStyleElement;
 
@@ -106,8 +114,7 @@ export class TextSizeComponent {
     this._rescaleFrame = requestAnimationFrame(() => {
       this._rescaleFrame = null;
       this.observer.disconnect();
-      this.restoreTextSize(document.body);
-      this.updateTextSize(document.body, this.currentScale);
+      this._restoreThenApply(this.currentScale);
       this.observer.observe(this.targetNode, this.config);
     });
   });
@@ -118,6 +125,37 @@ export class TextSizeComponent {
       this._runStateLogic();
       this.observer.observe(this.targetNode, this.config);
     }
+  }
+
+  // Restore, then re-apply, with CSS transitions switched off for the duration.
+  //
+  // Both halves measure elements, and a measurement is only trustworthy once
+  // the browser has settled the value. Host apps transition font-size (the FHA
+  // navbar uses `transition: all 0.2s ease`), so clearing an inline font-size
+  // *starts* a transition rather than completing it, and a measurement taken
+  // straight afterwards returns the old, still-scaled size. Caching that as a
+  // base size is what made the text compound. Suppressing transitions makes
+  // every read exact regardless of what is in flight.
+  private _restoreThenApply(scale: number) {
+    const style = this.document.createElement("style");
+    style.textContent = `*, *::before, *::after { transition: none !important; }`;
+    this.document.head.appendChild(style);
+    // Force a style flush so the suppression is in effect for the reads below.
+    void this.document.body.offsetHeight;
+
+    try {
+      this.restoreTextSize(this.document.body);
+      this.updateTextSize(this.document.body, scale);
+    } finally {
+      style.remove();
+    }
+  }
+
+  ngOnDestroy() {
+    // Without this the observer keeps watching document.body after Angular has
+    // destroyed the component, re-scaling the page on every mutation forever.
+    if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
+    this.observer.disconnect();
   }
 
   get labels(): string[] {
@@ -153,8 +191,7 @@ export class TextSizeComponent {
       formControls.includes(node.nodeName)
     ) {
       // Record the element's unscaled size the first time we see it, and keep
-      // it for as long as scaling stays on; `_runStateLogic` drops the whole
-      // map when scaling is switched off. Callers restore the document before
+      // it for as long as scaling stays on. Callers restore the document before
       // re-applying, so the size read here is the element's own base size,
       // never a size we produced.
       let saved = this.initialStyles.get(node);
@@ -166,8 +203,16 @@ export class TextSizeComponent {
             "word-spacing": node.style.wordSpacing,
           },
           baseFontSize: parseFloat(window.getComputedStyle(node).fontSize),
+          generation: this.baseGeneration,
         };
         this.initialStyles.set(node, saved);
+      } else if (saved.generation !== this.baseGeneration) {
+        // Scaling has been off since we last measured this element, so nothing
+        // of ours is mid-transition and it is safe to read its size again.
+        // This is what picks up anything the app restyled while we were off.
+        const measured = parseFloat(window.getComputedStyle(node).fontSize);
+        if (Number.isFinite(measured)) saved.baseFontSize = measured;
+        saved.generation = this.baseGeneration;
       }
 
       // Always derive from the base size, so re-applying the same scale is
@@ -236,22 +281,24 @@ export class TextSizeComponent {
       // Restore before applying: elements added since the last pass must be
       // measured at their base size, which means no ancestor may still be
       // carrying a scaled font-size when we read them.
-      this.restoreTextSize(document.body);
-      this.updateTextSize(document.body, this.currentScale);
+      this._restoreThenApply(this.currentScale);
     } else {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
-      // Scaling is off, so nothing we wrote is in play any more. Drop the
-      // remembered sizes: the next time the user turns scaling on we measure
-      // the page afresh and so pick up anything the app has restyled since.
+      // Retire the recorded sizes so the next switch-on measures the page
+      // afresh and picks up anything the app has restyled since. The `inline`
+      // records stay: they are how we undo our changes, and an element parked
+      // off-screen while scaling was switched off can only be repaired when it
+      // comes back if we still know we touched it.
       //
       // Deliberately not re-measuring on every restore instead. Host apps
       // transition font-size (the FHA navbar uses `transition: all 0.2s`), and
       // clearing an inline font-size starts that transition rather than
       // completing it — so a measurement taken immediately afterwards returns
       // the *old, scaled* size. Caching that as the new base is what made the
-      // text compound in the first place.
-      this.initialStyles = new WeakMap();
+      // text compound in the first place. Re-measuring on switch-on is safe
+      // because scaling has been off in between.
+      this.baseGeneration++;
     }
   }
 }
