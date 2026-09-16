@@ -353,6 +353,60 @@ describe("TextSizeComponent state transitions", () => {
     }
   });
 
+  it("stops rescaling the page once the component is destroyed", async () => {
+    const own = TestBed.createComponent(TextSizeComponent);
+    own.detectChanges(); // register lifecycle hooks, so ngOnDestroy will run
+
+    own.componentInstance.nextState(); // Medium
+    own.componentInstance.nextState(); // Large — the observer is live
+
+    own.destroy(); // the host app tears the widget down while scaling is on
+
+    const later = document.createElement("p");
+    later.style.fontSize = "16px";
+    later.textContent = "rendered after the widget was destroyed";
+    document.body.appendChild(later);
+
+    const before = parseFloat(window.getComputedStyle(later).fontSize);
+    // Long enough that a live observer would certainly have re-scaled by now:
+    // its callback is itself deferred to an animation frame.
+    await new Promise((r) => setTimeout(r, 100));
+    const after = parseFloat(window.getComputedStyle(later).fontSize);
+    later.remove();
+
+    expect({ before, after }).toEqual({ before: 16, after: 16 });
+  });
+
+  // Pre-existing before this PR: tearing the widget down left our inline sizes
+  // on the page with the only records that could undo them, so re-creating it
+  // measured already-enlarged text as if it were the natural size.
+  it("does not compound when the host app re-creates the widget", () => {
+    const first = TestBed.createComponent(TextSizeComponent);
+    first.detectChanges();
+    first.componentInstance.nextState(); // Medium
+    first.componentInstance.nextState(); // Large, 1.5x
+    expect(parseFloat(window.getComputedStyle(mixed).fontSize)).toBeCloseTo(
+      30,
+      1,
+    );
+
+    first.destroy(); // the host app removes the widget while scaling is on
+
+    // Re-created on a route change: ngOnInit restores the saved choice itself.
+    const second = TestBed.createComponent(TextSizeComponent);
+    second.detectChanges();
+
+    // 20 * 1.5. Measured against text left at 30px it would come back 45.
+    expect(parseFloat(window.getComputedStyle(mixed).fontSize)).toBeCloseTo(
+      30,
+      1,
+    );
+
+    while (second.componentInstance.currentState() !== 0)
+      second.componentInstance.nextState();
+    second.destroy();
+  });
+
   // Guards the restore in `_runStateLogic`: without it, DOM added between two
   // state changes is measured while its parent is still carrying the previous
   // scale, and comes out too big.

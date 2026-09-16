@@ -156,6 +156,14 @@ export class TextSizeComponent {
     // destroyed the component, re-scaling the page on every mutation forever.
     if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
     this.observer.disconnect();
+
+    // Put the page back. Our inline sizes outlive the component, and the
+    // records that could undo them are held here — so a host app that removes
+    // the widget while scaling is on would leave the page permanently enlarged
+    // with no control left to undo it. Worse, re-creating the widget would
+    // measure that enlarged text as if it were the natural size and scale it
+    // again.
+    this.restoreTextSize(this.document.body);
   }
 
   get labels(): string[] {
@@ -196,16 +204,18 @@ export class TextSizeComponent {
       // never a size we produced.
       let saved = this.initialStyles.get(node);
       if (!saved) {
+        const measured = parseFloat(window.getComputedStyle(node).fontSize);
         saved = {
           inline: {
             "font-size": node.style.fontSize,
             "line-height": node.style.lineHeight,
             "word-spacing": node.style.wordSpacing,
           },
-          baseFontSize: parseFloat(window.getComputedStyle(node).fontSize),
-          generation: this.baseGeneration,
+          baseFontSize: Number.isFinite(measured) ? measured : 0,
+          generation: Number.isFinite(measured) ? this.baseGeneration : -1,
         };
         this.initialStyles.set(node, saved);
+        if (!Number.isFinite(measured)) return;
       } else if (saved.generation !== this.baseGeneration) {
         // Scaling has been off since we last measured this element, so nothing
         // of ours is mid-transition and it is safe to read its size again.
