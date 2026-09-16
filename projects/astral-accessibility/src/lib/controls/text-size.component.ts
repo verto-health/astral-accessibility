@@ -152,9 +152,11 @@ export class TextSizeComponent {
       children.length === 0 ||
       formControls.includes(node.nodeName)
     ) {
-      // Record the element's unscaled size the first time we see it. Callers
-      // restore the document before re-applying, so the computed size read here
-      // is always the element's own base size, never a size we produced.
+      // Record the element's unscaled size the first time we see it, and keep
+      // it for as long as scaling stays on; `_runStateLogic` drops the whole
+      // map when scaling is switched off. Callers restore the document before
+      // re-applying, so the size read here is the element's own base size,
+      // never a size we produced.
       let saved = this.initialStyles.get(node);
       if (!saved) {
         saved = {
@@ -172,7 +174,7 @@ export class TextSizeComponent {
       // idempotent. Deriving from the *current* computed size instead made every
       // re-application multiply on top of the last one: each SPA route change
       // re-rendered the DOM, re-fired the observer and grew the text by another
-      // `scale` factor, without bound (TICKET-12742).
+      // `scale` factor, without bound.
       //
       // Apply with `important` priority so the accessibility override wins over
       // app stylesheet rules that use `!important` (e.g. `font-size: 18px !important`).
@@ -193,8 +195,9 @@ export class TextSizeComponent {
     const saved = this.initialStyles.get(node);
     if (saved) {
       for (const [key, value] of Object.entries(saved.inline)) {
-        // Clear first: the font-size we set carries `important` priority, and
-        // re-setting it without a priority would not drop that flag.
+        // removeProperty rather than setProperty(key, value): both drop the
+        // `important` flag we applied, but clearing first states the intent
+        // and handles the common case where the original inline value was "".
         node.style.removeProperty(key);
         if (value) node.style.setProperty(key, value);
       }
@@ -238,6 +241,17 @@ export class TextSizeComponent {
     } else {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
+      // Scaling is off, so nothing we wrote is in play any more. Drop the
+      // remembered sizes: the next time the user turns scaling on we measure
+      // the page afresh and so pick up anything the app has restyled since.
+      //
+      // Deliberately not re-measuring on every restore instead. Host apps
+      // transition font-size (the FHA navbar uses `transition: all 0.2s`), and
+      // clearing an inline font-size starts that transition rather than
+      // completing it — so a measurement taken immediately afterwards returns
+      // the *old, scaled* size. Caching that as the new base is what made the
+      // text compound in the first place.
+      this.initialStyles = new WeakMap();
     }
   }
 }

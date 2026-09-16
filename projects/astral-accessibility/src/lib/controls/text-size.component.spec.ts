@@ -43,6 +43,7 @@ describe("TextSizeComponent labels", () => {
 describe("TextSizeComponent form field scaling", () => {
   let component: TextSizeComponent;
   let container: HTMLElement;
+  const sheets: HTMLStyleElement[] = [];
 
   const FIELD_IDS = ["ff-label", "ff-input", "ff-textarea", "ff-select"];
 
@@ -69,6 +70,8 @@ describe("TextSizeComponent form field scaling", () => {
 
   afterEach(() => {
     container.remove();
+    sheets.forEach((s) => s.remove());
+    sheets.length = 0;
   });
 
   function fontSizeOf(id: string): number {
@@ -102,11 +105,11 @@ describe("TextSizeComponent form field scaling", () => {
     });
   });
 
-  // TICKET-12742: the scale used to be derived from each element's *current*
-  // computed size, so every re-application multiplied on top of the last one.
-  // In the DFD each SPA route change re-rendered the DOM, re-fired the
-  // MutationObserver and grew the navbar text by another `scale` factor, with
-  // no bound — 20px reached 1615px after six navigations.
+  // The scale used to be derived from each element's *current* computed size,
+  // so every re-application multiplied on top of the last one. In an SPA each
+  // route change re-rendered the DOM, re-fired the MutationObserver and grew
+  // the text by another `scale` factor, with no bound — a 20px nav label
+  // reached 1185px after six navigations.
   it("does not compound when the same scale is applied repeatedly", () => {
     const scale = 1.5;
     const initial: Record<string, number> = {};
@@ -151,21 +154,160 @@ describe("TextSizeComponent form field scaling", () => {
     });
   });
 
+  // The parent needs its own text *and* child elements: that is the shape that
+  // gets a font-size of its own, so a child added later would inherit the
+  // scaled size unless we restore before measuring. A wrapper holding only
+  // elements and whitespace is skipped, and the situation never arises.
+  function mixedParent(fontSize = 20): HTMLElement {
+    const mixed = document.createElement("div");
+    mixed.style.fontSize = `${fontSize}px`;
+    mixed.innerHTML = `Text <span>inner</span>`;
+    container.appendChild(mixed);
+    return mixed;
+  }
+
   it("measures elements added after scaling at their own base size", () => {
     const scale = 1.5;
+    const mixed = mixedParent(20);
+
     component.updateTextSize(container, scale);
 
-    // Simulate a route change swapping in fresh DOM after a scale is active.
+    // Simulate a route change swapping in fresh DOM while a scale is active.
     const added = document.createElement("p");
     added.textContent = "Added after the first scale";
-    container.appendChild(added);
-    const base = parseFloat(window.getComputedStyle(added).fontSize);
+    mixed.appendChild(added);
 
     component.restoreTextSize(container);
     component.updateTextSize(container, scale);
 
+    // 20 * 1.5. Without the restore it measures the parent at 1.5x and yields 45.
     expect(parseFloat(window.getComputedStyle(added).fontSize)).toBeCloseTo(
-      base * scale,
+      30,
+      1,
+    );
+  });
+
+  // The app restyles its own text through a stylesheet — a theme switch or a
+  // layout breakpoint. It cannot do so through the inline style, because that
+  // is the slot we save and restore.
+  function restylable(): {
+    el: HTMLElement;
+    setNaturalSize: (px: number) => void;
+  } {
+    const sheet = document.createElement("style");
+    sheet.textContent = `.restyle-me { font-size: 10px; }`;
+    document.head.appendChild(sheet);
+    sheets.push(sheet);
+
+    const el = document.createElement("p");
+    el.className = "restyle-me";
+    el.textContent = "Restyled by the app";
+    container.appendChild(el);
+
+    return {
+      el,
+      setNaturalSize: (px) =>
+        (sheet.textContent = `.restyle-me { font-size: ${px}px; }`),
+    };
+  }
+
+  // While a scale is active the remembered size is deliberately *not*
+  // refreshed, so an app restyle mid-scale is not picked up until scaling is
+  // switched off and on again — see `_runStateLogic` for why re-measuring on
+  // every restore is unsafe. This test pins that known limitation so the
+  // trade-off is visible rather than surprising.
+  it("keeps the remembered size while a scale stays active", () => {
+    const scale = 1.5;
+    const { el, setNaturalSize } = restylable();
+
+    component.updateTextSize(container, scale);
+    expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(15, 1);
+
+    setNaturalSize(40);
+
+    component.restoreTextSize(container);
+    component.updateTextSize(container, scale);
+
+    expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(15, 1);
+  });
+});
+
+describe("TextSizeComponent state transitions", () => {
+  let component: TextSizeComponent;
+  let mixed: HTMLElement;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TextSizeComponent],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TextSizeComponent);
+    component = fixture.componentInstance;
+
+    mixed = document.createElement("div");
+    mixed.style.fontSize = "20px";
+    mixed.innerHTML = `Text <span>inner</span>`;
+    document.body.appendChild(mixed);
+  });
+
+  afterEach(() => {
+    component.restoreTextSize(document.body);
+    mixed.remove();
+    localStorage.removeItem("text_size");
+  });
+
+  // Turning scaling off drops the remembered sizes, so the next time it is
+  // turned on the page is measured afresh and app restyles are picked up.
+  it("picks up a new natural size after scaling is switched off and on", () => {
+    const sheet = document.createElement("style");
+    sheet.textContent = `.restyle-me { font-size: 10px; }`;
+    document.head.appendChild(sheet);
+
+    const el = document.createElement("p");
+    el.className = "restyle-me";
+    el.textContent = "Restyled while scaling is off";
+    document.body.appendChild(el);
+
+    try {
+      component.nextState(); // -> Medium, 1.2x
+      expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(
+        12,
+        1,
+      );
+
+      component.nextState(); // Large
+      component.nextState(); // Extra Large
+      component.nextState(); // -> back to base, remembered sizes dropped
+
+      sheet.textContent = `.restyle-me { font-size: 40px; }`;
+
+      component.nextState(); // -> Medium again, measured afresh
+
+      expect(parseFloat(window.getComputedStyle(el).fontSize)).toBeCloseTo(
+        48,
+        1,
+      );
+    } finally {
+      el.remove();
+      sheet.remove();
+    }
+  });
+
+  // Guards the restore in `_runStateLogic`: without it, DOM added between two
+  // state changes is measured while its parent is still carrying the previous
+  // scale, and comes out too big.
+  it("measures DOM added between state changes at its base size", () => {
+    component.nextState(); // -> Medium Text, 1.2x
+
+    const added = document.createElement("p");
+    added.textContent = "Added between states";
+    mixed.appendChild(added);
+
+    component.nextState(); // -> Large Text, 1.5x
+
+    // 20 * 1.5. Measured against a parent still at 1.2x it would be 36.
+    expect(parseFloat(window.getComputedStyle(added).fontSize)).toBeCloseTo(
+      30,
       1,
     );
   });
