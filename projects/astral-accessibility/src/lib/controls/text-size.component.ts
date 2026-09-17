@@ -87,19 +87,14 @@ export class TextSizeComponent {
   base = "Bigger Text";
   states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
   // Per element: the inline styles it had before we touched it, plus its
-  // *unscaled* font size in px. Scaling is always derived from `baseFontSize`,
-  // never from the element's current computed size — see `updateTextSize`.
-  //
-  // Entries live as long as the element does. `inline` is how we undo our
-  // changes, and an element parked off-screen can only be repaired when it
-  // comes back if we still hold its entry, so this map is never cleared.
+  // *unscaled* font size. Never cleared — `inline` is how we undo our changes,
+  // including for elements parked off-screen and re-attached later.
   private initialStyles = new WeakMap<
     HTMLElement,
     { inline: Record<string, string>; baseFontSize: number; generation: number }
   >();
 
-  // Bumped whenever scaling is switched off, to retire every recorded
-  // `baseFontSize` without discarding the `inline` records alongside them.
+  // Bumped on switch-off, to retire recorded sizes without dropping `inline`.
   private baseGeneration = 0;
 
   _style: HTMLStyleElement;
@@ -127,20 +122,16 @@ export class TextSizeComponent {
     }
   }
 
-  // Restore, then re-apply, with CSS transitions switched off for the duration.
-  //
-  // Both halves measure elements, and a measurement is only trustworthy once
-  // the browser has settled the value. Host apps transition font-size (the FHA
-  // navbar uses `transition: all 0.2s ease`), so clearing an inline font-size
-  // *starts* a transition rather than completing it, and a measurement taken
-  // straight afterwards returns the old, still-scaled size. Caching that as a
-  // base size is what made the text compound. Suppressing transitions makes
-  // every read exact regardless of what is in flight.
+  // Restore then re-apply, with CSS transitions suppressed so measurements are
+  // exact. Host apps transition font-size, so clearing an inline font-size
+  // starts a transition rather than completing it, and a read taken straight
+  // after returns the old, still-scaled size — which is what made text
+  // compound.
   private _restoreThenApply(scale: number) {
     const style = this.document.createElement("style");
     style.textContent = `*, *::before, *::after { transition: none !important; }`;
     this.document.head.appendChild(style);
-    // Force a style flush so the suppression is in effect for the reads below.
+    // Flush so the suppression is in effect for the reads below.
     void this.document.body.offsetHeight;
 
     try {
@@ -152,17 +143,13 @@ export class TextSizeComponent {
   }
 
   ngOnDestroy() {
-    // Without this the observer keeps watching document.body after Angular has
-    // destroyed the component, re-scaling the page on every mutation forever.
+    // Otherwise the observer keeps watching document.body forever.
     if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
     this.observer.disconnect();
 
-    // Put the page back. Our inline sizes outlive the component, and the
-    // records that could undo them are held here — so a host app that removes
-    // the widget while scaling is on would leave the page permanently enlarged
-    // with no control left to undo it. Worse, re-creating the widget would
-    // measure that enlarged text as if it were the natural size and scale it
-    // again.
+    // Put the page back: our inline sizes outlive us, and the records that
+    // undo them are held here. Otherwise a re-created widget would measure the
+    // still-enlarged text as its natural size and scale it again.
     this.restoreTextSize(this.document.body);
   }
 
@@ -198,10 +185,8 @@ export class TextSizeComponent {
       children.length === 0 ||
       formControls.includes(node.nodeName)
     ) {
-      // Record the element's unscaled size the first time we see it, and keep
-      // it for as long as scaling stays on. Callers restore the document before
-      // re-applying, so the size read here is the element's own base size,
-      // never a size we produced.
+      // Record the unscaled size on first sight. Callers restore before
+      // re-applying, so this reads the element's own base size.
       let saved = this.initialStyles.get(node);
       if (!saved) {
         const measured = parseFloat(window.getComputedStyle(node).fontSize);
@@ -217,19 +202,16 @@ export class TextSizeComponent {
         this.initialStyles.set(node, saved);
         if (!Number.isFinite(measured)) return;
       } else if (saved.generation !== this.baseGeneration) {
-        // Scaling has been off since we last measured this element, so nothing
-        // of ours is mid-transition and it is safe to read its size again.
-        // This is what picks up anything the app restyled while we were off.
+        // Scaling has been off since we last measured, so re-reading is safe
+        // and picks up anything the app restyled meanwhile.
         const measured = parseFloat(window.getComputedStyle(node).fontSize);
         if (Number.isFinite(measured)) saved.baseFontSize = measured;
         saved.generation = this.baseGeneration;
       }
 
-      // Always derive from the base size, so re-applying the same scale is
-      // idempotent. Deriving from the *current* computed size instead made every
-      // re-application multiply on top of the last one: each SPA route change
-      // re-rendered the DOM, re-fired the observer and grew the text by another
-      // `scale` factor, without bound.
+      // Derive from the base size so re-applying is idempotent. Deriving from
+      // the current computed size made every SPA route change multiply the text
+      // by another `scale` factor, without bound.
       //
       // Apply with `important` priority so the accessibility override wins over
       // app stylesheet rules that use `!important` (e.g. `font-size: 18px !important`).
@@ -250,9 +232,8 @@ export class TextSizeComponent {
     const saved = this.initialStyles.get(node);
     if (saved) {
       for (const [key, value] of Object.entries(saved.inline)) {
-        // removeProperty rather than setProperty(key, value): both drop the
-        // `important` flag we applied, but clearing first states the intent
-        // and handles the common case where the original inline value was "".
+        // Clear first: states the intent, and handles the usual case where
+        // the original inline value was "".
         node.style.removeProperty(key);
         if (value) node.style.setProperty(key, value);
       }
@@ -288,26 +269,15 @@ export class TextSizeComponent {
     }
 
     if (!(this.states[this.currentState()] === this.base)) {
-      // Restore before applying: elements added since the last pass must be
-      // measured at their base size, which means no ancestor may still be
-      // carrying a scaled font-size when we read them.
+      // Restore first so elements added since the last pass are measured with
+      // no ancestor still carrying a scaled font-size.
       this._restoreThenApply(this.currentScale);
     } else {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
-      // Retire the recorded sizes so the next switch-on measures the page
-      // afresh and picks up anything the app has restyled since. The `inline`
-      // records stay: they are how we undo our changes, and an element parked
-      // off-screen while scaling was switched off can only be repaired when it
-      // comes back if we still know we touched it.
-      //
-      // Deliberately not re-measuring on every restore instead. Host apps
-      // transition font-size (the FHA navbar uses `transition: all 0.2s`), and
-      // clearing an inline font-size starts that transition rather than
-      // completing it — so a measurement taken immediately afterwards returns
-      // the *old, scaled* size. Caching that as the new base is what made the
-      // text compound in the first place. Re-measuring on switch-on is safe
-      // because scaling has been off in between.
+      // Retire recorded sizes so the next switch-on measures afresh. The
+      // `inline` records stay — they are how we undo our changes, including for
+      // elements parked off-screen while scaling was off.
       this.baseGeneration++;
     }
   }
