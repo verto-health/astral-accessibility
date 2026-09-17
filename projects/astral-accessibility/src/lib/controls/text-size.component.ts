@@ -86,7 +86,16 @@ export class TextSizeComponent {
   currentScale = 1;
   base = "Bigger Text";
   states = [this.base, "Medium Text", "Large Text", "Extra Large Text"];
-  private initialStyles = new WeakMap<HTMLElement, Record<string, string>>();
+  // Per element: the inline styles it had before we touched it, plus its
+  // *unscaled* font size. Never cleared — `inline` is how we undo our changes,
+  // including for elements parked off-screen and re-attached later.
+  private initialStyles = new WeakMap<
+    HTMLElement,
+    { inline: Record<string, string>; baseFontSize: number; generation: number }
+  >();
+
+  // Bumped on switch-off, to retire recorded sizes without dropping `inline`.
+  private baseGeneration = 0;
 
   _style: HTMLStyleElement;
 
@@ -100,8 +109,7 @@ export class TextSizeComponent {
     this._rescaleFrame = requestAnimationFrame(() => {
       this._rescaleFrame = null;
       this.observer.disconnect();
-      this.restoreTextSize(document.body);
-      this.updateTextSize(document.body, this.currentScale, 1);
+      this._restoreThenApply(this.currentScale);
       this.observer.observe(this.targetNode, this.config);
     });
   });
@@ -114,6 +122,37 @@ export class TextSizeComponent {
     }
   }
 
+  // Restore then re-apply, with CSS transitions suppressed so measurements are
+  // exact. Host apps transition font-size, so clearing an inline font-size
+  // starts a transition rather than completing it, and a read taken straight
+  // after returns the old, still-scaled size — which is what made text
+  // compound.
+  private _restoreThenApply(scale: number) {
+    const style = this.document.createElement("style");
+    style.textContent = `*, *::before, *::after { transition: none !important; }`;
+    this.document.head.appendChild(style);
+    // Flush so the suppression is in effect for the reads below.
+    void this.document.body.offsetHeight;
+
+    try {
+      this.restoreTextSize(this.document.body);
+      this.updateTextSize(this.document.body, scale);
+    } finally {
+      style.remove();
+    }
+  }
+
+  ngOnDestroy() {
+    // Otherwise the observer keeps watching document.body forever.
+    if (this._rescaleFrame !== null) cancelAnimationFrame(this._rescaleFrame);
+    this.observer.disconnect();
+
+    // Put the page back: our inline sizes outlive us, and the records that
+    // undo them are held here. Otherwise a re-created widget would measure the
+    // still-enlarged text as its natural size and scale it again.
+    this.restoreTextSize(this.document.body);
+  }
+
   get labels(): string[] {
     return [
       this.translation.t("textSize.base"),
@@ -123,21 +162,13 @@ export class TextSizeComponent {
     ];
   }
 
-  updateTextSize(node: HTMLElement, scale: number, previousScale: number = 1) {
-    if (!this.initialStyles.has(node)) {
-      this.initialStyles.set(node, {
-        "font-size": node.style.fontSize,
-        "line-height": node.style.lineHeight,
-        "word-spacing": node.style.wordSpacing,
-      });
-    }
-
+  updateTextSize(node: HTMLElement, scale: number) {
     const children = node.children;
     const excludeNodes = ["SCRIPT", "ASTRAL-ACCESSIBILITY"];
     if (children.length > 0) {
       for (const child of children) {
         if (!excludeNodes.includes(child.nodeName))
-          this.updateTextSize(child as HTMLElement, scale, previousScale);
+          this.updateTextSize(child as HTMLElement, scale);
       }
     }
 
@@ -154,16 +185,41 @@ export class TextSizeComponent {
       children.length === 0 ||
       formControls.includes(node.nodeName)
     ) {
-      const currentFontSize = window.getComputedStyle(node).fontSize;
-      const currentFontSizeNum = parseFloat(currentFontSize);
+      // Record the unscaled size on first sight. Callers restore before
+      // re-applying, so this reads the element's own base size.
+      let saved = this.initialStyles.get(node);
+      if (!saved) {
+        const measured = parseFloat(window.getComputedStyle(node).fontSize);
+        saved = {
+          inline: {
+            "font-size": node.style.fontSize,
+            "line-height": node.style.lineHeight,
+            "word-spacing": node.style.wordSpacing,
+          },
+          baseFontSize: Number.isFinite(measured) ? measured : 0,
+          generation: Number.isFinite(measured) ? this.baseGeneration : -1,
+        };
+        this.initialStyles.set(node, saved);
+        if (!Number.isFinite(measured)) return;
+      } else if (saved.generation !== this.baseGeneration) {
+        // Scaling has been off since we last measured, so re-reading is safe
+        // and picks up anything the app restyled meanwhile.
+        const measured = parseFloat(window.getComputedStyle(node).fontSize);
+        if (Number.isFinite(measured)) saved.baseFontSize = measured;
+        saved.generation = this.baseGeneration;
+      }
 
+      // Derive from the base size so re-applying is idempotent. Deriving from
+      // the current computed size made every SPA route change multiply the text
+      // by another `scale` factor, without bound.
+      //
       // Apply with `important` priority so the accessibility override wins over
       // app stylesheet rules that use `!important` (e.g. `font-size: 18px !important`).
       // A normal inline style loses to an author `!important` rule in the cascade,
       // which otherwise leaves such elements (e.g. labels/captions) unscaled.
       node.style.setProperty(
         "font-size",
-        `${(currentFontSizeNum / previousScale) * scale}px`,
+        `${saved.baseFontSize * scale}px`,
         "important",
       );
       node.style.lineHeight = `initial`;
@@ -175,8 +231,11 @@ export class TextSizeComponent {
     const children = node.children;
     const saved = this.initialStyles.get(node);
     if (saved) {
-      for (const [key, value] of Object.entries(saved)) {
-        node.style.setProperty(key, value);
+      for (const [key, value] of Object.entries(saved.inline)) {
+        // Clear first: states the intent, and handles the usual case where
+        // the original inline value was "".
+        node.style.removeProperty(key);
+        if (value) node.style.setProperty(key, value);
       }
     }
 
@@ -197,8 +256,6 @@ export class TextSizeComponent {
   }
 
   private _runStateLogic() {
-    let previousScale = this.currentScale;
-
     if (this.states[this.currentState()] === "Medium Text") {
       this.currentScale = 1.2;
     }
@@ -212,10 +269,16 @@ export class TextSizeComponent {
     }
 
     if (!(this.states[this.currentState()] === this.base)) {
-      this.updateTextSize(document.body, this.currentScale, previousScale);
+      // Restore first so elements added since the last pass are measured with
+      // no ancestor still carrying a scaled font-size.
+      this._restoreThenApply(this.currentScale);
     } else {
       this.restoreTextSize(document.body);
       this.currentScale = 1;
+      // Retire recorded sizes so the next switch-on measures afresh. The
+      // `inline` records stay — they are how we undo our changes, including for
+      // elements parked off-screen while scaling was off.
+      this.baseGeneration++;
     }
   }
 }

@@ -35,6 +35,13 @@ started this project [here](https://blue.verto.health/advancing-accessibility-wi
 | `Screen Mask`   | Screen Mask is a tool which dims the background and has a smaller focused area which follows the cursor sliding up and down the page.                                                                                                                                                                      |
 | `Line Spacing`  | Line Spacing is a tool which increases the space between lines for greater readability.                                                                                                                                                                                                                    |
 
+> **Note on `Bigger Text`:** the widget measures each element's normal text size
+> when you turn text scaling on, and scales from that measurement for as long as
+> it stays on. If the host site changes its own text sizes while scaling is
+> active — a light/dark theme switch, or a layout breakpoint when a phone is
+> rotated — the widget will not notice until text scaling is switched off and on
+> again. Sizes are re-measured on each switch-on.
+
 ## Usage
 
 Astral is built with Angular Elements. You can use it in your website in under 30 seconds. To add it, simply include the Javascript and initialize it:
