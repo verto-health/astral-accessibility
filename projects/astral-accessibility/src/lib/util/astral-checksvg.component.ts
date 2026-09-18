@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: "astral-widget-checkmark",
@@ -47,6 +47,7 @@ import { Component, input } from "@angular/core";
     </div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class AstralCheckmarkSvgComponent {

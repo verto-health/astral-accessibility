@@ -1,8 +1,24 @@
 {
-  "extends": "../tsconfig.json",
+  // Self-contained (does NOT extend ../tsconfig.json) on purpose: Cypress' bundled
+  // webpack preprocessor runs ts-loader with a forced `downlevelIteration` and emits
+  // per-file. Under TypeScript 6.0 that surfaces two fatal config diagnostics that the
+  // root config would drag in — TS5101 (downlevelIteration deprecated) and TS5011
+  // ("rootDir must be explicitly set", triggered by the root's `outDir`). Keeping this
+  // config free of `outDir` and silencing the deprecation here avoids both. The e2e
+  // specs don't use the `astral-accessibility` path alias, so no `paths` mapping is needed.
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "dom"],
+    "types": ["cypress", "node"],
     "sourceMap": false,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0"
   },
   "include": ["**/*.ts"]
 }

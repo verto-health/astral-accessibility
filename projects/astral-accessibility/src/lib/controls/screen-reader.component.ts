@@ -7,6 +7,7 @@ import {
   Renderer2,
   signal,
   DOCUMENT,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AstralCheckmarkSvgComponent } from "../util/astral-checksvg.component";
@@ -94,6 +95,7 @@ import { AstralStateService } from "../astral-state.service";
       ></astral-widget-checkmark>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, AstralCheckmarkSvgComponent],
 })
 export class ScreenReaderComponent {

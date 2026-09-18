@@ -4,14 +4,11 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "paths": {
-      "astral-accessibility": ["dist/astral-accessibility"]
+      "astral-accessibility": ["./dist/astral-accessibility"]
     },
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    // Required: suppresses TS5.x deprecation warning on suppressImplicitAnyIndexErrors; removing causes build failures.
-    "ignoreDeprecations": "5.0",
     "strictPropertyInitialization": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -19,7 +16,6 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
